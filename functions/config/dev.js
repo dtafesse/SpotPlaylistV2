@@ -1,4 +1,0 @@
-module.exports = {
-  CLIENT_ID: '45c5fde19e7944db94f3344760655569',
-  CLIENT_SECRET: '14b2d436ed6f4b328376beb28e44e05f'
-};
