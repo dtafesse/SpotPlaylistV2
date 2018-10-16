@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "staging": "spotplaylist-dev",
+    "default": "spotplaylist-dev"
+  }
+}
