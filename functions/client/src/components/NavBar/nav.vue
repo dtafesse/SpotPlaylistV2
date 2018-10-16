@@ -53,7 +53,7 @@ export default {
                     icon: 'lock_open', title: 'Sign In', link: '/signin'
                 },
                 {
-                    icon: 'face', title: 'Sing Up', link: '/signup'
+                    icon: 'face', title: 'Sign Up', link: '/signup'
                 },
                 {
                     icon: 'exit_to_app', title: 'Logout', link: '/'
