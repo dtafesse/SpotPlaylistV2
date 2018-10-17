@@ -13,7 +13,7 @@
                     <volumeControl />
                 </v-flex>
             </v-layout>
-            <v-layout v-else>
+            <v-layout v-else v-layout align-center justify-center row fill-height>
                 <v-flex xs12>
                     <audioControl />
                 </v-flex>
