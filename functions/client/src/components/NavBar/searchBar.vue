@@ -1,5 +1,4 @@
 <template>
- 
     <v-autocomplete 
         v-model="model"
         :items="artists"

@@ -2,8 +2,8 @@
 const ROOT_URL_PROD =
   'https://us-central1-spotplaylist-dev.cloudfunctions.net/server';
 
-const ROOT_URL = ROOT_URL_PROD;
-//const ROOT_URL = '/server';
+//const ROOT_URL = ROOT_URL_PROD;
+const ROOT_URL = '/server';
 
 export default {
   fetchAlbumTracks() {

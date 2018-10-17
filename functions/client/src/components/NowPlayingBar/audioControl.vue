@@ -1,6 +1,6 @@
 <template>
-    <v-container>
-        <v-layout row ml-5>
+    <v-container >
+        <v-layout row :class="{mobile: $vuetify.breakpoint.xsOnly}" align-center justify-center>
             <v-flex sm2>
                 <v-btn fab dark small color="white">
                     <v-icon @click="onShuffle" v-if="!this.$store.getters.isShuffle" color="primary" >shuffle</v-icon>
@@ -96,6 +96,7 @@ export default {
                 playSong: false
             });
         },
+        onStop(){},
         onRepeat(){
             this.$store.dispatch('repeatSong', !this.$store.getters.isRepeat);
         },
@@ -137,6 +138,10 @@ export default {
 </script>
 
 <style scoped>
+    .mobile {
+        padding-left: 13px;
+    }
+
     .container {
         padding-top: 0;
         padding-bottom: 0;
