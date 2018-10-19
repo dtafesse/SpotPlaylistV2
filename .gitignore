@@ -9,7 +9,7 @@ firebase-debug.log*
 service-account.json
 functions/config/dev.js
 dist
-.DS_Store
+*.DS_Store
 
 # Firebase cache
 .firebase/
