@@ -139,7 +139,7 @@ export default {
 
 <style scoped>
     .mobile {
-        padding-left: 13px;
+        padding-left: 15px;
     }
 
     .container {

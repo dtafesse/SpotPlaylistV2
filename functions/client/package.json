@@ -6,7 +6,8 @@
     "devServer": {
       "proxy": {
         "/server/*": {
-          "target": "http://localhost:5000/spotplaylist-dev/us-central1/"
+          "target": "http://localhost:5000/spotplaylist-dev/us-central1/",
+          "changeOrigin": true
         }
       }
     }
