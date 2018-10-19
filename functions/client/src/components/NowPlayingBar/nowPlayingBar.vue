@@ -13,22 +13,24 @@
                     <volumeControl />
                 </v-flex>
             </v-layout>
-            <v-layout v-else v-layout align-center justify-center row fill-height>
+            <v-layout v-else align-center justify-center row fill-height>
                 <v-flex xs12>
                     <audioControl />
                 </v-flex>
             </v-layout>
             <v-layout>
-                <div v-if="this.$store.getters.getCurrentTrack">
-                    <audio ref="audioElement" :src="setAudioSource" 
-                        @loadeddata="handleLoad" @timeupdate="handleUpdateTimeProgressBar"  
-                        @volumechange="handleUpdateVolumeProgressBar" @ended="onNextSong"
+                <!-- <div v-if="this.$store.getters.getCurrentTrack">
+                    <audio 
+                        ref="audioElement" 
+                        :src="setAudioSource" 
                         style="display:none">
                     </audio>
-                </div>
-                <div v-else>
-                    <audio ref="audioElement"></audio>
-                </div>
+                </div> -->
+                <audio 
+                    ref="audioElement" 
+                    :src="setAudioSource" 
+                    style="display:none">
+                </audio>
             </v-layout>
         </v-container>
     </v-footer>    
@@ -119,13 +121,21 @@ export default {
         }
     },
     mounted(){
-        this.$store.dispatch('setAudioElement', this.$refs.audioElement );
         this.$el.addEventListener('mouseup', this.resetMouseDown);
 
-        console.log(this.$refs.audioElement.src);
+        this.$refs.audioElement.addEventListener('loadeddata', this.handleLoad);
+        this.$refs.audioElement.addEventListener('timeupdate', this.handleUpdateTimeProgressBar);
+        this.$refs.audioElement.addEventListener('volumechange', this.handleUpdateVolumeProgressBar);
+        this.$refs.audioElement.addEventListener('ended', this.onNextSong);
+
+        this.$store.dispatch('setAudioElement', this.$refs.audioElement );
     },
     beforeDestroy(){
         this.$el.removeEventListener('mouseup', this.resetMouseDown);
+        this.$store.getAudioElement.removeEventListener('loadeddata', this.handleLoad);
+        this.$store.getAudioElement.removeEventListener('timeupdate', this.handleUpdateTimeProgressBar);
+        this.$store.getAudioElement.removeEventListener('volumechange', this.handleUpdateVolumeProgressBar);
+        this.$store.getAudioElement.removeEventListener('ended', this.onNextSong);
     }
 }
 </script>
