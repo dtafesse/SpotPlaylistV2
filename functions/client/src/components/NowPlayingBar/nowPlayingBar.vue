@@ -19,13 +19,6 @@
                 </v-flex>
             </v-layout>
             <v-layout>
-                <!-- <div v-if="this.$store.getters.getCurrentTrack">
-                    <audio 
-                        ref="audioElement" 
-                        :src="setAudioSource" 
-                        style="display:none">
-                    </audio>
-                </div> -->
                 <audio 
                     ref="audioElement" 
                     :src="setAudioSource" 
@@ -122,8 +115,7 @@ export default {
     },
     mounted(){
         this.$el.addEventListener('mouseup', this.resetMouseDown);
-
-        this.$refs.audioElement.addEventListener('loadeddata', this.handleLoad);
+        this.$refs.audioElement.addEventListener('canplay', this.handleLoad);
         this.$refs.audioElement.addEventListener('timeupdate', this.handleUpdateTimeProgressBar);
         this.$refs.audioElement.addEventListener('volumechange', this.handleUpdateVolumeProgressBar);
         this.$refs.audioElement.addEventListener('ended', this.onNextSong);
@@ -132,7 +124,7 @@ export default {
     },
     beforeDestroy(){
         this.$el.removeEventListener('mouseup', this.resetMouseDown);
-        this.$store.getAudioElement.removeEventListener('loadeddata', this.handleLoad);
+        this.$store.getAudioElement.removeEventListener('canplay', this.handleLoad);
         this.$store.getAudioElement.removeEventListener('timeupdate', this.handleUpdateTimeProgressBar);
         this.$store.getAudioElement.removeEventListener('volumechange', this.handleUpdateVolumeProgressBar);
         this.$store.getAudioElement.removeEventListener('ended', this.onNextSong);

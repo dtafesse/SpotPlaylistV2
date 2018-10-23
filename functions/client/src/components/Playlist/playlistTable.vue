@@ -145,12 +145,6 @@ export default {
         onShuffle(){
             if(this.currentlySelectedPlaylist){
                 let randomTrackIndex = Math.floor((Math.random() * this.currentlySelectedPlaylist.length));
-                const track = {
-                    currentTrack: this.currentlySelectedPlaylist[randomTrackIndex],
-                    currentArtwork: this.currentlySelectedPlaylist[randomTrackIndex].album.images[0].url,
-                    currentTrackIndex: randomTrackIndex
-                };
-                //this.$store.dispatch('setCurrentTrack', track);
                 this.$store.dispatch('setSuffle', {
                     shuffle: !this.$store.getters.isShuffle,
                     loadingNewPlaylist: false
