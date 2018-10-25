@@ -6,16 +6,28 @@ const spotifyWebApi = new SpotifyWebApi({
   clientSecret: keys.CLIENT_SECRET
 });
 
-function callSpotifyWebApiClientCredentialGrant() {
+spotifyWebApi
+  .clientCredentialsGrant()
+  .then(data => {
+    // Save the access token so that it's used in future calls
+    spotifyWebApi.setAccessToken(data.body['access_token']);
+    spotifyWebApi.setRefreshToken(data.body['refresh_token']);
+    return;
+  })
+  .catch(err => {
+    console.log('error retrieving an access token', err);
+  });
+
+function initalize() {}
+
+function refreshToken() {
   spotifyWebApi
-    .clientCredentialsGrant()
-    .then(data => {
-      // Save the access token so that it's used in future calls
-      spotifyWebApi.setAccessToken(data.body['access_token']);
-      return;
+    .refreshAccessToken()
+    .then(result => {
+      return spotifyWebApi.setAccessToken(result.body.access_token);
     })
     .catch(err => {
-      console.log('error retrieving an access token', err);
+      return err;
     });
 }
 
@@ -25,7 +37,7 @@ exports.getArtistWithName = (req, res, next) => {
     artistName = req.params.name;
   }
 
-  callSpotifyWebApiClientCredentialGrant();
+  //refreshToken();
 
   spotifyWebApi
     .searchArtists(artistName, { limit: 10 })
@@ -43,7 +55,7 @@ exports.getArtistWithName = (req, res, next) => {
       return;
     })
     .catch(err => {
-      console.log(err.message);
+      console.log(err);
       res.status(404).json({
         confirmation: 'fail',
         message: err.message
@@ -56,7 +68,7 @@ exports.getArtistTopTracks = (req, res, next) => {
   if (req.params.id) {
     artistId = req.params.id;
 
-    callSpotifyWebApiClientCredentialGrant();
+    //callSpotifyWebApiClientCredentialGrant();
 
     spotifyWebApi
       .getArtistTopTracks(artistId, 'US')

@@ -1,21 +1,67 @@
-<template>
+<template>    
     <v-autocomplete 
         v-model="model"
         :items="artists"
         :loading="isLoading"
         :search-input.sync="search"
-        hide-no-data hide-selected
-        cache-items
+        hide-no-data hide-details
+        chips
+        clearable
         flat
-        color="white"
+        color="cyan darken-3"
         item-text="artistName"
-        item-value="API"
-        placeholder="Search for an Artist"
+        item-value="query"
+        placeholder="Search ..."
         prepend-icon="search"
         return-object
+        multiple
         @input="onInputModelChange"
     >
+        <template slot="no-data">
+            <v-list-tile>
+                <v-list-tile-title>
+                    Search for your favorite
+                    <strong>Artist or Album</strong>
+                </v-list-tile-title>
+            </v-list-tile>
+        </template>
+        <template
+            slot="selection"
+            slot-scope="data"
+        >
+            <v-chip
+                :selected="data.selected"
+                close
+                class="chip--select-multi"
+                @input="remove(data.item)"
+            >
+            <v-avatar>
+                <img v-if="data.item.images.length > 0" :src="data.item.images[0].url">
+                <v-icon v-else> {{ 'person_outline' }} </v-icon>
+            </v-avatar>
+                {{ data.item.name }}
+            </v-chip>
+        </template> 
+        <template
+            slot="item"
+            slot-scope="{ item }"
+        >
+            <template v-if="typeof item !== 'object'">
+                <v-list-tile-content v-text="item.name"></v-list-tile-content>
+            </template>
+
+            <template v-else>
+                <v-list-tile-avatar>
+                    <img v-if="item.images.length > 0" :src="item.images[0].url">
+                    <v-icon v-else> {{ 'person_outline' }} </v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                    <v-list-tile-title v-html="item.name"></v-list-tile-title>
+                </v-list-tile-content>
+            </template>
+        </template> 
     </v-autocomplete>
+               
 </template>
 
 <script>
@@ -36,14 +82,14 @@ export default {
         artists() {
             return this.$store.getters.getArtists.map(artist => {
                 const artistName = artist.name;
-                return Object.assign({}, artist, {artistName});
+                return Object.assign({}, artist, { artistName });
             });
-        }
+        },
     },
     watch: {
         search(val){
             if(val && val !== this.model && !this.isLoading){
-                this.searchApiRequest(val);
+                 this.searchApiRequest(val);
             }
         }
     },
@@ -53,13 +99,19 @@ export default {
         searchApiRequest: _.debounce(function(val) {    
                 this.$store.dispatch('searchArtistId', val);
             }, 
-        100), 
+        300), 
+        
         onInputModelChange(){
             if(this.model){
                 this.$store.dispatch('setSelectedArtistId', this.model.id);
                 this.$store.dispatch('searchArtistTopTrack');
                 this.$router.push({path: '/Playlist'});
             }
+        },
+        remove (item) {
+            console.log(item);
+            // const index = this.friends.indexOf(item.name)
+            // if (index >= 0) this.friends.splice(index, 1)
         }
     }
 }

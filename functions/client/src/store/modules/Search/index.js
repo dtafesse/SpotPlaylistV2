@@ -20,14 +20,17 @@ const actions = {
     api
       .fetchArtistId(payload)
       .then(data => {
-        const artistList = data.data.items;
-        const { statusCode } = data.data;
-        if (statusCode === 304 || artistList.length == 0) {
-          commit('SET_ARTISTS_SEARCH_QUERY', getters.getArtists);
-        } else {
+        if (data.message !== 'Unauthorized') {
+          const artistList = data.data.items;
+
+          const { statusCode } = data.data;
+          if (statusCode === 304 || artistList.length == 0) {
+            commit('SET_ARTISTS_SEARCH_QUERY', getters.getArtists);
+          } else {
+            commit('SET_ARTISTS_SEARCH_QUERY', artistList);
+          }
           commit('SET_ARTISTS_SEARCH_QUERY', artistList);
         }
-        commit('SET_ARTISTS_SEARCH_QUERY', artistList);
       })
       .catch(err => {
         // eslint-disable-next-line
