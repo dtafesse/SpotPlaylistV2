@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan'); // logs all incoming requests to console, acts as a middleware
 const bodyParser = require('body-parser');
 
+const authRoutes = require('./api/auth/spotifyLogin');
 const artistRoutes = require('./api/routes/artists');
 const albumRoutes = require('./api/routes/albums');
 const searchRoutes = require('./api/routes/search');
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 });
 
 // middleware which forwards to artistRoutes
+app.use('/api/auth', authRoutes);
 app.use('/api/artists', artistRoutes);
 app.use('/api/albums', albumRoutes);
 app.use('/api/search', searchRoutes);
