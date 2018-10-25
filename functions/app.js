@@ -4,6 +4,8 @@ const morgan = require('morgan'); // logs all incoming requests to console, acts
 const bodyParser = require('body-parser');
 
 const artistRoutes = require('./api/routes/artists');
+const albumRoutes = require('./api/routes/albums');
+const searchRoutes = require('./api/routes/search');
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,6 +26,8 @@ app.use((req, res, next) => {
 
 // middleware which forwards to artistRoutes
 app.use('/api/artists', artistRoutes);
+app.use('/api/albums', albumRoutes);
+app.use('/api/search', searchRoutes);
 
 // middleware - routes that artistRoutes could not handle thus, send an error
 app.use((req, res, next) => {

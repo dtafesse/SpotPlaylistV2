@@ -3,31 +3,57 @@ import _ from 'lodash';
 
 const state = {
   selectedArtistId: '',
-  artists: [],
+  queryResult: [],
   suggestionsDivVisible: false,
   loading: false
 };
 
 const getters = {
   getArtistId: state => state.selectedArtistId,
-  getArtists: state => state.artists,
+  getQueryResult: state => state.queryResult,
   isLoading: state => state.loading
 };
 
 const actions = {
-  searchArtistId({ commit, getters }, payload) {
+  searchForQueryString({ commit, getters }, payload) {
     commit('SET_LOADING', true);
     api
-      .fetchArtistId(payload)
+      .fetchQueryResults(payload)
       .then(data => {
-        const artistList = data.data.items;
-        const { statusCode } = data.data;
-        if (statusCode === 304 || artistList.length == 0) {
-          commit('SET_ARTISTS_SEARCH_QUERY', getters.getArtists);
-        } else {
-          commit('SET_ARTISTS_SEARCH_QUERY', artistList);
+        if (data.message !== 'Unauthorized') {
+          const { items } = data.data;
+          const results = [];
+
+          if (items.albums) {
+            results.push({ header: 'Albums' });
+            items.albums.items.forEach(element => results.push(element));
+
+            if (items.artists) {
+              results.push({ divider: true });
+              results.push({ header: 'Artists' });
+              items.artists.items.forEach(element => results.push(element));
+            }
+          } else {
+            if (items.artists) {
+              results.push({ header: 'Artists' });
+              items.artists.items.forEach(element => results.push(element));
+            }
+          }
+
+          // results.push({ header: 'Albums' });
+          // items.albums.items.forEach(element => results.push(element));
+          // results.push({ divider: true });
+          // results.push({ header: 'Artists' });
+          // items.artists.items.forEach(element => results.push(element));
+
+          const { statusCode } = data.data;
+          if (statusCode === 304) {
+            commit('SET_QUERY_RESULTS_SEARCH_QUERY', getters.queryResult);
+          } else {
+            commit('SET_QUERY_RESULTS_SEARCH_QUERY', results);
+          }
+          //commit('SET_ARTISTS_SEARCH_QUERY', results);
         }
-        commit('SET_ARTISTS_SEARCH_QUERY', artistList);
       })
       .catch(err => {
         // eslint-disable-next-line
@@ -35,6 +61,30 @@ const actions = {
       })
       .finally(() => commit('SET_LOADING', false));
   },
+
+  // searchArtistId({ commit, getters }, payload) {
+  //   commit('SET_LOADING', true);
+  //   api
+  //     .fetchArtistId(payload)
+  //     .then(data => {
+  //       if (data.message !== 'Unauthorized') {
+  //         const artistList = data.data.items;
+
+  //         const { statusCode } = data.data;
+  //         if (statusCode === 304 || artistList.length == 0) {
+  //           commit('SET_ARTISTS_SEARCH_QUERY', getters.getArtists);
+  //         } else {
+  //           commit('SET_ARTISTS_SEARCH_QUERY', artistList);
+  //         }
+  //         commit('SET_ARTISTS_SEARCH_QUERY', artistList);
+  //       }
+  //     })
+  //     .catch(err => {
+  //       // eslint-disable-next-line
+  //       console.log(err.message);
+  //     })
+  //     .finally(() => commit('SET_LOADING', false));
+  // },
 
   async searchArtistTopTrack({ dispatch, commit, getters }) {
     commit('SET_LOADING', true);
@@ -80,8 +130,8 @@ const mutations = {
   SET_SELECTED_ARTIST_ID: (state, payload) => {
     state.selectedArtistId = payload;
   },
-  SET_ARTISTS_SEARCH_QUERY: (state, payload) => {
-    state.artists = payload;
+  SET_QUERY_RESULTS_SEARCH_QUERY: (state, payload) => {
+    state.queryResult = payload;
   },
   SET_LOADING: (state, payload) => {
     state.loading = payload;
