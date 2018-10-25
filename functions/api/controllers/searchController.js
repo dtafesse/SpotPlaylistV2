@@ -12,6 +12,7 @@ function callSpotifyWebApiClientCredentialGrant() {
     .then(data => {
       // Save the access token so that it's used in future calls
       spotifyWebApi.setAccessToken(data.body['access_token']);
+      spotifyWebApi.setRefreshToken(data.body['refresh_token']);
       return;
     })
     .catch(err => {

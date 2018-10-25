@@ -15,6 +15,30 @@ const getters = {
 };
 
 const actions = {
+  searchForQueryString({ commit, getters }, payload) {
+    commit('SET_LOADING', true);
+    api
+      .fetchQueryResults(payload)
+      .then(data => {
+        if (data.message !== 'Unauthorized') {
+          const { items } = data.data;
+
+          const { statusCode } = data.data;
+          if (statusCode === 304) {
+            commit('SET_ARTISTS_SEARCH_QUERY', getters.getArtists);
+          } else {
+            commit('SET_ARTISTS_SEARCH_QUERY', items);
+          }
+          //commit('SET_ARTISTS_SEARCH_QUERY', items);
+        }
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err.message);
+      })
+      .finally(() => commit('SET_LOADING', false));
+  },
+
   searchArtistId({ commit, getters }, payload) {
     commit('SET_LOADING', true);
     api

@@ -104,7 +104,8 @@ export default {
         // debounce takes the inner function and calls it/runs it every 250 miliseconds, 
         // comment out to see difference
         searchApiRequest: _.debounce(function(val) {    
-                this.$store.dispatch('searchArtistId', val);
+                // this.$store.dispatch('searchArtistId', val);
+                this.$store.dispatch('searchForQueryString', val);
             }, 
         300), 
         

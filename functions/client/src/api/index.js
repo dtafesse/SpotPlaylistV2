@@ -48,6 +48,16 @@ export default {
     }).then(response => response.json());
   },
 
+  fetchQueryResults(query) {
+    return fetch(`${ROOT_URL}/api/search/${query}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then(response => response.json());
+  },
+
   fetchArtistId(artist) {
     return fetch(`${ROOT_URL}/api/artists/${artist}`, {
       method: 'GET',
