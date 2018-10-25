@@ -4,7 +4,7 @@
             <v-form>
                 <v-autocomplete 
                     v-model="model"
-                    :items="artists"
+                    :items="queryResults"
                     :loading="isLoading"
                     :search-input.sync="search"
                     hide-no-data hide-details
@@ -12,7 +12,7 @@
                     clearable
                     flat
                     color="cyan darken-3"
-                    item-text="artistName"
+                    item-text="name"
                     item-value="query"
                     placeholder="Search ..."
                     append-outer-icon="search"
@@ -54,12 +54,13 @@
                         </template>
 
                         <template v-else>
-                            <v-list-tile-avatar>
+                            <v-list-tile-avatar v-if="item.images">
                                 <img v-if="item.images.length > 0" :src="item.images[0].url">
                                 <v-icon v-else> {{ 'person_outline' }} </v-icon>
                             </v-list-tile-avatar>
                             <v-list-tile-content>
                                 <v-list-tile-title v-html="item.name"></v-list-tile-title>
+                                <v-list-tile-sub-title v-html="item.type"></v-list-tile-sub-title>
                             </v-list-tile-content>
                         </template>
                     </template> 
@@ -86,11 +87,12 @@ export default {
         isLoading(){
             return this.$store.getters.isLoading;
         },
-        artists() {
-            return this.$store.getters.getArtists.map(artist => {
-                const artistName = artist.name;
-                return Object.assign({}, artist, { artistName });
-            });
+        queryResults() {
+            // return this.$store.getters.getQueryResult.map(artist => {
+            //     const artistName = artist.name;
+            //     return Object.assign({}, artist, { artistName });
+            // });
+            return this.$store.getters.getQueryResult;
         },
     },
     watch: {
