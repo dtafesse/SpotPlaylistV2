@@ -29,7 +29,7 @@ exports.search = (req, res, next) => {
   callSpotifyWebApiClientCredentialGrant();
 
   spotifyWebApi
-    .search(query, ['album', 'artist'], { limit: 10 })
+    .search(query, ['album', 'artist'], { limit: 20 })
     .then(data => {
       //const artistId = data.body.artists.items[0].id;
       //   const artistId = data.body.artists.items;

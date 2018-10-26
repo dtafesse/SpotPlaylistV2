@@ -1,15 +1,16 @@
 import api from '../../../api';
-import _ from 'lodash';
 
 const state = {
   selectedArtistId: '',
   queryResult: [],
+  searchQueryCleared: false,
   suggestionsDivVisible: false,
   loading: false
 };
 
 const getters = {
   getArtistId: state => state.selectedArtistId,
+  isSearchQueryCleared: state => state.searchQueryCleared,
   getQueryResult: state => state.queryResult,
   isLoading: state => state.loading
 };
@@ -24,33 +25,27 @@ const actions = {
           const { items } = data.data;
           const results = [];
 
-          if (items.albums) {
-            results.push({ header: 'Albums' });
-            items.albums.items.forEach(element => results.push(element));
+          // if (items.albums) {
+          //   results.push({ header: 'Albums' });
+          //   items.albums.items.forEach(element => results.push(element));
 
-            if (items.artists) {
-              results.push({ divider: true });
-              results.push({ header: 'Artists' });
-              items.artists.items.forEach(element => results.push(element));
-            }
-          } else {
-            if (items.artists) {
-              results.push({ header: 'Artists' });
-              items.artists.items.forEach(element => results.push(element));
-            }
-          }
-
-          // results.push({ header: 'Albums' });
-          // items.albums.items.forEach(element => results.push(element));
-          // results.push({ divider: true });
-          // results.push({ header: 'Artists' });
-          // items.artists.items.forEach(element => results.push(element));
+          //   if (items.artists) {
+          //     results.push({ divider: true });
+          //     results.push({ header: 'Artists' });
+          //     items.artists.items.forEach(element => results.push(element));
+          //   }
+          // } else {
+          //   if (items.artists) {
+          //     results.push({ header: 'Artists' });
+          //     items.artists.items.forEach(element => results.push(element));
+          //   }
+          // }
 
           const { statusCode } = data.data;
           if (statusCode === 304) {
             commit('SET_QUERY_RESULTS_SEARCH_QUERY', getters.queryResult);
           } else {
-            commit('SET_QUERY_RESULTS_SEARCH_QUERY', results);
+            commit('SET_QUERY_RESULTS_SEARCH_QUERY', items);
           }
           //commit('SET_ARTISTS_SEARCH_QUERY', results);
         }
@@ -127,6 +122,9 @@ const actions = {
 };
 
 const mutations = {
+  UPDATE_SEARCH_QUERY_CLEAR: (state, payload) => {
+    state.searchQueryCleared = payload;
+  },
   SET_SELECTED_ARTIST_ID: (state, payload) => {
     state.selectedArtistId = payload;
   },
