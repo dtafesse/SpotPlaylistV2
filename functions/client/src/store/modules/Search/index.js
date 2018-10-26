@@ -3,6 +3,7 @@ import api from '../../../api';
 const state = {
   selectedArtistId: '',
   queryResult: [],
+  selectedItems: [],
   searchQueryCleared: false,
   suggestionsDivVisible: false,
   loading: false
@@ -12,7 +13,8 @@ const getters = {
   getArtistId: state => state.selectedArtistId,
   isSearchQueryCleared: state => state.searchQueryCleared,
   getQueryResult: state => state.queryResult,
-  isLoading: state => state.loading
+  isLoading: state => state.loading,
+  getSelectedItems: state => state.selectedItems
 };
 
 const actions = {
@@ -23,7 +25,7 @@ const actions = {
       .then(data => {
         if (data.message !== 'Unauthorized') {
           const { items } = data.data;
-          const results = [];
+          // const results = [];
 
           // if (items.albums) {
           //   results.push({ header: 'Albums' });
@@ -118,6 +120,25 @@ const actions = {
   },
   setSelectedArtistId: ({ commit }, payload) => {
     commit('SET_SELECTED_ARTIST_ID', payload);
+  },
+  addToSelectedItems: ({ dispatch, commit, getters }, item) => {
+    const itemPos = getters.getSelectedItems
+      .map(function(e) {
+        return e.id;
+      })
+      .indexOf(item.id);
+
+    if (itemPos === -1) {
+      commit('ADD_TO_SELECTED_ITEMS', item);
+    } else {
+      dispatch('removeItemFromSelectedItems', itemPos);
+    }
+  },
+  removeItemFromSelectedItems: ({ commit }, index) => {
+    commit('REMOVE_ITEM_FROM_SELECTED_ITEMS', index);
+  },
+  removeAllSelectedItems: ({ commit }) => {
+    commit('REMOVE_ALL_SELECTED_ITEMS');
   }
 };
 
@@ -133,6 +154,15 @@ const mutations = {
   },
   SET_LOADING: (state, payload) => {
     state.loading = payload;
+  },
+  ADD_TO_SELECTED_ITEMS: (state, item) => {
+    state.selectedItems.push(item);
+  },
+  REMOVE_ITEM_FROM_SELECTED_ITEMS: (state, index) => {
+    state.selectedItems.splice(index, 1);
+  },
+  REMOVE_ALL_SELECTED_ITEMS: state => {
+    state.selectedItems = [];
   }
 };
 

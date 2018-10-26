@@ -4,11 +4,14 @@
             row wrap  
         >
             <v-flex
-                v-for="item in items"
+                v-for="(item, index) in items"
                 xs6 sm3
                 :key="item.id"
             >
-                <v-card flat>
+                <v-card 
+                    flat
+                    class="card"
+                >
                     <v-avatar 
                         v-bind="{ ['tile']: imageType }"
                         size="150"
@@ -16,10 +19,14 @@
                         <v-img
                             v-if="item.images.length > 0" 
                             :src="item.images[0].url"
+                            @click="selected(index)"
                         >
                         </v-img>
                     </v-avatar>
-                    <v-card-title class="caption">
+                    <v-card-title 
+                        class="caption"
+                        @click="selected(index)"
+                    >
                         {{ item.name }}
                     </v-card-title>
                 </v-card>
@@ -51,6 +58,23 @@ export default {
                 return false;
             }
         }
+    },
+    methods: {
+        selected(index){
+            //console.log({ 'type': this.$route.params.type, 'index': index });
+            let itemToAdd;
+
+            if(this.items){
+                itemToAdd = this.items[index];
+                this.$store.dispatch('addToSelectedItems', itemToAdd);
+            }
+        }
     }
 }
 </script>
+
+<style scoped>
+    .card:hover{
+        cursor: pointer;
+    }
+</style>

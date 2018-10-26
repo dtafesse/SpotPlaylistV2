@@ -5,16 +5,41 @@
          </v-content>
 
          <v-content v-else>
-            <v-layout row>
-                <v-flex xs12>
-                    Selected
-                </v-flex>
-            </v-layout>
-            
+             <v-container>
+                <v-layout row wrap v-if="albums || artists">
+                    <v-flex xs9>
+                        <v-chip
+                            v-if="selectedItems"
+                            v-for="(item, index) in selectedItems"
+                            :key="index"
+                            close
+                            label 
+                            class="chip--select-multi"
+                            @input="removeSelected(index)" 
+                        >
+                        <v-avatar>
+                            <img 
+                                v-if="item.images.length > 0" :src="item.images[0].url"
+                            >
+                            <v-icon v-else > 
+                                {{ 'person_outline' }} 
+                            </v-icon>
+                        </v-avatar>    
+                        {{ item.name }}
+                        </v-chip>
+                    </v-flex>
+                    <v-flex xs3 v-if="selectedItems.length > 0">
+                        <v-btn @click="onClearAll">
+                            <v-icon>clear</v-icon>
+                            Clear All
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+             </v-container>
+
            <router-view></router-view>
          </v-content>
 
-        
      </v-container>
 
 </template>
@@ -33,6 +58,27 @@ export default {
     computed: {
         loading(){
             return this.$store.getters.isLoading;
+        },
+        selectedItems(){
+            return this.$store.getters.getSelectedItems;
+        },
+        albums(){
+            return this.$store.getters.getQueryResult.albums 
+                ? this.$store.getters.getQueryResult.albums.items
+                : null;
+        },
+        artists(){
+            return this.$store.getters.getQueryResult.artists
+                ? this.$store.getters.getQueryResult.artists.items
+                : null;
+        },
+    },
+    methods: {
+        removeSelected(index){
+            this.$store.dispatch('removeItemFromSelectedItems', index);
+        },
+        onClearAll(){
+            this.$store.dispatch('removeAllSelectedItems');
         }
     }
 }

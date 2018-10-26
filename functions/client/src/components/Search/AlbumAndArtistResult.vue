@@ -1,21 +1,31 @@
 <template>
-    <v-layout>
-        <category  
-            :type="'Albums'"    
-            :items="albums"
-            :size="5"
-            @onClick="handleOnClick"
-            @onShowAllClick="handleShowAllChick"
-        />
+    <v-container v-if="albums || artists">
+        <v-layout row wrap>
+            <v-flex xs12 sm6>
+                <category  
+                    :type="'Albums'"    
+                    :items="albums"
+                    :size="5"
+                    @onClick="handleOnClick"
+                    @onShowAllClick="handleShowAllChick"
+                />
+            </v-flex>
+            <v-flex xs12 sm6>
+                <category  
+                    :type="'Artists'"    
+                    :items="artists"
+                    :size="5"
+                    @onClick="handleOnClick"
+                    @onShowAllClick="handleShowAllChick"
+                />
+            </v-flex>
+        </v-layout>
+        <!-- <v-layout>
+            
+        </v-layout> -->
 
-        <category  
-            :type="'Artists'"    
-            :items="artists"
-            :size="5"
-            @onClick="handleOnClick"
-            @onShowAllClick="handleShowAllChick"
-        />
-    </v-layout>
+    </v-container>
+    
 </template>
 
 
@@ -40,15 +50,25 @@ export default {
         },
     },
     methods: {
-        handleOnClick(selectedObj){
-            if(selectedObj.type === 'Album'){
-                 console.log('album index: ', selectedObj.index);
+        handleOnClick(selectedItem){
+            let itemToAdd = null;
+            if(selectedItem.type === 'albums'){
+                if(this.albums){
+                    itemToAdd = this.albums[selectedItem.index];
+                }
             }else{
-                console.log('artist index: ', selectedObj.index);
+                if(this.artists){
+                    itemToAdd = this.artists[selectedItem.index];
+                }
             }
+
+            if(itemToAdd){
+                this.$store.dispatch('addToSelectedItems', itemToAdd);
+            }
+
         },
         handleShowAllChick(type){
-            if(type === "Album"){
+            if(type === "album"){
                 this.$router.push({path: `/search/${this.$route.params.query}/all/${type.toLowerCase()}`});
             }else{
                 this.$router.push({path: `/search/${this.$route.params.query}/all/${type.toLowerCase()}`});

@@ -7,7 +7,7 @@ import SignUp from '../components/User/signUp';
 import Home from '../components/Home';
 
 import SearchResults from '../components/Search/index';
-import AlbumAndArtistResult from '../components/Search/AlbumAndArtistResult';
+import AlbumAndArtistResult from '../components/Search/albumAndArtistResult';
 import RenderAll from '../components/Search/displayAll';
 
 import PlaylistTable from '../components/Playlist/playlistTable';

@@ -11,7 +11,8 @@
                     placeholder="Search ..."
                     clearable
                     @click:clear="clearSearchQuery"
-                ></v-text-field>
+                >            
+                </v-text-field>
             </v-form>
 
         </v-flex>
