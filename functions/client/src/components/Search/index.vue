@@ -7,7 +7,7 @@
          <v-content v-else>
              <v-container>
                 <v-layout row wrap v-if="albums || artists">
-                    <v-flex xs9>
+                    <v-flex sm8>
                         <v-chip
                             v-if="selectedItems"
                             v-for="(item, index) in selectedItems"
@@ -19,7 +19,8 @@
                         >
                         <v-avatar>
                             <img 
-                                v-if="item.images.length > 0" :src="item.images[0].url"
+                                v-if="item.images.length > 0" 
+                                :src="item.images[0].url"
                             >
                             <v-icon v-else > 
                                 {{ 'person_outline' }} 
@@ -28,10 +29,17 @@
                         {{ item.name }}
                         </v-chip>
                     </v-flex>
-                    <v-flex xs3 v-if="selectedItems.length > 0">
+                    <v-flex 
+                        sm4
+                        v-if="selectedItems.length > 0"
+                    >
+                        <v-btn @click="onGeneratePlaylist" >
+                            Generate Playlist!
+                            <v-icon color="primary">library_music</v-icon>
+                        </v-btn>
                         <v-btn @click="onClearAll">
-                            <v-icon>clear</v-icon>
                             Clear All
+                            <v-icon color="red lighten-2">clear</v-icon>
                         </v-btn>
                     </v-flex>
                 </v-layout>
@@ -79,6 +87,9 @@ export default {
         },
         onClearAll(){
             this.$store.dispatch('removeAllSelectedItems');
+        },
+        onGeneratePlaylist(){
+            console.log('generate playlist');
         }
     }
 }
