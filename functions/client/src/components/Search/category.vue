@@ -5,17 +5,17 @@
             <template v-for="(item, index) in limitItemSize" >
                 <v-list-tile :key="item.id" avatar ripple @click="onClick(index)" class="listItem">
                     <v-list-tile>
-                        <img 
-                            v-if="item.images.length > 0" :src="item.images[0].url"
-                            max-width="50"
-                            height="50"
+                        <v-avatar 
+                            v-bind="{ ['tile']: imageType }"
+                            size="55"
                         >
-                        <v-icon 
-                            v-else
-                            max-width="50"
-                            height="50"> 
-                            {{ 'person_outline' }} 
-                        </v-icon>
+                            <img 
+                                v-if="item.images.length > 0" :src="item.images[0].url"
+                            >
+                            <v-icon v-else > 
+                                {{ 'person_outline' }} 
+                            </v-icon>
+                        </v-avatar>
                     </v-list-tile>
                     <v-list-tile-content>
                         <v-list-tile-title v-html="item.name"></v-list-tile-title>
@@ -25,6 +25,7 @@
             <v-btn 
                 v-if="showMoreButton" 
                 outline color="cyan lighten-1"
+                @click="onShowAllClick"
             >
                 {{ moreText }}
             </v-btn>
@@ -35,8 +36,9 @@
 </template>
 
 <script>
+
 export default {
-    name: 'render',
+    name: 'category',
     props: {
         type: String,
         items: Array,
@@ -61,13 +63,31 @@ export default {
         },
         moreText(){
             return this.type === "Albums" ? 'See all albums' : 'See all artists';
+        },
+        imageType(){
+            if(this.type === "Albums"){
+                return true;
+            }else{
+                return false;
+            }
         }
     },
     methods: {
         onClick(index){
             this.$emit('onClick', { 'type': this.type, 'index' : index});
+        },
+        onShowAllClick(){
+            this.$emit('onShowAllClick', this.type );
         }
     }
 }
 </script>
 
+<style scoped>
+    .listItem {
+        cursor: pointer;
+    }
+    .listItem:hover {
+        background-color: rgb(228,231,234);
+    }
+</style>
