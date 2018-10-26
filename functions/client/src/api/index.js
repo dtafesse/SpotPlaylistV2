@@ -6,6 +6,7 @@ const ROOT_URL_PROD =
 const ROOT_URL = '/server';
 
 export default {
+  spotifySignIn() {},
   fetchAlbumTracks() {
     return fetch('/server/api/album', {
       method: 'GET',
