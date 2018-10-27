@@ -16,14 +16,12 @@
                     >
                         <v-img
                             v-if="item.images.length > 0" 
-                             :src="item.images[0].url"
-                            @click="onClick(index)"
+                             :src="item.images[0].url"  
                         >
                         </v-img>
                         <v-img 
                             v-else
                             :src="defaultImage"
-                            @click="onClick(index)"
                         >
                         </v-img>
                     </v-avatar>
