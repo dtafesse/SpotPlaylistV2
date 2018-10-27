@@ -7,16 +7,6 @@ const ROOT_URL = '/server';
 
 export default {
   spotifySignIn() {},
-  fetchAlbumTracks() {
-    return fetch('/server/api/album', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }).then(response => response.json());
-  },
-
   // temp way to fetch artwork until search by top rated tracks of artists in implement
   fetchArtwork() {
     const id = '6NijWPXUijjGcrdkQFcflv';
@@ -39,16 +29,6 @@ export default {
     }).then(response => response.json());
   },
 
-  fetchTopTracks(artistId) {
-    return fetch(`${ROOT_URL}/api/artists/${artistId}/toptracks`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }).then(response => response.json());
-  },
-
   fetchQueryResults(query) {
     return fetch(`${ROOT_URL}/api/search/${query}`, {
       method: 'GET',
@@ -59,8 +39,18 @@ export default {
     }).then(response => response.json());
   },
 
-  fetchArtistId(artist) {
-    return fetch(`${ROOT_URL}/api/artists/${artist}`, {
+  fetchArtistTopTracks(artistId) {
+    return fetch(`${ROOT_URL}/api/artists/${artistId}/toptracks`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then(response => response.json());
+  },
+
+  fetchAlbumTracks(id) {
+    return fetch(`${ROOT_URL}/api/albums/${id}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

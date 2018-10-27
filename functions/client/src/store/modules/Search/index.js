@@ -59,35 +59,34 @@ const actions = {
       .finally(() => commit('SET_LOADING', false));
   },
 
-  // searchArtistId({ commit, getters }, payload) {
-  //   commit('SET_LOADING', true);
-  //   api
-  //     .fetchArtistId(payload)
-  //     .then(data => {
-  //       if (data.message !== 'Unauthorized') {
-  //         const artistList = data.data.items;
-
-  //         const { statusCode } = data.data;
-  //         if (statusCode === 304 || artistList.length == 0) {
-  //           commit('SET_ARTISTS_SEARCH_QUERY', getters.getArtists);
-  //         } else {
-  //           commit('SET_ARTISTS_SEARCH_QUERY', artistList);
-  //         }
-  //         commit('SET_ARTISTS_SEARCH_QUERY', artistList);
-  //       }
-  //     })
-  //     .catch(err => {
-  //       // eslint-disable-next-line
-  //       console.log(err.message);
-  //     })
-  //     .finally(() => commit('SET_LOADING', false));
-  // },
+  searchAlbumTracks({ commit, getters }, id) {
+    commit('SET_LOADING', true);
+    api
+      .fetchAlbumTracks(id)
+      .then(data => {
+        if (data.message !== 'Unauthorized') {
+          // const artistList = data.data.items;
+          // const { statusCode } = data.data;
+          // if (statusCode === 304 || artistList.length == 0) {
+          //   commit('SET_ARTISTS_SEARCH_QUERY', getters.getArtists);
+          // } else {
+          //   commit('SET_ARTISTS_SEARCH_QUERY', artistList);
+          // }
+          // commit('SET_ARTISTS_SEARCH_QUERY', artistList);
+        }
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err.message);
+      })
+      .finally(() => commit('SET_LOADING', false));
+  },
 
   async searchArtistTopTrack({ dispatch, commit, getters }) {
     commit('SET_LOADING', true);
     let topTracksResponse = undefined;
     try {
-      topTracksResponse = await api.fetchTopTracks(getters.getArtistId);
+      topTracksResponse = await api.fetchArtistTopTracks(getters.getArtistId);
     } catch (err) {
       // eslint-disable-next-line
       console.log(err.message);
