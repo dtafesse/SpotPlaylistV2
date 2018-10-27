@@ -14,13 +14,18 @@
                         v-bind="{ ['tile']: imageType }"
                         size="55"
                     >
-                        <img 
+                        <v-img
                             v-if="item.images.length > 0" 
-                            :src="item.images[0].url"
+                             :src="item.images[0].url"
+                            @click="selected(index)"
                         >
-                        <v-icon v-else > 
-                            {{ 'person_outline' }} 
-                        </v-icon>
+                        </v-img>
+                        <v-img 
+                            v-else
+                            :src="defaultImage"
+                            @click="selected(index)"
+                        >
+                        </v-img>
                     </v-avatar>
                 </v-list-tile>
                 <v-list-tile-content>
@@ -42,6 +47,7 @@
 </template>
 
 <script>
+import config from '../../config/index';
 
 export default {
     name: 'category',
@@ -78,6 +84,9 @@ export default {
             }else{
                 return false;
             }
+        },
+        defaultImage(){
+            return config.defaultImage
         }
     },
     methods: {

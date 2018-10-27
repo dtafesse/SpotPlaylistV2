@@ -18,7 +18,13 @@
                     >
                         <v-img
                             v-if="item.images.length > 0" 
-                            :src="item.images[0].url"
+                             :src="item.images[0].url"
+                            @click="selected(index)"
+                        >
+                        </v-img>
+                        <v-img 
+                            v-else
+                            :src="defaultImage"
                             @click="selected(index)"
                         >
                         </v-img>
@@ -37,6 +43,8 @@
 </template>
 
 <script>
+import config from '../../config/index';
+
 export default {
     name: 'renderAll',
     computed: {
@@ -57,6 +65,9 @@ export default {
             }else{
                 return false;
             }
+        },
+        defaultImage(){
+            return config.defaultImage
         }
     },
     methods: {
