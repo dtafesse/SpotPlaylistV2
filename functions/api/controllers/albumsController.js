@@ -19,35 +19,29 @@ function callSpotifyWebApiClientCredentialGrant() {
     });
 }
 
-exports.getAlbums = (req, res, next) => {
+exports.getAlbumTracks = (req, res, next) => {
   let id;
   if (req.params.id) {
     id = req.params.id;
+
+    callSpotifyWebApiClientCredentialGrant();
+    spotifyWebApi
+      .getAlbumTracks(id)
+      .then(data => {
+        res.status(200).json({
+          confirmation: 'success',
+          data: {
+            items: data.body
+          }
+        });
+        return;
+      })
+      .catch(err => {
+        console.log(err.message);
+        res.status(404).json({
+          confirmation: 'fail',
+          message: err.message
+        });
+      });
   }
-
-  callSpotifyWebApiClientCredentialGrant();
-
-  //   spotifyWebApi
-  //     .search(query, ['album', 'artist'], { limit: 10 })
-  //     .then(data => {
-  //       //const artistId = data.body.artists.items[0].id;
-  //       //   const artistId = data.body.artists.items;
-
-  //       const statusCode = data.statusCode;
-  //       res.status(200).json({
-  //         confirmation: 'success',
-  //         data: {
-  //           items: data.body,
-  //           statusCode
-  //         }
-  //       });
-  //       return;
-  //     })
-  //     .catch(err => {
-  //       console.log(err.message);
-  //       res.status(404).json({
-  //         confirmation: 'fail',
-  //         message: err.message
-  //       });
-  //     });
 };
