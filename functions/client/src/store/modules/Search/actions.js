@@ -1,5 +1,6 @@
 import api from '../../../api';
 import router from '../../../router/index';
+import helpers from '../../../assets/js/helpers';
 
 const TYPE = {
   album: 'albumTracks',
@@ -56,6 +57,7 @@ const actions = {
       }
     });
 
+    // helpers.shuffle(state.playlist);
     dispatch('setPlaylist', getters.getNewGeneratedPlaylist)
       .then(() => {
         dispatch('setSuffle', {
