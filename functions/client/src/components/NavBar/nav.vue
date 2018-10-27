@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import searchBar from './searchBar';
+// import searchBar from './searchBar';
+import searchBar from './searchTextField';
 
 export default {
     name: 'navBar',

@@ -10,13 +10,18 @@
                         <v-form>
                             <v-text-field prepend-icon="person" name="email" label="Email" type="email" color="primary"></v-text-field>
                             <v-text-field prepend-icon="lock" name="password" label="Password" id="password" type="password" color="primary"></v-text-field>
+                            
+                            <v-layout align-center justify-center>
+                                <v-btn color="primary">Submit</v-btn>
+                            </v-layout>
+                        
                         </v-form>
                     </v-card-text>
-                    <v-card-actions>
+                    <!-- <v-card-actions>
                         <v-layout align-center justify-center>
                             <v-btn color="primary">Submit</v-btn>
                         </v-layout>
-                    </v-card-actions>
+                    </v-card-actions> -->
                 </v-card>
             </v-flex>
         </v-layout>
