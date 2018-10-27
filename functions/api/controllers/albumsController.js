@@ -6,32 +6,24 @@ const spotifyWebApi = new SpotifyWebApi({
   clientSecret: keys.CLIENT_SECRET
 });
 
-function callSpotifyWebApiClientCredentialGrant() {
-  spotifyWebApi
-    .clientCredentialsGrant()
-    .then(data => {
-      // Save the access token so that it's used in future calls
-      spotifyWebApi.setAccessToken(data.body['access_token']);
-      return;
-    })
-    .catch(err => {
-      console.log('error retrieving an access token', err);
-    });
-}
-
 exports.getAlbumTracks = (req, res, next) => {
   let id;
   if (req.params.id) {
     id = req.params.id;
 
-    callSpotifyWebApiClientCredentialGrant();
+    //callSpotifyWebApiClientCredentialGrant();
     spotifyWebApi
-      .getAlbumTracks(id)
+      .clientCredentialsGrant()
+      .then(data => {
+        // Save the access token so that it's used in future calls
+        spotifyWebApi.setAccessToken(data.body['access_token']);
+        return spotifyWebApi.getAlbumTracks(id);
+      })
       .then(data => {
         res.status(200).json({
           confirmation: 'success',
           data: {
-            items: data.body
+            items: data.body.items
           }
         });
         return;

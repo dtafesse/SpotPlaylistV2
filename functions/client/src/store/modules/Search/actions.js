@@ -1,5 +1,10 @@
 import api from '../../../api';
 
+const TYPE = {
+  album: 'albumTracks',
+  artist: 'topArtistTracks'
+};
+
 const actions = {
   searchForQueryString({ commit, getters }, payload) {
     commit('SET_LOADING', true);
@@ -8,24 +13,6 @@ const actions = {
       .then(data => {
         if (data.message !== 'Unauthorized') {
           const { items } = data.data;
-          // const results = [];
-
-          // if (items.albums) {
-          //   results.push({ header: 'Albums' });
-          //   items.albums.items.forEach(element => results.push(element));
-
-          //   if (items.artists) {
-          //     results.push({ divider: true });
-          //     results.push({ header: 'Artists' });
-          //     items.artists.items.forEach(element => results.push(element));
-          //   }
-          // } else {
-          //   if (items.artists) {
-          //     results.push({ header: 'Artists' });
-          //     items.artists.items.forEach(element => results.push(element));
-          //   }
-          // }
-
           const { statusCode } = data.data;
           if (statusCode === 304) {
             commit('SET_QUERY_RESULTS_SEARCH_QUERY', getters.queryResult);
@@ -42,40 +29,30 @@ const actions = {
       .finally(() => commit('SET_LOADING', false));
   },
 
-  searchAlbumTracks({ commit, getters }, id) {
+  generatePlaylist({ commit, dispatch, getters }) {
     commit('SET_LOADING', true);
-    api
-      .fetchAlbumTracks(id)
-      .then(data => {
-        if (data.message !== 'Unauthorized') {
-          // const artistList = data.data.items;
-          // const { statusCode } = data.data;
-          // if (statusCode === 304 || artistList.length == 0) {
-          //   commit('SET_ARTISTS_SEARCH_QUERY', getters.getArtists);
-          // } else {
-          //   commit('SET_ARTISTS_SEARCH_QUERY', artistList);
-          // }
-          // commit('SET_ARTISTS_SEARCH_QUERY', artistList);
-        }
-      })
-      .catch(err => {
-        // eslint-disable-next-line
-        console.log(err.message);
-      })
-      .finally(() => commit('SET_LOADING', false));
-  },
 
-  async searchArtistTopTrack({ dispatch, commit, getters }, payload) {
-    commit('SET_LOADING', true);
-    let topTracksResponse = undefined;
-    try {
-      topTracksResponse = await api.fetchArtistTopTracks(getters.getArtistId);
-    } catch (err) {
-      // eslint-disable-next-line
-      console.log(err.message);
-    }
+    const selectedItems = getters.getSelectedItems;
+    selectedItems.forEach(item => {
+      if (item.type === 'album') {
+        let albumPayload = {
+          id: item.id,
+          albumName: item.name,
+          type: TYPE.album,
+          images: item.images
+        };
 
-    dispatch('setPlaylist', topTracksResponse.data)
+        dispatch('searchForAlbumTracks', albumPayload);
+      } else {
+        let artistPayload = {
+          id: item.id,
+          type: TYPE.artist
+        };
+        dispatch('searchArtistTopTrack', artistPayload);
+      }
+    });
+
+    dispatch('setPlaylist', getters.getNewGeneratedPlaylist)
       .then(() => {
         dispatch('setSuffle', {
           shuffle: true,
@@ -87,18 +64,45 @@ const actions = {
         console.log(err.message);
       })
       .finally(() => commit('SET_LOADING', false));
+  },
 
-    /// move this to table componet, set it first track in table component later on
-    // maybe table component should have its own playlist and current track state??
-    // dispatch(
-    //   'setCurrentTrack',
-    //   {
-    //     currentTrack: rootGetters.getCurrentPlaylist[0],
-    //     currentArtwork: rootGetters.getCurrentPlaylist[0].album.images[0].url,
-    //     currentTrackIndex: 0
-    //   },
-    //   { root: true }
-    // );
+  searchForAlbumTracks({ commit }, { id, albumName, type, images }) {
+    api
+      .fetchAlbumTracks(id)
+      .then(data => {
+        let items = data.data.items;
+
+        items.forEach(item => {
+          item.type = type;
+          let album = {
+            images: images,
+            name: albumName
+          };
+          item.album = album;
+          commit('PUSH_TO_GENERATED_PLAYLIST', item);
+        });
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err.message);
+      });
+  },
+
+  searchArtistTopTrack({ commit }, { id, type }) {
+    api
+      .fetchArtistTopTracks(id)
+      .then(data => {
+        let items = data.data;
+
+        items.forEach(item => {
+          item.type = type;
+          commit('PUSH_TO_GENERATED_PLAYLIST', item);
+        });
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err.message);
+      });
   },
   setSelectedArtistId: ({ commit }, payload) => {
     commit('SET_SELECTED_ARTIST_ID', payload);

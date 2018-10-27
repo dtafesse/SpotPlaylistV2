@@ -6,72 +6,19 @@ const spotifyWebApi = new SpotifyWebApi({
   clientSecret: keys.CLIENT_SECRET
 });
 
-spotifyWebApi
-  .clientCredentialsGrant()
-  .then(data => {
-    // Save the access token so that it's used in future calls
-    spotifyWebApi.setAccessToken(data.body['access_token']);
-    spotifyWebApi.setRefreshToken(data.body['refresh_token']);
-    return;
-  })
-  .catch(err => {
-    console.log('error retrieving an access token', err);
-  });
-
-function initalize() {}
-
-function refreshToken() {
-  spotifyWebApi
-    .refreshAccessToken()
-    .then(result => {
-      return spotifyWebApi.setAccessToken(result.body.access_token);
-    })
-    .catch(err => {
-      return err;
-    });
-}
-
-exports.getArtistWithName = (req, res, next) => {
-  let artistName;
-  if (req.params.name) {
-    artistName = req.params.name;
-  }
-
-  //refreshToken();
-
-  spotifyWebApi
-    .searchArtists(artistName, { limit: 10 })
-    .then(data => {
-      //const artistId = data.body.artists.items[0].id;
-      const artistId = data.body.artists.items;
-      const statusCode = data.statusCode;
-      res.status(200).json({
-        confirmation: 'success',
-        data: {
-          items: artistId,
-          statusCode
-        }
-      });
-      return;
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(404).json({
-        confirmation: 'fail',
-        message: err.message
-      });
-    });
-};
-
 exports.getArtistTopTracks = (req, res, next) => {
   let artistId;
   if (req.params.id) {
     artistId = req.params.id;
 
-    //callSpotifyWebApiClientCredentialGrant();
-
     spotifyWebApi
-      .getArtistTopTracks(artistId, 'US')
+      .clientCredentialsGrant()
+      .then(data => {
+        // Save the access token so that it's used in future calls
+        spotifyWebApi.setAccessToken(data.body['access_token']);
+        spotifyWebApi.setRefreshToken(data.body['refresh_token']);
+        return spotifyWebApi.getArtistTopTracks(artistId, 'US');
+      })
       .then(data => {
         res.status(200).json({
           confirmation: 'success',

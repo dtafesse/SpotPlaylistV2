@@ -17,13 +17,13 @@
                         <v-img
                             v-if="item.images.length > 0" 
                              :src="item.images[0].url"
-                            @click="selected(index)"
+                            @click="onClick(index)"
                         >
                         </v-img>
                         <v-img 
                             v-else
                             :src="defaultImage"
-                            @click="selected(index)"
+                            @click="onClick(index)"
                         >
                         </v-img>
                     </v-avatar>

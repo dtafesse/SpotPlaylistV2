@@ -89,7 +89,7 @@ export default {
             this.$store.dispatch('removeAllSelectedItems');
         },
         onGeneratePlaylist(){
-            console.log('generate playlist');
+            this.$store.dispatch('generatePlaylist');
         }
     }
 }

@@ -5,6 +5,16 @@ const ROOT_URL_PROD =
 //const ROOT_URL = ROOT_URL_PROD;
 const ROOT_URL = '/server';
 
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    var error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  }
+}
+
 export default {
   spotifySignIn() {},
   // temp way to fetch artwork until search by top rated tracks of artists in implement
@@ -36,7 +46,9 @@ export default {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
-    }).then(response => response.json());
+    })
+      .then(checkStatus)
+      .then(response => response.json());
   },
 
   fetchArtistTopTracks(artistId) {
@@ -56,6 +68,8 @@ export default {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
-    }).then(response => response.json());
+    })
+      .then(checkStatus)
+      .then(response => response.json());
   }
 };
