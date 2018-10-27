@@ -2,6 +2,9 @@ const mutations = {
   UPDATE_SEARCH_QUERY_CLEAR: (state, payload) => {
     state.searchQueryCleared = payload;
   },
+  RESET_GENERATED_PLAYLIST: state => {
+    state.newGeneratedPlaylist = [];
+  },
   PUSH_TO_GENERATED_PLAYLIST: (state, track) => {
     state.newGeneratedPlaylist.push(track);
   },

@@ -32,8 +32,11 @@ const actions = {
 
   generatePlaylist({ commit, dispatch, getters }) {
     commit('SET_LOADING', true);
+    commit('RESET_GENERATED_PLAYLIST');
 
     const selectedItems = getters.getSelectedItems;
+    commit('REMOVE_ALL_SELECTED_ITEMS');
+
     selectedItems.forEach(item => {
       if (item.type === 'album') {
         let albumPayload = {
@@ -66,7 +69,9 @@ const actions = {
         // eslint-disable-next-line
         console.log(err.message);
       })
-      .finally(() => commit('SET_LOADING', false));
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
   },
 
   searchForAlbumTracks({ commit, getters }, { id, albumName, type, images }) {

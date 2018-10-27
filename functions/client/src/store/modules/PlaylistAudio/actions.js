@@ -1,6 +1,9 @@
 const actions = {
-  setPlaylist: (context, payload) => {
-    context.commit('SET_PLAYLIST', payload);
+  setPlaylist: (context, newPlayist) => {
+    let temp = newPlayist;
+
+    context.commit('SET_PLAYLIST', temp);
+    //context.commit('RESET_GENERATED_PLAYLIST');
   },
   setCurrentTrack: (context, payload) => {
     context.commit('SET_CURRENT_TRACK', payload.currentTrack);
