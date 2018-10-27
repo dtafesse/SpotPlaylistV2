@@ -1,4 +1,5 @@
 import api from '../../../api';
+import router from '../../../router/index';
 
 const TYPE = {
   album: 'albumTracks',
@@ -58,6 +59,8 @@ const actions = {
           shuffle: true,
           loadingNewPlaylist: true
         });
+
+        router.push({ path: '/Playlist' });
       })
       .catch(err => {
         // eslint-disable-next-line
@@ -66,20 +69,28 @@ const actions = {
       .finally(() => commit('SET_LOADING', false));
   },
 
-  searchForAlbumTracks({ commit }, { id, albumName, type, images }) {
+  searchForAlbumTracks({ commit, getters }, { id, albumName, type, images }) {
     api
       .fetchAlbumTracks(id)
       .then(data => {
         let items = data.data.items;
 
         items.forEach(item => {
-          item.type = type;
-          let album = {
-            images: images,
-            name: albumName
-          };
-          item.album = album;
-          commit('PUSH_TO_GENERATED_PLAYLIST', item);
+          const itemPos = getters.getNewGeneratedPlaylist
+            .map(function(e) {
+              return e.id;
+            })
+            .indexOf(item.id);
+
+          if (itemPos === -1) {
+            item.type = type;
+            let album = {
+              images: images,
+              name: albumName
+            };
+            item.album = album;
+            commit('PUSH_TO_GENERATED_PLAYLIST', item);
+          }
         });
       })
       .catch(err => {
@@ -88,15 +99,23 @@ const actions = {
       });
   },
 
-  searchArtistTopTrack({ commit }, { id, type }) {
+  searchArtistTopTrack({ commit, getters }, { id, type }) {
     api
       .fetchArtistTopTracks(id)
       .then(data => {
         let items = data.data;
 
         items.forEach(item => {
-          item.type = type;
-          commit('PUSH_TO_GENERATED_PLAYLIST', item);
+          const itemPos = getters.getNewGeneratedPlaylist
+            .map(function(e) {
+              return e.id;
+            })
+            .indexOf(item.id);
+
+          if (itemPos === -1) {
+            item.type = type;
+            commit('PUSH_TO_GENERATED_PLAYLIST', item);
+          }
         });
       })
       .catch(err => {
