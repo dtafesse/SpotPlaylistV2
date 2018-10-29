@@ -11,6 +11,9 @@
                     placeholder="Search ..."
                     clearable
                     @click:clear="clearSearchQuery"
+                    autocomplete="off"
+                    autocorrect="off"
+                    spellcheck="false"
                 >            
                 </v-text-field>
             </v-form>
