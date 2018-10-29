@@ -28,6 +28,15 @@
                 </v-list-tile>
                 <v-list-tile-content>
                     <v-list-tile-title v-html="item.name"></v-list-tile-title>
+                    <span v-if="selectedItems">
+                        <v-icon 
+                            v-if="selectedItems.indexOf(item.id) !== -1" 
+                            color="primary"
+                            right
+                        >
+                            check_circle_outline
+                        </v-icon>
+                    </span>
                 </v-list-tile-content>
             </v-list-tile>
         </template>
@@ -52,6 +61,7 @@ export default {
     props: {
         type: String,
         items: Array,
+        selectedItems: Array,
         size: Number
     },
     computed: {

@@ -34,6 +34,13 @@
                         @click="selected(index)"
                     >
                         {{ item.name }}
+
+                        <span v-if="selectedItemsIds">
+                            <v-icon v-if="selectedItemsIds.indexOf(item.id) !== -1" color="primary">
+                                check_circle_outline
+                            </v-icon>
+                        </span>
+
                     </v-card-title>
                 </v-card>
             </v-flex>
@@ -57,6 +64,18 @@ export default {
                 return this.$store.getters.getQueryResult.artists
                     ? this.$store.getters.getQueryResult.artists.items
                     : null;
+            }
+        },
+        selectedItemsIds(){
+            let selectedItems = this.$store.getters.getSelectedItems;
+            let selectedIds = [];
+            if(selectedItems) {
+                selectedItems.forEach(item => {
+                    selectedIds.push(item.id);
+                })
+                return selectedIds;
+            }else{
+                return null;
             }
         },
         imageType(){

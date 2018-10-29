@@ -5,6 +5,7 @@
                 <category  
                     :type="'Albums'"    
                     :items="albums"
+                    :selectedItems="selectedItemsIds"
                     :size="5"
                     @onClick="handleOnClick"
                     @onShowAllClick="handleShowAllChick"
@@ -14,6 +15,7 @@
                 <category  
                     :type="'Artists'"    
                     :items="artists"
+                    :selectedItems="selectedItemsIds"
                     :size="5"
                     @onClick="handleOnClick"
                     @onShowAllClick="handleShowAllChick"
@@ -44,6 +46,18 @@ export default {
                 ? this.$store.getters.getQueryResult.artists.items
                 : null;
         },
+        selectedItemsIds(){
+            let selectedItems = this.$store.getters.getSelectedItems;
+            let selectedIds = [];
+            if(selectedItems) {
+                selectedItems.forEach(item => {
+                    selectedIds.push(item.id);
+                })
+                return selectedIds;
+            }else{
+                return null;
+            }
+        }
     },
     methods: {
         handleOnClick(selectedItem){
