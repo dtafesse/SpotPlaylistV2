@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+let request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 
@@ -9,7 +9,8 @@ const keys = require('../../config/keys.js');
 
 const client_id = keys.CLIENT_ID; // Your client id
 const client_secret = keys.CLIENT_SECRET; // Your secret
-const redirect_uri = 'http://localhost:5000/server/api/auth/callback/'; // Your redirect uri
+const redirect_uri = 'http://localhost:8080/server/api/auth/callback/'; // Your redirect uri
+
 
 const spotifyWebApi = new SpotifyWebApi({
   clientId: client_id,
@@ -17,7 +18,7 @@ const spotifyWebApi = new SpotifyWebApi({
   redirectUrl: redirect_uri
 });
 
-let authorizationCode;
+var authorizationCode;
 const stateKey = 'spotify_auth_state'; 
 
 function generateRandomString (length) {
@@ -36,12 +37,13 @@ router.get("/login", (req, res) => {
     let scope = 'user-read-private user-read-email';
     res.redirect('https://accounts.spotify.com/authorize?' +
       querystring.stringify({
-        response_type: 'code',
         client_id: client_id,
+        response_type: 'code',
         scope: scope,
         redirect_uri: redirect_uri,
         state: state
-      }));
+      })
+      );
 });
 
 router.get('/callback', (req, res) => {
@@ -49,19 +51,30 @@ router.get('/callback', (req, res) => {
     // your application requests refresh and access tokens
     // after checking the state parameter
   
-    let code = req.query.code || null;
-    let state = req.query.state || null;
-    let storedState = req.cookies ? req.cookies[stateKey] : null;
-  
-    if (state === null || state !== storedState) {
+    var code = req.query.code || null;
+    var state = req.query.state || null;
+    var storedState = req.cookies ? req.cookies[stateKey] : null;
+    console.log('CODE: ' + code);
+    console.log('state: ' + state);
+    console.log('stateKey: ' + stateKey);
+    console.log('storedState: ' + storedState);
+
+    if ((state === null) || (state !== storedState)) {
       res.redirect('/#' +
         querystring.stringify({
           error: 'state_mismatch'
         }));
-    } else {
-      res.clearCookie(stateKey);   
-      console.log(code);   
     }
-  });
-  
+     else {
+      res.clearCookie(stateKey);   
+      spotifyWebApi.authorizationCodeGrant(code).then(
+        data => {
+          let authorizationCode = data.body["access_token"];
+        }
+        
+      ).catch( err => 
+        console.log(err.message));  
+  }
+});
+
 module.exports = router;
