@@ -99,6 +99,8 @@ const actions = {
             commit('PUSH_TO_GENERATED_PLAYLIST', item);
           }
         });
+
+        helpers.shuffle(getters.getNewGeneratedPlaylist);
       })
       .catch(err => {
         // eslint-disable-next-line
@@ -124,6 +126,8 @@ const actions = {
             commit('PUSH_TO_GENERATED_PLAYLIST', item);
           }
         });
+
+        helpers.shuffle(getters.getNewGeneratedPlaylist);
       })
       .catch(err => {
         // eslint-disable-next-line
