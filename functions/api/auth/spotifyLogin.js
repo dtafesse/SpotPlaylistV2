@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-let request = require('request');
+
 const querystring = require('querystring');
-const cookieParser = require('cookie-parser');
+
 
 const SpotifyWebApi = require('spotify-web-api-node');
 const keys = require('../../config/keys.js');
@@ -20,61 +20,55 @@ const spotifyWebApi = new SpotifyWebApi({
 
 var authorizationCode;
 const stateKey = 'spotify_auth_state'; 
-
-function generateRandomString (length) {
-    let text = '';
-    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  
-    for (let i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-  };
+//var authorizeURL = spotifyWebApi.clientCredentialsGrant();
 
 router.get("/login", (req, res) => {   
-    let state = generateRandomString(16);
-    res.cookie(stateKey, state);
+    //console.log('authurl: ' + JSON.stringify(authorizeURL));
     let scope = 'user-read-private user-read-email';
     res.redirect('https://accounts.spotify.com/authorize?' +
       querystring.stringify({
         client_id: client_id,
         response_type: 'code',
         scope: scope,
-        redirect_uri: redirect_uri,
-        state: state
+        redirect_uri: redirect_uri
       })
       );
 });
+//router.post("https://accounts.spotify.com/api/token",)
+// var authOptions = {
+//   url: 'https://accounts.spotify.com/api/token',
+//   form: {
+//     code: code,
+//     redirect_uri: redirect_uri,
+//     grant_type: 'authorization_code'
+//   }
+// };
 
 router.get('/callback', (req, res) => {
 
     // your application requests refresh and access tokens
     // after checking the state parameter
   
-    var code = req.query.code || null;
-    var state = req.query.state || null;
-    var storedState = req.cookies ? req.cookies[stateKey] : null;
-    console.log('CODE: ' + code);
-    console.log('state: ' + state);
-    console.log('stateKey: ' + stateKey);
-    console.log('storedState: ' + storedState);
-
-    if ((state === null) || (state !== storedState)) {
-      res.redirect('/#' +
-        querystring.stringify({
-          error: 'state_mismatch'
-        }));
-    }
-     else {
-      res.clearCookie(stateKey);   
-      spotifyWebApi.authorizationCodeGrant(code).then(
-        data => {
-          let authorizationCode = data.body["access_token"];
-        }
-        
-      ).catch( err => 
-        console.log(err.message));  
-  }
+    var code = req.query.code;
+      console.log(code);
+      // spotifyWebApi.authorizationCodeGrant(code).then(
+      //   data => {
+      //     let authorizationCode = data.body["access_token"];
+      //     // spotifyWebApi.setAccessToken(data.body['access_token']);
+      //     // spotifyWebApi.setRefreshToken(data.body['refresh_token']);
+      //   }
+      spotifyWebApi.setAccessToken(code);
+      console.log(spotifyWebApi.getAccessToken());
+      // ).catch( err => {
+      //   console.log(err.message);  
+        //console.log(spotifyWebApi.getAccessToken());
+      //});
+      res.redirect('../../../../home');
 });
 
+router.get('/home',(req, res) =>
+{
+console.log("hey you made it this far");
+console.log(spotifyWebApi.getAccessToken());
+});
 module.exports = router;
