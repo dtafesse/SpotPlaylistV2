@@ -7,15 +7,15 @@
                         <v-toolbar-title>Sign Up</v-toolbar-title>
                     </v-toolbar>
                     <v-card-text>
-                        <v-form>
+                        <v-form @submit="onSubmit">
                             <v-text-field prepend-icon="person" name="email" label="Email" type="email" color="primary"></v-text-field>
                             <v-text-field prepend-icon="lock" name="password" label="Password" id="password" type="password" color="primary"></v-text-field>
                             <v-text-field prepend-icon="lock" name="confirmPassword" label="Confirm Password" id="confirmPassword" type="password" color="primary"></v-text-field>
+                            <v-layout align-center justify-center>
+                                <v-btn color="primary">Submit</v-btn>
+                            </v-layout>
                         </v-form>
                     </v-card-text>
-                    <v-layout align-center justify-center>
-                        <v-btn color="primary">Submit</v-btn>
-                    </v-layout>
                 </v-card>
             </v-flex>
         </v-layout>
@@ -24,7 +24,19 @@
 
 <script>
 export default {
-    name: 'signUp'
+    name: 'signUp',
+    methods: {
+        onSubmit(){
+            //// firebase signup 
+
+
+
+            /// Spotify Linking
+
+            
+
+        }
+    }
 }
 </script>
 

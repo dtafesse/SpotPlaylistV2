@@ -1,13 +1,8 @@
 <template>
     <v-container grid-list-md text-xs-center my-5 pt-2 >
-        <v-layout v-if="loading" align-center justify-center row fill-height >
-            <v-progress-circular
-                :size="70"
-                :width="7"
-                 color="primary"
-                indeterminate
-            ></v-progress-circular>
-        </v-layout>
+
+        <Loader v-if="loading" :width="7" :size="70" />
+        
         <v-layout v-else row>
             <v-flex sm5 v-if="$vuetify.breakpoint.smAndUp">
                 <v-card v-if="currentlySelectedTrack">
@@ -106,7 +101,7 @@ export default {
         },
         loading(){
             return this.$store.getters.isLoading;
-        },
+        }
     },
     methods: {
         // onClickTrack(index) {
