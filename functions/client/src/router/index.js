@@ -12,7 +12,7 @@ import RenderAll from '../components/Search/displayAll';
 
 import PlaylistTable from '../components/Playlist/playlistTable';
 import SavedPlaylists from '../components/Playlist/playlistSaved';
-
+import Landing from '../components/Landing/landing';
 Vue.use(Router);
 
 export default new Router({
@@ -55,6 +55,11 @@ export default new Router({
       path: '/signup',
       name: 'Signup',
       component: SignUp
+    },
+    {
+      path: '/landing',
+      name: 'Landing',
+      component: Landing
     }
   ],
   mode: 'history'

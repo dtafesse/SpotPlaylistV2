@@ -1,4 +1,3 @@
-// const ROOT_URL = 'https://spotrestapi-kgfipe.turbo360-vertex.com';
 const ROOT_URL_PROD =
   'https://us-central1-spotplaylist-dev.cloudfunctions.net/server';
 
@@ -16,7 +15,12 @@ function checkStatus(response) {
 }
 
 export default {
-  spotifySignIn() {},
+  loginSpotify() {
+    window.location = window.location.href.includes('localhost')
+      ? 'http://localhost:5000/spotplaylist-dev/us-central1/server/api/auth/login'
+      : `${ROOT_URL_PROD}/api/auth/login`;
+  },
+  
   // temp way to fetch artwork until search by top rated tracks of artists in implement
   fetchArtwork() {
     const id = '6NijWPXUijjGcrdkQFcflv';
