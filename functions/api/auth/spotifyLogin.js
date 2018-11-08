@@ -38,7 +38,6 @@ router.get('/callback', (req, res) => {
   spotifyWebApi
     .authorizationCodeGrant(authorizationCode)
     .then(data => {
-      console.log('herr in callback');
       let accessCode = data.body['access_token'];
       let uri = 'http://localhost:8080';
       return res.redirect(uri + '?access_token=' + accessCode);
