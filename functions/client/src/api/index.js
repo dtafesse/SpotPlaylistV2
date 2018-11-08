@@ -6,6 +6,15 @@ const ROOT_URL_PROD =
 const ROOT_URL = '/server';
 
 export default {
+  loginSpotify() {
+    return fetch('/server/api/auth/login', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then(response => response.json());
+  },
   fetchAlbumTracks() {
     return fetch('/server/api/album', {
       method: 'GET',

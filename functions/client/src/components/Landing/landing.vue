@@ -14,7 +14,7 @@
                         </p>
                         <br>
                         <p>
-                         <a href='http://localhost:5000/spotplaylist-dev/us-central1/server/api/auth/login'>Log into Spotify</a>  
+                         <button @click="loginSpotify">Log into Spotify</button>  
                         </p>   
                     </v-card-text>                   
                 </v-card>
@@ -24,8 +24,14 @@
 </template>
 
 <script>
+import api from '../../api';
 export default {
-    name: 'landing'
+    name: 'landing',
+    methods: {
+         loginSpotify() {
+             api.loginSpotify();
+         }
+    }
 }
 
 </script>
