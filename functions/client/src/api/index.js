@@ -1,4 +1,3 @@
-// const ROOT_URL = 'https://spotrestapi-kgfipe.turbo360-vertex.com';
 const ROOT_URL_PROD =
   'https://us-central1-spotplaylist-dev.cloudfunctions.net/server';
 
@@ -7,13 +6,9 @@ const ROOT_URL = '/server';
 
 export default {
   loginSpotify() {
-    return fetch('/server/api/auth/login', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }).then(response => response.json());
+    window.location = window.location.href.includes('localhost')
+      ? 'http://localhost:5000/spotplaylist-dev/us-central1/server/api/auth/login'
+      : `${ROOT_URL_PROD}/api/auth/login`;
   },
   fetchAlbumTracks() {
     return fetch('/server/api/album', {

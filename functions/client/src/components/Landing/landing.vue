@@ -29,7 +29,7 @@ export default {
     name: 'landing',
     methods: {
          loginSpotify() {
-             api.loginSpotify();
+            api.loginSpotify();
          }
     }
 }
