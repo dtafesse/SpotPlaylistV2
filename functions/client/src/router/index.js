@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import SigIn from '../components/User/signIn';
+import SignIn from '../components/User/signIn';
 import SignUp from '../components/User/signUp';
 
 import Home from '../components/Home';
+import SpotifyAuthHandler from '../components/User/spotifyAuthHandler';
 
 import SearchResults from '../components/Search/index';
 import AlbumAndArtistResult from '../components/Search/AlbumAndArtistResult';
@@ -49,7 +50,7 @@ export default new Router({
     {
       path: '/signin',
       name: 'Signin',
-      component: SigIn
+      component: SignIn
     },
     {
       path: '/signup',
@@ -60,6 +61,11 @@ export default new Router({
       path: '/landing',
       name: 'Landing',
       component: Landing
+    },
+    {
+      path: '/oauth/callback',
+      name: 'spotifyAuthHandler',
+      component: SpotifyAuthHandler
     }
   ],
   mode: 'history'

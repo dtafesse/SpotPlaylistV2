@@ -13,7 +13,7 @@
                         <router-link to="../saved/playlists">Enter as Guest</router-link>    
                         </p>
                         <br>
-                        <p>
+                        <p v-if="!isSpotifyLoggedIn">
                          <button @click="loginSpotify">Log into Spotify</button>  
                         </p>   
                     </v-card-text>                   
@@ -24,12 +24,17 @@
 </template>
 
 <script>
-import api from '../../api';
+
 export default {
     name: 'landing',
+    computed: {
+        isSpotifyLoggedIn(){
+           return this.$store.getters.isSpotifyLoggedIn;
+        }
+    },
     methods: {
          loginSpotify() {
-            api.loginSpotify();
+            this.$store.dispatch("loginSpotify");
          }
     }
 }
