@@ -123,11 +123,18 @@ export default {
         this.$store.dispatch('setAudioElement', this.$refs.audioElement );
     },
     beforeDestroy(){
+        console.log('1');
         this.$el.removeEventListener('mouseup', this.resetMouseDown);
+        console.log('2');
+        console.log(this.$store);
         this.$store.getAudioElement.removeEventListener('canplay', this.handleLoad);
+        console.log('3');
         this.$store.getAudioElement.removeEventListener('timeupdate', this.handleUpdateTimeProgressBar);
+        console.log('4');
         this.$store.getAudioElement.removeEventListener('volumechange', this.handleUpdateVolumeProgressBar);
+        console.log('5');
         this.$store.getAudioElement.removeEventListener('ended', this.onNextSong);
+        console.log('6');
     }
 }
 </script>
