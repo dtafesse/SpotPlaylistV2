@@ -66,7 +66,6 @@ export default {
     },
     methods: {
         routeItem(item){
-            console.log({item});
             if(item.title === "Sign In"){
                 this.signIn();
             }else if(item.title === "Sign Up"){

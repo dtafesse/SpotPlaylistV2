@@ -28,9 +28,9 @@ const actions = {
     window.localStorage.setItem('spotifyAuthRefreshCode', query.refresh_token);
     window.localStorage.setItem('spotifyAuthExpiresIn', query.expires_in);
 
+    let tokenExpirationInMilliSeconds = (Number(query.expires_in) - 200) * 1000;
+
     refreshTokenInterval = setInterval(() => {
-      let tokenExpiration = new Date().getTime() / 1000 + query.expires_in;
-      console.log({ tokenExpiration });
       api
         .fetchSpotifyRefreshToken(query.refresh_token)
         .then(({ data }) => {
@@ -41,7 +41,7 @@ const actions = {
           });
         })
         .catch(err => console.log(err.message));
-    }, 3000);
+    }, tokenExpirationInMilliSeconds);
 
     router.push('/saved/playlists');
   },
