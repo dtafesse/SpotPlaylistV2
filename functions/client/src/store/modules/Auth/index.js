@@ -3,37 +3,52 @@ import queryString from 'query-string';
 import router from '../../../router/index';
 
 const state = {
-    spotifyAuthCode: window.localStorage.getItem("spotAuthCode")
+  spotifyAuthAccessCode: window.localStorage.getItem('spotifyAuthAccessCode'),
+  spotifyAuthRefreshCode: window.localStorage.getItem('spotifyAuthRefreshCode'),
+  spotifyAuthExpiresIn: window.localStorage.getItem('spotifyAuthExpiresIn')
 };
 const getters = {
-    isSpotifyLoggedIn: state => !!state.spotifyAuthCode
+  isSpotifyLoggedIn: state => !!state.spotifyAuthAccessCode
 };
 const actions = {
-    loginSpotify: () => { 
-        api.loginSpotify();
-    },
+  loginSpotify: () => {
+    api.loginSpotify();
+  },
 
-    finalizeSpotifyLogin: ({commit}, searchQuery) => {
-        const query = queryString.parse(searchQuery);
-        commit("setSpotifyAuthCode", query.access_token);
-        window.localStorage.setItem("spotAuthCode", query.access_token);
-        router.push('/saved/playlists');
-    },
-    logoutSpotify: ({commit}) => {
-        commit("setSpotifyAuthCode", null);
-        window.localStorage.removeItem("spotAuthCode");
-    }
-    
+  finalizeSpotifyLogin: ({ commit }, searchQuery) => {
+    const query = queryString.parse(searchQuery);
+    commit('setSpotifyAuthCodes', {
+      access_token: query.access_token,
+      refresh_token: query.refresh_token,
+      expires_in: query.expires_in
+    });
+    window.localStorage.setItem('spotifyAuthAccessCode', query.access_token);
+    window.localStorage.setItem('spotifyAuthRefreshCode', query.refresh_token);
+    window.localStorage.setItem('spotifyAuthExpiresIn', query.expires_in);
+    router.push('/saved/playlists');
+  },
+  logoutSpotify: ({ commit }) => {
+    commit('setSpotifyAuthCodes', {
+      access_token: null,
+      refresh_token: null,
+      expires_in: null
+    });
+    window.localStorage.removeItem('spotifyAuthAccessCode');
+    window.localStorage.removeItem('spotifyAuthRefreshCode');
+    window.localStorage.removeItem('spotifyAuthExpiresIn');
+  }
 };
 const mutations = {
-    setSpotifyAuthCode: (state, access_token) =>{
-        state.spotifyAuthCode = access_token;
-    }
+  setSpotifyAuthCodes: (state, { access_token, refresh_token, expires_in }) => {
+    state.spotifyAuthAccessCode = access_token;
+    state.spotifyAuthRefreshCode = refresh_token;
+    state.spotifyAuthExpiresIn = expires_in;
+  }
 };
 
-export default{
-    state,
-    getters,
-    actions,
-    mutations
-}
+export default {
+  state,
+  getters,
+  actions,
+  mutations
+};
