@@ -20,7 +20,7 @@ const actions = {
     api.loginSpotify();
   },
 
-  finalizeSpotifyLogin: ({ commit, dispatch }, searchQuery) => {
+  finalizeSpotifyLogin: ({ commit }, searchQuery) => {
     const query = queryString.parse(searchQuery);
     commit('setSpotifyAuthCodes', {
       access_token: query.access_token,
@@ -47,11 +47,14 @@ const actions = {
     window.localStorage.removeItem('spotifyAuthAccessCode');
     window.localStorage.removeItem('spotifyAuthRefreshCode');
     window.localStorage.removeItem('spotifyAuthExpiresIn');
+
+    router.push('/landing');
   },
   setSpotifyRefreshInterval: ({ commit, getters }) => {
     if (getters.isSpotifyLoggedIn & !isRefreshTokenIntervalSet) {
       isRefreshTokenIntervalSet = true;
-      let tokenExpirationInSeconds = Number(getters.getExpiresIn) - 200;
+      let tokenExpirationInMilliSeconds =
+        (Number(getters.getExpiresIn) - 200) * 1000;
 
       refreshTokenInterval = setInterval(() => {
         api
@@ -64,7 +67,7 @@ const actions = {
             });
           })
           .catch(err => console.log(err.message));
-      }, 3000);
+      }, tokenExpirationInMilliSeconds);
     }
   },
 

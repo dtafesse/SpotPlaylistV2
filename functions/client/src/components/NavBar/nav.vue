@@ -22,7 +22,7 @@
 
             <v-toolbar-items class="hidden-xs-only">
                 <v-btn
-                    flat v-for="item in menuItem" :key="item.title" @click="routeItem(item)"
+                    flat v-for="item in menuItem" :key="item.title" :to="item.link" @click="routeItem(item)"
                 >
                     <v-icon left dark>{{ item.icon }}</v-icon>
                 </v-btn>
@@ -82,7 +82,7 @@ export default {
         },
         logout() {
             this.$store.dispatch('logoutSpotify');
-            this.$router.push({path: '/landing'});
+            // inside of the dispatched func, this.$router.push({path: '/landing'});
         },
         onScrollTop(value){
             if(this.dropDownSugDivRef){
