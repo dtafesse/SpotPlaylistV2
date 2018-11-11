@@ -8,8 +8,7 @@ const keys = require('../../config/keys.js');
 
 const client_id = keys.CLIENT_ID; // Your client id
 const client_secret = keys.CLIENT_SECRET; // Your secret
-const redirect_uri =
-  'http://localhost:5000/spotplaylist-dev/us-central1/server/api/auth/callback'; // Your redirect uri
+const redirect_uri = keys.REDIRECT_URI;
 
 router.get('/login', (req, res) => {
   var scope = 'user-read-private user-read-email';
@@ -39,7 +38,7 @@ router.get('/callback', (req, res) => {
     .authorizationCodeGrant(authorizationCode)
     .then(data => {
       let accessToken = data.body['access_token'];
-      let uri = 'http://localhost:8080/oauth/callback';
+      let uri = keys.FRONT_END_URI_CALLBACK;
       return res.redirect(uri + '?access_token=' + accessToken);
     })
     .catch(err => {
