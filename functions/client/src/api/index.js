@@ -23,6 +23,20 @@ export default {
       : `${ROOT_URL_PROD}/api/auth/login`;
   },
 
+  fetchSpotifyRefreshToken(refresh_token) {
+    let uri = new URL(
+      'http://localhost:5000/spotplaylist-dev/us-central1/server/api/auth/refresh_token'
+    );
+    uri.searchParams.append('refresh_token', refresh_token);
+    return fetch(uri, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then(response => response.json());
+  },
+
   // temp way to fetch artwork until search by top rated tracks of artists in implement
   fetchArtwork() {
     const id = '6NijWPXUijjGcrdkQFcflv';

@@ -62,20 +62,24 @@ router.get('/refresh_token', (req, res) => {
   spotifyWebApi
     .refreshAccessToken()
     .then(data => {
-      // to direct them back to the originting url path,
-      // this route will be called just before the time expires,
-      // this logic will be handled client side
-      backURL = req.header('Referer');
-      return res.redirect(
-        backURL +
-          '?' +
-          querystring.stringify({
+      return res.status(200).json({
+        confirmation: 'success',
+        data: {
+          items: {
             access_token: data.body.access_token,
+            refresh_token: req.query.refresh_token,
             expires_in: data.body.expires_in
-          })
-      );
+          }
+        }
+      });
     })
-    .catch(err => err.message);
+    .catch(err => {
+      console.log(err.message);
+      res.status(404).json({
+        confirmation: 'fail',
+        message: err.message
+      });
+    });
 });
 
 module.exports = router;

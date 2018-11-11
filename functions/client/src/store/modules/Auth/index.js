@@ -2,6 +2,8 @@ import api from '../../../api/index';
 import queryString from 'query-string';
 import router from '../../../router/index';
 
+let refreshTokenInterval;
+
 const state = {
   spotifyAuthAccessCode: window.localStorage.getItem('spotifyAuthAccessCode'),
   spotifyAuthRefreshCode: window.localStorage.getItem('spotifyAuthRefreshCode'),
@@ -25,6 +27,22 @@ const actions = {
     window.localStorage.setItem('spotifyAuthAccessCode', query.access_token);
     window.localStorage.setItem('spotifyAuthRefreshCode', query.refresh_token);
     window.localStorage.setItem('spotifyAuthExpiresIn', query.expires_in);
+
+    refreshTokenInterval = setInterval(() => {
+      let tokenExpiration = new Date().getTime() / 1000 + query.expires_in;
+      console.log({ tokenExpiration });
+      api
+        .fetchSpotifyRefreshToken(query.refresh_token)
+        .then(({ data }) => {
+          commit('setSpotifyAuthCodes', {
+            access_token: data.items.access_token,
+            refresh_token: data.items.refresh_token,
+            expires_in: data.items.expires_in
+          });
+        })
+        .catch(err => console.log(err.message));
+    }, 3000);
+
     router.push('/saved/playlists');
   },
   logoutSpotify: ({ commit }) => {
@@ -33,6 +51,9 @@ const actions = {
       refresh_token: null,
       expires_in: null
     });
+
+    clearInterval(refreshTokenInterval);
+
     window.localStorage.removeItem('spotifyAuthAccessCode');
     window.localStorage.removeItem('spotifyAuthRefreshCode');
     window.localStorage.removeItem('spotifyAuthExpiresIn');
