@@ -8,7 +8,10 @@ const state = {
     user: null
 };
 const getters = {
-    isSpotifyLoggedIn: state => !!state.spotifyAuthCode
+    isSpotifyLoggedIn: state => !!state.spotifyAuthCode,
+    user (state) {
+        return state.user
+    }
 };
 const actions = {
     loginSpotify: () => { 
@@ -27,9 +30,9 @@ const actions = {
     firebaseSignUpUser ({commit}, signUpRequest) {
         firebase.auth().createUserWithEmailAndPassword(signUpRequest.email, signUpRequest.password)
             .then(
-                user => {
+                response => {
                     const newUser = {
-                        id: user.UID
+                        id: response.user.uid
                     }
                     commit('setUser', newUser)
                 }
@@ -43,9 +46,9 @@ const actions = {
     firebaseSignInUser ({commit}, signInRequest) {
         firebase.auth().signInWithEmailAndPassword(signInRequest.email, signInRequest.password)
             .then(
-                user => {
+                response => {
                     const oldUser = {
-                        id: user.UID
+                        id: response.user.uid
                     }
                     commit('setUser', oldUser)
                 }

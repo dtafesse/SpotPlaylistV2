@@ -12,6 +12,7 @@
                             <v-text-field v-model="password" prepend-icon="lock" name="password" label="Password" id="password" type="password" color="primary" required></v-text-field>
                             <v-layout align-center justify-center>
                                 <v-btn @click="navHome" color="primary">Cancel</v-btn>
+                                <v-btn @click="navSignUp" color="primary">Sign Up</v-btn>
                                 <v-btn type="submit" color="primary">Log In</v-btn>
                             </v-layout>
                         </v-form>
@@ -36,10 +37,15 @@ export default {
             password: ''
         }
     },
+    computed: {
+        user() {
+            return this.$store.getters.user
+        }
+    },
     watch: {
         user (value) {
             if (value !== null && value !== undefined) {
-                navHome(); 
+                this.navHome(); 
             }
         }
     },
@@ -48,7 +54,10 @@ export default {
             this.$store.dispatch('firebaseSignInUser',{email: this.email, password: this.password});
         },
         navHome() {
-            this.$router.push({path: '/'});
+            this.$router.push({path: '/saved/playlists'});
+        },
+        navSignUp() {
+            this.$router.push({path: '/signup'});
         }
     }
 }

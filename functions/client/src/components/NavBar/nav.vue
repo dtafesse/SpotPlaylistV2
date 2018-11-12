@@ -60,8 +60,15 @@ export default {
                     icon: 'exit_to_app', title: 'Logout', link: '/'
                 }
             ];
-            // if(this.userIsAuth) => change icons
+            if(this.userIsAuth) {
+                menuItemIcons = [
+                    { icon: 'exit_to_app', title: 'Logout', link: '/'}
+                ];
+            }
             return menuItemIcons;
+        },
+        userIsAuth() {
+            return this.$store.getters.user !== null && this.$store.getters.user !== undefined
         }
     },
     methods: {

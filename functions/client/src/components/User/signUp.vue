@@ -13,7 +13,8 @@
                             <v-text-field v-model="confirmPassword" prepend-icon="lock" name="confirmPassword" label="Confirm Password" id="confirmPassword" type="password" color="primary" :rules="[validatePassword]"></v-text-field>
                             <v-layout align-center justify-center>
                                 <v-btn @click="navHome" color="primary">Cancel</v-btn>
-                                <v-btn type="submit" color="primary">Sign Up</v-btn>
+                                <v-btn @click="navSignIn" color="primary">Sign In</v-btn>
+                                <v-btn type="submit" color="primary">Create Account</v-btn>
                             </v-layout>
                         </v-form>
                     </v-card-text>
@@ -36,12 +37,15 @@ export default {
     computed: {
         validatePassword() {
             return this.password !== this.confirmPassword ? 'Entered passwords are not the same' : ''
+        },
+        user() {
+            return this.$store.getters.user
         }
     },
     watch: {
         user (value) {
             if (value !== null && value !== undefined) {
-                navHome();
+                this.navHome();
             }
         }
     },
@@ -57,7 +61,7 @@ export default {
 
         },
         navHome() {
-            this.$router.push({path: '/'});
+            this.$router.push({path: '/saved/playlists'});
         },
         navSignIn() {
             this.$router.push({path: '/signin'});
