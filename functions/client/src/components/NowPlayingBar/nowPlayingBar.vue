@@ -18,12 +18,15 @@
                     <audioControl />
                 </v-flex>
             </v-layout>
-            <v-layout>
-                <audio 
-                    ref="audioElement" 
-                    :src="setAudioSource" 
+            <v-layout v-if="this.$store.getters.getCurrentTrack">
+                <audio ref="audioElement" :src="setAudioSource" preload="auto"
+                    @loadeddata="handleLoad" @timeupdate="handleUpdateTimeProgressBar"  
+                    @volumechange="handleUpdateVolumeProgressBar" @ended="onNextSong"
                     style="display:none">
                 </audio>
+            </v-layout>
+            <v-layout v-else>
+                <audio ref="audioElement"></audio>
             </v-layout>
         </v-container>
     </v-footer>    
@@ -53,27 +56,6 @@ export default {
             this.$store.dispatch('setNextTrack');
         },
         handleLoad(){
-            //// maybe here figure out the current playlist??
-
-            // if(this.$store.getters.isMobileAudioElementFirstClick){
-            //     this.$store.commit('MOBILE_AUDIO_ELEMENT_FIRST_CLICK', false);
-            // }else{
-            //     if(this.$store.getters.getAudioElement.readyState >= 2 ){
-            //         if(this.$store.getters.isAutoPlay) {
-            //             this.$store.dispatch('playPauseSong', {
-            //                 playing: false,
-            //                 playSong: true
-            //             });
-            //         }
-
-            //         this.$store.dispatch('setDuration', this.$store.getters.getAudioElement.duration);
-            //         this.$store.dispatch('setRemainingTime', helpers.formatTime(this.$store.getters.getDuration));
-                
-            //     } else {
-            //         throw new Error('Failed to load sound file');
-            //     }
-            // }
-            
             if(this.$store.getters.getAudioElement.readyState >= 2 ){
                 if(this.$store.getters.isAutoPlay) {
                     this.$store.dispatch('playPauseSong', {
@@ -115,19 +97,10 @@ export default {
     },
     mounted(){
         this.$el.addEventListener('mouseup', this.resetMouseDown);
-        this.$refs.audioElement.addEventListener('canplay', this.handleLoad);
-        this.$refs.audioElement.addEventListener('timeupdate', this.handleUpdateTimeProgressBar);
-        this.$refs.audioElement.addEventListener('volumechange', this.handleUpdateVolumeProgressBar);
-        this.$refs.audioElement.addEventListener('ended', this.onNextSong);
-
         this.$store.dispatch('setAudioElement', this.$refs.audioElement );
     },
     beforeDestroy(){
         this.$el.removeEventListener('mouseup', this.resetMouseDown);
-        this.$store.getAudioElement.removeEventListener('canplay', this.handleLoad);
-        this.$store.getAudioElement.removeEventListener('timeupdate', this.handleUpdateTimeProgressBar);
-        this.$store.getAudioElement.removeEventListener('volumechange', this.handleUpdateVolumeProgressBar);
-        this.$store.getAudioElement.removeEventListener('ended', this.onNextSong);
     }
 }
 </script>
