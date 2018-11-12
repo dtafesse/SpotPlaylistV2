@@ -7,12 +7,13 @@
                         <v-toolbar-title>Sign Up</v-toolbar-title>
                     </v-toolbar>
                     <v-card-text>
-                        <v-form @submit="onSubmit">
-                            <v-text-field prepend-icon="person" name="email" label="Email" type="email" color="primary"></v-text-field>
-                            <v-text-field prepend-icon="lock" name="password" label="Password" id="password" type="password" color="primary"></v-text-field>
-                            <v-text-field prepend-icon="lock" name="confirmPassword" label="Confirm Password" id="confirmPassword" type="password" color="primary"></v-text-field>
+                        <v-form @submit.prevent="onSubmit">
+                            <v-text-field v-model="email" prepend-icon="person" name="email" label="Email" type="email" color="primary" required></v-text-field>
+                            <v-text-field v-model="password" prepend-icon="lock" name="password" label="Password" id="password" type="password" color="primary" required></v-text-field>
+                            <v-text-field v-model="confirmPassword" prepend-icon="lock" name="confirmPassword" label="Confirm Password" id="confirmPassword" type="password" color="primary" :rules="[validatePassword]"></v-text-field>
                             <v-layout align-center justify-center>
-                                <v-btn color="primary">Submit</v-btn>
+                                <v-btn @click="navHome" color="primary">Cancel</v-btn>
+                                <v-btn type="submit" color="primary">Sign Up</v-btn>
                             </v-layout>
                         </v-form>
                     </v-card-text>
@@ -25,16 +26,41 @@
 <script>
 export default {
     name: 'signUp',
+    data () {
+        return {
+            email: '',
+            password: '',
+            confirmPassword: ''
+        }
+    },
+    computed: {
+        validatePassword() {
+            return this.password !== this.confirmPassword ? 'Entered passwords are not the same' : ''
+        }
+    },
+    watch: {
+        user (value) {
+            if (value !== null && value !== undefined) {
+                navHome();
+            }
+        }
+    },
     methods: {
         onSubmit(){
             //// firebase signup 
-
+            this.$store.dispatch('firebaseSignUpUser',{email: this.email, password: this.password});
 
 
             /// Spotify Linking
 
             
 
+        },
+        navHome() {
+            this.$router.push({path: '/'});
+        },
+        navSignIn() {
+            this.$router.push({path: '/signin'});
         }
     }
 }

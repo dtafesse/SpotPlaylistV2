@@ -21,6 +21,7 @@
     "firebase-functions": "^2.0.5",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.4",
+    "query-string": "^6.2.0",
     "querystring": "^0.2.0",
     "spotify-web-api-node": "^4.0.0"
   },
