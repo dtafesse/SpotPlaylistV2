@@ -1,9 +1,24 @@
+import api from '../../../api/index';
+
 const actions = {
   setPlaylist: (context, newPlayist) => {
     let temp = newPlayist;
 
     context.commit('SET_PLAYLIST', temp);
     //context.commit('RESET_GENERATED_PLAYLIST');
+  },
+  savePlaylist({ commit, getters }) {
+    if (!getters.getAccessToken) {
+      return Promise.reject({ err: 'Spotify Account has not be linked' });
+    }
+    api
+      .savePlaylistToSpotify(getters.getAccessToken)
+      .then(data => {
+        console.log(data);
+
+        /// return Promise.resolve(true)
+      })
+      .catch(err => console.log(err));
   },
   setCurrentTrack: (context, payload) => {
     context.commit('SET_CURRENT_TRACK', payload.currentTrack);
