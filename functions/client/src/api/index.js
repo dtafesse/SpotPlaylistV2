@@ -24,16 +24,13 @@ export default {
   },
 
   fetchSpotifyRefreshToken(refresh_token) {
-    let uri = new URL(
-      'http://localhost:5000/spotplaylist-dev/us-central1/server/api/auth/refresh_token'
-    );
-    uri.searchParams.append('refresh_token', refresh_token);
-    return fetch(uri, {
-      method: 'GET',
+    return fetch(`${ROOT_URL}/api/auth/refresh_token`, {
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({ refresh_token })
     }).then(response => response.json());
   },
 

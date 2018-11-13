@@ -63,6 +63,7 @@ const actions = {
         commit('setUser', oldUser);
 
         // fetch access, refresh, expire_in data from database for given user
+        // dispatch('loginSpotify');
       })
       .catch(error => {
         commit('SET_LOADING', false);
