@@ -1,5 +1,10 @@
 <template>
     <v-container fluid>
+        <v-layout align-center justify-center row v-if="error">
+            <v-flex xs12 sm8 md4>
+                <Alert @dismissed="onDismissed" :text="error.message"></alert>
+            </v-flex>
+        </v-layout>
         <v-layout align-center justify-center row fill-height >
             <v-flex xs12 sm8 md4>
                 <v-card class="elevation-12">
@@ -13,15 +18,15 @@
                             <v-layout align-center justify-center>
                                 <v-btn @click="navHome" color="primary">Cancel</v-btn>
                                 <v-btn @click="navSignUp" color="primary">Sign Up</v-btn>
-                                <v-btn type="submit" color="primary">Log In</v-btn>
+                                <v-btn type="submit" color="primary" :disabled="loading" :loading="loading">
+                                    Log In
+                                    <span v-if="loading">
+                                        <Loader :width="7" :size="50" />
+                                    </span>
+                                </v-btn>
                             </v-layout>
                         </v-form>
                     </v-card-text>
-                    <!-- <v-card-actions>
-                        <v-layout align-center justify-center>
-                            <v-btn color="primary">Submit</v-btn>
-                        </v-layout>
-                    </v-card-actions> -->
                 </v-card>
             </v-flex>
         </v-layout>
@@ -29,8 +34,15 @@
 </template>
 
 <script>
+import Loader from '../Shared/Loader';
+import Alert from '../Shared/Alert';
+
 export default {
     name: 'signIn',
+    components: {
+        Loader,
+        Alert
+    },
     data () {
         return {
             email: '',
@@ -40,6 +52,12 @@ export default {
     computed: {
         user() {
             return this.$store.getters.user
+        },
+        error() {
+            return this.$store.getters.error
+        },
+        loading() {
+            return this.$store.getters.loading
         }
     },
     watch: {
@@ -52,6 +70,9 @@ export default {
     methods: {
         signIn () {
             this.$store.dispatch('firebaseSignInUser',{email: this.email, password: this.password});
+        },
+        onDismissed () {
+            this.$store.dispatch('clearError');
         },
         navHome() {
             this.$router.push({path: '/saved/playlists'});

@@ -1,5 +1,10 @@
 <template>
     <v-container fluid>
+        <v-layout align-center justify-center row v-if="error">
+            <v-flex xs12 sm8 md4>
+                <Alert @dismissed="onDismissed" :text="error.message"></alert>
+            </v-flex>
+        </v-layout>
         <v-layout align-center justify-center row fill-height >
             <v-flex xs12 sm8 md4>
                 <v-card class="elevation-12">
@@ -14,7 +19,12 @@
                             <v-layout align-center justify-center>
                                 <v-btn @click="navHome" color="primary">Cancel</v-btn>
                                 <v-btn @click="navSignIn" color="primary">Sign In</v-btn>
-                                <v-btn type="submit" color="primary">Create Account</v-btn>
+                                <v-btn type="submit" color="primary" :disabled="loading || validatePassword != ''" :loading="loading">
+                                    Create Account
+                                    <span v-if="loading">
+                                        <Loader :width="7" :size="50" />
+                                    </span>
+                                </v-btn>
                             </v-layout>
                         </v-form>
                     </v-card-text>
@@ -25,8 +35,15 @@
 </template>
 
 <script>
+import Loader from '../Shared/Loader';
+import Alert from '../Shared/Alert';
+
 export default {
     name: 'signUp',
+    components: {
+        Loader,
+        Alert
+    },
     data () {
         return {
             email: '',
@@ -40,6 +57,12 @@ export default {
         },
         user() {
             return this.$store.getters.user
+        },
+        error() {
+            return this.$store.getters.error
+        },
+        loading() {
+            return this.$store.getters.loading
         }
     },
     watch: {
@@ -54,11 +77,11 @@ export default {
             //// firebase signup 
             this.$store.dispatch('firebaseSignUpUser',{email: this.email, password: this.password});
 
-
             /// Spotify Linking
 
-            
-
+        },
+        onDismissed () {
+            this.$store.dispatch('clearError');
         },
         navHome() {
             this.$router.push({path: '/saved/playlists'});

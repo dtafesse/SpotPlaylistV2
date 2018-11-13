@@ -5,12 +5,20 @@ import * as firebase from 'firebase'
 
 const state = {
     spotifyAuthCode: window.localStorage.getItem("spotAuthCode"),
-    user: null
+    user: null,
+    loading: false,
+    error: null
 };
 const getters = {
     isSpotifyLoggedIn: state => !!state.spotifyAuthCode,
     user (state) {
         return state.user
+    },
+    loading (state) {
+        return state.loading
+    },
+    error (state) {
+        return state.error
     }
 };
 const actions = {
@@ -28,9 +36,12 @@ const actions = {
         window.localStorage.removeItem("spotAuthCode");
     },
     firebaseSignUpUser ({commit}, signUpRequest) {
+        commit('setLoading', true)
+        commit('clearError')
         firebase.auth().createUserWithEmailAndPassword(signUpRequest.email, signUpRequest.password)
             .then(
                 response => {
+                    commit('setLoading', false)
                     const newUser = {
                         id: response.user.uid
                     }
@@ -39,14 +50,19 @@ const actions = {
             )
             .catch(
                 error => {
-                    console.log(error); //TODO: Need to display error for user
+                    commit('setLoading', false)
+                    commit('setError', error)
+                    console.log(error); 
                 }
             )
     },
     firebaseSignInUser ({commit}, signInRequest) {
+        commit('setLoading', true)
+        commit('clearError')
         firebase.auth().signInWithEmailAndPassword(signInRequest.email, signInRequest.password)
             .then(
                 response => {
+                    commit('setLoading', false)
                     const oldUser = {
                         id: response.user.uid
                     }
@@ -55,10 +71,15 @@ const actions = {
             )
             .catch(
                 error => {
-                    console.log(error); //TODO: Need to display error for user
+                    commit('setLoading', false)
+                    commit('setError', error)
+                    console.log(error); 
                 }
             )
-    }
+    },
+    clearError({commit}) {
+        commit('clearError')
+     }
 };
 const mutations = {
     setSpotifyAuthCode: (state, access_token) =>{
@@ -66,6 +87,15 @@ const mutations = {
     },
     setUser: (state, userObject) => {
         state.user = userObject;
+    },
+    setLoading: (state, isLoading) => {
+        state.loading = isLoading;
+    },
+    setError: (state, error) => {
+        state.error = error;
+    },
+    clearError (state) {
+        state.error = null;
     }
 };
 

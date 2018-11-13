@@ -50,15 +50,8 @@ export default {
     computed: {
         menuItem(){
             let menuItemIcons = [
-                {
-                    icon: 'lock_open', title: 'Sign In', link: '/signin'
-                },
-                {
-                    icon: 'face', title: 'Sign Up', link: '/signup'
-                },
-                {
-                    icon: 'exit_to_app', title: 'Logout', link: '/'
-                }
+                { icon: 'lock_open', title: 'Sign In', link: '/signin' },
+                { icon: 'face', title: 'Sign Up', link: '/signup'}
             ];
             if(this.userIsAuth) {
                 menuItemIcons = [

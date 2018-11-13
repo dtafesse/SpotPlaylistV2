@@ -65,7 +65,7 @@ export default {
     },
     computed: {
         loading(){
-            return this.$store.getters.isLoading;
+            return this.$store.getters.loading;
         },
         selectedItems(){
             return this.$store.getters.getSelectedItems;
