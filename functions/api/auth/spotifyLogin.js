@@ -56,8 +56,16 @@ router.get('/callback', (req, res) => {
     });
 });
 
-router.post('/refresh_token', (req, res) => {
-  spotifyWebApi.setRefreshToken(req.body.data.refresh_token);
+router.get('/refresh_token', (req, res) => {
+  let refresh_token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(' ')[0] === 'Bearer'
+  ) {
+    refresh_token = req.headers.authorization.split(' ')[1];
+  }
+
+  spotifyWebApi.setRefreshToken(refresh_token);
 
   spotifyWebApi
     .refreshAccessToken()
@@ -67,7 +75,7 @@ router.post('/refresh_token', (req, res) => {
         data: {
           items: {
             access_token: data.body.access_token,
-            refresh_token: req.body.data.refresh_token,
+            refresh_token: refresh_token,
             expires_in: data.body.expires_in
           }
         }

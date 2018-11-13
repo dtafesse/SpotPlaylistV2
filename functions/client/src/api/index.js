@@ -27,8 +27,10 @@ export default {
 
   fetchSpotifyRefreshToken(refresh_token) {
     return axios
-      .post(`${ROOT_URL}/api/auth/refresh_token`, {
-        data: { refresh_token }
+      .get(`${ROOT_URL}/api/auth/refresh_token`, {
+        headers: {
+          Authorization: `Bearer ${refresh_token}`
+        }
       })
       .then(response => response.data);
   },
