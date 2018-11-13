@@ -7,15 +7,19 @@
                         <v-toolbar-title>Welcome!</v-toolbar-title>
                     </v-toolbar>
                     <v-card-text>
-                        <p> Hello welcome to spot playlist we are spot playlist</p>
-                        <br>
-                        <p>
-                        <router-link to="../saved/playlists">Enter as Guest</router-link>    
-                        </p>
-                        <br>
-                        <p v-if="!isSpotifyLoggedIn">
-                         <button @click="loginSpotify">Log into Spotify</button>  
-                        </p>   
+                        <v-layout v-if="!user">
+                            <p> Hello welcome to spot playlist!</p>
+                            <br>
+                           
+                            <router-link to="../saved/playlists">Enter as Guest</router-link>    
+     
+                            <br>
+                            <v-btn @click="login" color="primary">Log In!</v-btn>
+                            <v-btn @click="signUp" color="primary">Sign Up</v-btn>
+                        </v-layout>   
+                        <v-layout v-else>
+                           <router-link to="../saved/playlists">Welcome Back!</router-link> 
+                        </v-layout>
                     </v-card-text>                   
                 </v-card>
             </v-flex>
@@ -28,13 +32,16 @@
 export default {
     name: 'landing',
     computed: {
-        isSpotifyLoggedIn(){
-           return this.$store.getters.isSpotifyLoggedIn;
+        user(){
+           return this.$store.getters.user;
         }
     },
     methods: {
-         loginSpotify() {
-            this.$store.dispatch("loginSpotify");
+         login() {
+            this.$router.push('/signin');
+         },
+         signUp(){
+            this.$router.push('/signup');
          }
     }
 }

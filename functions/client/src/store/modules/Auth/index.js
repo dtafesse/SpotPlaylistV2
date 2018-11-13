@@ -7,30 +7,22 @@ let refreshTokenInterval;
 let isRefreshTokenIntervalSet;
 
 const state = {
-  user: null,
-  loading: false,
+  user: window.localStorage.getItem('firebaseUserId'),
   error: null,
   spotifyAuthAccessCode: window.localStorage.getItem('spotifyAuthAccessCode'),
   spotifyAuthRefreshCode: window.localStorage.getItem('spotifyAuthRefreshCode'),
   spotifyAuthExpiresIn: window.localStorage.getItem('spotifyAuthExpiresIn')
 };
 const getters = {
-  isSpotifyLoggedIn: state => !!state.spotifyAuthCode,
-  user(state) {
-    return state.user;
-  },
-  loading(state) {
-    return state.loading;
-  },
-  error(state) {
-    return state.error;
-  },
+  isSpotifyLoggedIn: state => !!state.spotifyAuthAccessCode,
+  user: state => state.user,
+  error: state => state.error,
   getExpiresIn: state => state.spotifyAuthExpiresIn,
   getRefreshToken: state => state.spotifyAuthRefreshCode
 };
 const actions = {
-  firebaseSignUpUser({ commit }, signUpRequest) {
-    commit('setLoading', true);
+  firebaseSignUpUser({ commit, dispatch }, signUpRequest) {
+    commit('SET_LOADING', true);
     commit('clearError');
     firebase
       .auth()
@@ -39,36 +31,61 @@ const actions = {
         signUpRequest.password
       )
       .then(response => {
-        commit('setLoading', false);
+        commit('SET_LOADING', false);
         const newUser = {
           id: response.user.uid
         };
         commit('setUser', newUser);
+        window.localStorage.setItem('firebaseUserId', response.user.uid);
+
+        /// figire out where to handle spotify linking??
+        dispatch('loginSpotify');
       })
       .catch(error => {
-        commit('setLoading', false);
+        commit('SET_LOADING', false);
         commit('setError', error);
         console.log(error);
       });
   },
-  firebaseSignInUser({ commit }, signInRequest) {
-    commit('setLoading', true);
+  firebaseSignInUser({ commit, dispatch }, signInRequest) {
+    commit('SET_LOADING', true);
     commit('clearError');
     firebase
       .auth()
       .signInWithEmailAndPassword(signInRequest.email, signInRequest.password)
       .then(response => {
-        commit('setLoading', false);
+        commit('SET_LOADING', false);
         const oldUser = {
           id: response.user.uid
         };
         commit('setUser', oldUser);
+        window.localStorage.setItem('firebaseUserId', response.user.uid);
+
+        /// figire out where to handle spotify linking??
+        //dispatch('loginSpotify');
       })
       .catch(error => {
-        commit('setLoading', false);
+        commit('SET_LOADING', false);
         commit('setError', error);
         console.log(error);
       });
+  },
+  autoSignIn({ commit }, payload) {
+    const user = {
+      id: payload.uid
+    };
+    commit('setUser', user);
+  },
+  logout({ commit, getters, dispatch }) {
+    if (getters.isSpotifyLoggedIn) {
+      dispatch('logoutSpotify');
+    }
+    firebase.auth().signOut();
+    commit('setUser', null);
+
+    window.localStorage.removeItem('firebaseUserId');
+
+    router.push('/landing');
   },
   clearError({ commit }) {
     commit('clearError');
@@ -104,8 +121,6 @@ const actions = {
     window.localStorage.removeItem('spotifyAuthAccessCode');
     window.localStorage.removeItem('spotifyAuthRefreshCode');
     window.localStorage.removeItem('spotifyAuthExpiresIn');
-
-    router.push('/landing');
   },
   setSpotifyRefreshInterval: ({ commit, getters }) => {
     if (getters.isSpotifyLoggedIn & !isRefreshTokenIntervalSet) {
@@ -135,10 +150,7 @@ const actions = {
 };
 const mutations = {
   setUser: (state, userObject) => {
-    state.user = userObject;
-  },
-  setLoading: (state, isLoading) => {
-    state.loading = isLoading;
+    state.user = userObject.id;
   },
   setError: (state, error) => {
     state.error = error;

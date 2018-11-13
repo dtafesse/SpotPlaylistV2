@@ -62,7 +62,7 @@ export default {
             return this.$store.getters.error
         },
         loading() {
-            return this.$store.getters.loading
+            return this.$store.getters.isLoading
         }
     },
     watch: {
