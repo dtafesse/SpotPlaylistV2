@@ -2,21 +2,16 @@ import api from '../../../api/index';
 import router from '../../../router/index';
 import * as firebase from 'firebase';
 
-let refreshTokenInterval;
-let isRefreshTokenIntervalSet;
-
 const state = {
   user: null,
   error: null,
   spotifyAuthAccessCode: window.localStorage.getItem('spotifyAuthAccessCode'),
-  spotifyAuthRefreshCode: window.localStorage.getItem('spotifyAuthRefreshCode'),
-  spotifyAuthExpiresIn: window.localStorage.getItem('spotifyAuthExpiresIn')
+  spotifyAuthRefreshCode: window.localStorage.getItem('spotifyAuthRefreshCode')
 };
 const getters = {
   isSpotifyLoggedIn: state => !!state.spotifyAuthAccessCode,
   user: state => state.user,
   error: state => state.error,
-  getExpiresIn: state => state.spotifyAuthExpiresIn,
   getAccessToken: state => state.spotifyAuthAccessCode,
   getRefreshToken: state => state.spotifyAuthRefreshCode
 };
@@ -97,12 +92,10 @@ const actions = {
   finalizeSpotifyLogin: ({ commit }, query) => {
     commit('setSpotifyAuthCodes', {
       access_token: query.access_token,
-      refresh_token: query.refresh_token,
-      expires_in: query.expires_in
+      refresh_token: query.refresh_token
     });
     window.localStorage.setItem('spotifyAuthAccessCode', query.access_token);
     window.localStorage.setItem('spotifyAuthRefreshCode', query.refresh_token);
-    window.localStorage.setItem('spotifyAuthExpiresIn', query.expires_in);
 
     // dispatch('setSpotifyRefreshInterval');
 
@@ -111,13 +104,11 @@ const actions = {
   logoutSpotify: ({ commit, dispatch }) => {
     commit('setSpotifyAuthCodes', {
       access_token: null,
-      refresh_token: null,
-      expires_in: null
+      refresh_token: null
     });
 
     window.localStorage.removeItem('spotifyAuthAccessCode');
     window.localStorage.removeItem('spotifyAuthRefreshCode');
-    window.localStorage.removeItem('spotifyAuthExpiresIn');
   },
   fetchSpotifyRefreshToken: ({ commit, getters }) => {
     if (!getters.isSpotifyLoggedIn) return;
@@ -126,8 +117,7 @@ const actions = {
       .then(({ data }) => {
         commit('setSpotifyAuthCodes', {
           access_token: data.items.access_token,
-          refresh_token: data.items.refresh_token,
-          expires_in: data.items.expires_in
+          refresh_token: data.items.refresh_token
         });
         window.localStorage.setItem(
           'spotifyAuthAccessCode',
@@ -136,10 +126,6 @@ const actions = {
         window.localStorage.setItem(
           'spotifyAuthRefreshCode',
           data.items.refresh_token
-        );
-        window.localStorage.setItem(
-          'spotifyAuthExpiresIn',
-          data.items.expires_in
         );
         return Promise.resolve(true);
       })
@@ -156,10 +142,9 @@ const mutations = {
   clearError(state) {
     state.error = null;
   },
-  setSpotifyAuthCodes: (state, { access_token, refresh_token, expires_in }) => {
+  setSpotifyAuthCodes: (state, { access_token, refresh_token }) => {
     state.spotifyAuthAccessCode = access_token;
     state.spotifyAuthRefreshCode = refresh_token;
-    state.spotifyAuthExpiresIn = expires_in;
   }
 };
 
