@@ -11,13 +11,50 @@
                     </v-toolbar>
                     <v-card-text>
                         <v-form @submit.prevent="onSubmit">
-                            <v-text-field v-model="email" prepend-icon="person" name="email" label="Email" type="email" color="primary" required></v-text-field>
-                            <v-text-field v-model="password" prepend-icon="lock" name="password" label="Password" id="password" type="password" color="primary" required></v-text-field>
-                            <v-text-field v-model="confirmPassword" prepend-icon="lock" name="confirmPassword" label="Confirm Password" id="confirmPassword" type="password" color="primary" :rules="[validatePassword]"></v-text-field>
+                            <v-text-field 
+                                v-model="email" 
+                                prepend-icon="person" 
+                                name="email" 
+                                label="Email" 
+                                type="email" 
+                                color="primary" 
+                                required>
+                            </v-text-field>
+                            <v-text-field 
+                                v-model="password" 
+                                prepend-icon="lock" 
+                                name="password" 
+                                label="Password" 
+                                id="password" 
+                                type="password" 
+                                color="primary" 
+                                required>
+                            </v-text-field>
+                            <v-text-field 
+                                v-model="confirmPassword" 
+                                prepend-icon="lock" 
+                                name="confirmPassword" 
+                                label="Confirm Password" 
+                                id="confirmPassword" 
+                                type="password" 
+                                color="primary" 
+                                :rules="[validatePassword]">
+                            </v-text-field>
+                             <v-switch
+                                label='Link Spotify Account?'
+                                v-model="linkSpotify"
+                                color="primary"
+                            >
+                            </v-switch>
                             <v-layout align-center justify-center>
                                 <v-btn @click="navHome" color="primary">Cancel</v-btn>
                                 <v-btn @click="navSignIn" color="primary">Sign In</v-btn>
-                                <v-btn type="submit" color="primary" :disabled="loading || validatePassword != ''" :loading="loading">
+                                <v-btn 
+                                    type="submit" 
+                                    color="primary" 
+                                    :disabled="loading || validatePassword != ''" 
+                                    :loading="loading"
+                                >
                                     Create Account
                                     <span v-if="loading">
                                         <Loader :width="7" :size="50" />
@@ -46,7 +83,8 @@ export default {
         return {
             email: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            linkSpotify: true
         }
     },
     computed: {
@@ -72,10 +110,11 @@ export default {
     },
     methods: {
         onSubmit(){
-            //// firebase signup 
-            this.$store.dispatch('firebaseSignUpUser',{email: this.email, password: this.password});
-
-            /// Spotify Linking
+            this.$store.dispatch('firebaseSignUpUser',{
+                email: this.email, 
+                password: this.password, 
+                linkSpotify: this.linkSpotify
+            });
 
         },
         onDismissed () {

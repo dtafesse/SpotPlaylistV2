@@ -4,10 +4,13 @@
     </div>
 </template>
 <script>
+import queryString from 'query-string';
+
 export default {
     name: 'spotifyAuthHandler',
     created(){
-        this.$store.dispatch("finalizeSpotifyLogin", window.location.search);
+        const query = queryString.parse(window.location.search);
+        this.$store.dispatch("finalizeSpotifyLogin", query);
     }
 }
 </script>

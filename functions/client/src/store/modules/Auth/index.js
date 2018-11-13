@@ -1,5 +1,4 @@
 import api from '../../../api/index';
-import queryString from 'query-string';
 import router from '../../../router/index';
 import * as firebase from 'firebase';
 
@@ -38,7 +37,11 @@ const actions = {
         commit('setUser', newUser);
 
         /// figire out where to handle spotify linking??
-        dispatch('loginSpotify');
+        if (signUpRequest.linkSpotify) {
+          dispatch('loginSpotify');
+
+          // save access token and refresh token in the database for the user
+        }
       })
       .catch(error => {
         commit('SET_LOADING', false);
@@ -59,8 +62,7 @@ const actions = {
         };
         commit('setUser', oldUser);
 
-        /// figire out where to handle spotify linking??
-        dispatch('loginSpotify');
+        // fetch access, refresh, expire_in data from database for given user
       })
       .catch(error => {
         commit('SET_LOADING', false);
@@ -90,8 +92,7 @@ const actions = {
     api.loginSpotify();
   },
 
-  finalizeSpotifyLogin: ({ commit }, searchQuery) => {
-    const query = queryString.parse(searchQuery);
+  finalizeSpotifyLogin: ({ commit }, query) => {
     commit('setSpotifyAuthCodes', {
       access_token: query.access_token,
       refresh_token: query.refresh_token,
