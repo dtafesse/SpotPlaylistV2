@@ -4,7 +4,7 @@
             <v-list dense>
                <v-list-tile v-for="item in menuItem" :key="item.title" @click="routeItem(item)">
                    <v-list-tile-action>
-                       <v-icon> {{ item.icon }} </v-icon>
+                        <v-icon> {{ item.icon }} </v-icon>
                    </v-list-tile-action>
                    <v-list-tile-content> {{ item.title }} </v-list-tile-content>
                </v-list-tile>
@@ -25,6 +25,7 @@
                     flat v-for="item in menuItem" :key="item.title" :to="item.link" @click="routeItem(item)"
                 >
                     <v-icon left dark>{{ item.icon }}</v-icon>
+                     {{item.title}}
                 </v-btn>
             </v-toolbar-items>
 
