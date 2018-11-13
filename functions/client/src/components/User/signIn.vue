@@ -1,13 +1,11 @@
 <template>
     <v-container fluid>
-        <v-layout align-center justify-center row v-if="error">
-            <v-flex xs12 sm8 md4>
-                <Alert @dismissed="onDismissed" :text="error.message"></alert>
-            </v-flex>
-        </v-layout>
         <v-layout align-center justify-center row fill-height >
-            <v-flex xs12 sm8 md4>
+            <v-flex xs12 sm6>
                 <v-card class="elevation-12">
+                    <div v-if="error">
+                        <Alert @dismissed="onDismissed" :text="error.message"></alert>
+                    </div>
                     <v-toolbar dark color="primary">
                         <v-toolbar-title>Sign In</v-toolbar-title>
                     </v-toolbar>

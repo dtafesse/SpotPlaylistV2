@@ -25,10 +25,10 @@ new Vue({
       projectId: 'spotplaylist-dev',
       storageBucket: ' spotplaylist-dev.appspot.com'
     });
-    // firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     this.$store.dispatch('autoSignIn', user);
-    //   }
-    // });
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.$store.dispatch('autoSignIn', user);
+      }
+    });
   }
 }).$mount('#app');

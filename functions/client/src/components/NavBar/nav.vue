@@ -82,7 +82,7 @@ export default {
             this.$router.push({path: '/signup'});
         },
         logout() {
-            this.$store.dispatch('logoutSpotify');
+            this.$store.dispatch('logout');
             // inside of the dispatched func, this.$router.push({path: '/landing'});
         }
     }

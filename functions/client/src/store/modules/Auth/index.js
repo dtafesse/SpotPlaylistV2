@@ -7,7 +7,7 @@ let refreshTokenInterval;
 let isRefreshTokenIntervalSet;
 
 const state = {
-  user: window.localStorage.getItem('firebaseUserId'),
+  user: null,
   error: null,
   spotifyAuthAccessCode: window.localStorage.getItem('spotifyAuthAccessCode'),
   spotifyAuthRefreshCode: window.localStorage.getItem('spotifyAuthRefreshCode'),
@@ -36,7 +36,6 @@ const actions = {
           id: response.user.uid
         };
         commit('setUser', newUser);
-        window.localStorage.setItem('firebaseUserId', response.user.uid);
 
         /// figire out where to handle spotify linking??
         dispatch('loginSpotify');
@@ -59,10 +58,9 @@ const actions = {
           id: response.user.uid
         };
         commit('setUser', oldUser);
-        window.localStorage.setItem('firebaseUserId', response.user.uid);
 
         /// figire out where to handle spotify linking??
-        //dispatch('loginSpotify');
+        dispatch('loginSpotify');
       })
       .catch(error => {
         commit('SET_LOADING', false);
@@ -82,8 +80,6 @@ const actions = {
     }
     firebase.auth().signOut();
     commit('setUser', null);
-
-    window.localStorage.removeItem('firebaseUserId');
 
     router.push('/landing');
   },
@@ -150,7 +146,7 @@ const actions = {
 };
 const mutations = {
   setUser: (state, userObject) => {
-    state.user = userObject.id;
+    state.user = userObject;
   },
   setError: (state, error) => {
     state.error = error;
