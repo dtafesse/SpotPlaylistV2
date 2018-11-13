@@ -73,17 +73,6 @@ export default {
         },
         logout() {
             this.$router.push({path: '/'});
-        },
-        onScrollTop(value){
-            if(this.dropDownSugDivRef){
-                this.dropDownSugDivRef.scrollTop = value;
-            }
-        },
-        onSetDropDownSugDivRef(ref){
-            this.dropDownSugDivRef = ref;
-        },
-        onSetSelectedIndex(index){
-            this.selectedIndex = index;
         }
     }
 }
