@@ -7,8 +7,8 @@ const spotifyWebApi = new SpotifyWebApi({
 });
 
 exports.getArtistTopTracks = (req, res, next) => {
-  let artistId = req.body.id;
-  let type = req.body.type;
+  let artistId = req.body.data.id;
+  let type = req.body.data.type;
 
   spotifyWebApi
     .clientCredentialsGrant()

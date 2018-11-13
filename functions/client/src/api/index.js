@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const ROOT_URL_PROD =
   'https://us-central1-spotplaylist-dev.cloudfunctions.net/server';
 
@@ -24,59 +26,44 @@ export default {
   },
 
   fetchSpotifyRefreshToken(refresh_token) {
-    return fetch(`${ROOT_URL}/api/auth/refresh_token`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ refresh_token })
-    }).then(response => response.json());
+    return axios
+      .post(`${ROOT_URL}/api/auth/refresh_token`, {
+        data: { refresh_token }
+      })
+      .then(response => response.data);
   },
 
-  fetchResultsForQuery(query) {
-    return fetch(`${ROOT_URL}/api/search/${query}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }).then(response => response.json());
+  savePlaylistToSpotify(access_token) {
+    return axios
+      .get(`${ROOT_URL}/api/playlist/save`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`
+        }
+      })
+      .then(response => response.data);
   },
 
   fetchQueryResults(query) {
-    return fetch(`${ROOT_URL}/api/search/${query}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
+    return axios
+      .get(`${ROOT_URL}/api/search/${query}`)
       .then(checkStatus)
-      .then(response => response.json());
+      .then(response => response.data);
   },
 
   fetchArtistTopTracks(payload) {
-    return fetch(`${ROOT_URL}/api/artists/tracks`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    }).then(response => response.json());
+    return axios
+      .post(`${ROOT_URL}/api/artists/tracks`, {
+        data: payload
+      })
+      .then(response => response.data);
   },
 
   fetchAlbumTracks(payload) {
-    return fetch(`${ROOT_URL}/api/albums/tracks`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    })
+    return axios
+      .post(`${ROOT_URL}/api/albums/tracks`, {
+        data: payload
+      })
       .then(checkStatus)
-      .then(response => response.json());
+      .then(response => response.data);
   }
 };

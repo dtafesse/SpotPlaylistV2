@@ -57,7 +57,7 @@ router.get('/callback', (req, res) => {
 });
 
 router.post('/refresh_token', (req, res) => {
-  spotifyWebApi.setRefreshToken(req.body.refresh_token);
+  spotifyWebApi.setRefreshToken(req.body.data.refresh_token);
 
   spotifyWebApi
     .refreshAccessToken()
@@ -67,7 +67,7 @@ router.post('/refresh_token', (req, res) => {
         data: {
           items: {
             access_token: data.body.access_token,
-            refresh_token: req.body.refresh_token,
+            refresh_token: req.body.data.refresh_token,
             expires_in: data.body.expires_in
           }
         }

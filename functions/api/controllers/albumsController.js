@@ -7,9 +7,8 @@ const spotifyWebApi = new SpotifyWebApi({
 });
 
 exports.getAlbumTracks = (req, res, next) => {
-  let { id, type, images, albumName } = req.body;
+  let { id, type, images, albumName } = req.body.data;
 
-  //callSpotifyWebApiClientCredentialGrant();
   spotifyWebApi
     .clientCredentialsGrant()
     .then(data => {

@@ -17,6 +17,7 @@ const getters = {
   user: state => state.user,
   error: state => state.error,
   getExpiresIn: state => state.spotifyAuthExpiresIn,
+  getAccessToken: state => state.spotifyAuthAccessCode,
   getRefreshToken: state => state.spotifyAuthRefreshCode
 };
 const actions = {
@@ -114,36 +115,35 @@ const actions = {
       expires_in: null
     });
 
-    dispatch('clearSpotifyRefreshInterval');
-
     window.localStorage.removeItem('spotifyAuthAccessCode');
     window.localStorage.removeItem('spotifyAuthRefreshCode');
     window.localStorage.removeItem('spotifyAuthExpiresIn');
   },
-  setSpotifyRefreshInterval: ({ commit, getters }) => {
-    if (getters.isSpotifyLoggedIn & !isRefreshTokenIntervalSet) {
-      isRefreshTokenIntervalSet = true;
-      let tokenExpirationInMilliSeconds =
-        (Number(getters.getExpiresIn) - 200) * 1000;
-
-      refreshTokenInterval = setInterval(() => {
-        api
-          .fetchSpotifyRefreshToken(getters.getRefreshToken)
-          .then(({ data }) => {
-            commit('setSpotifyAuthCodes', {
-              access_token: data.items.access_token,
-              refresh_token: data.items.refresh_token,
-              expires_in: data.items.expires_in
-            });
-          })
-          .catch(err => console.log(err.message));
-      }, tokenExpirationInMilliSeconds);
-    }
-  },
-
-  clearSpotifyRefreshInterval: () => {
-    isRefreshTokenIntervalSet = false;
-    clearInterval(refreshTokenInterval);
+  fetchSpotifyRefreshToken: ({ commit, getters }) => {
+    if (!getters.isSpotifyLoggedIn) return;
+    api
+      .fetchSpotifyRefreshToken(getters.getRefreshToken)
+      .then(({ data }) => {
+        commit('setSpotifyAuthCodes', {
+          access_token: data.items.access_token,
+          refresh_token: data.items.refresh_token,
+          expires_in: data.items.expires_in
+        });
+        window.localStorage.setItem(
+          'spotifyAuthAccessCode',
+          data.items.access_token
+        );
+        window.localStorage.setItem(
+          'spotifyAuthRefreshCode',
+          data.items.refresh_token
+        );
+        window.localStorage.setItem(
+          'spotifyAuthExpiresIn',
+          data.items.expires_in
+        );
+        return Promise.resolve(true);
+      })
+      .catch(err => console.log(err.message));
   }
 };
 const mutations = {
