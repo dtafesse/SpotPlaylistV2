@@ -66,7 +66,6 @@ router.get('/refresh_token', (req, res) => {
   }
 
   spotifyWebApi.setRefreshToken(refresh_token);
-
   spotifyWebApi
     .refreshAccessToken()
     .then(data => {
