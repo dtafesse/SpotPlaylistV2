@@ -7,33 +7,41 @@ const spotifyWebApi = new SpotifyWebApi({
 });
 
 exports.getAlbumTracks = (req, res, next) => {
-  let id;
-  if (req.params.id) {
-    id = req.params.id;
+  let { id, type, images, albumName } = req.body;
 
-    //callSpotifyWebApiClientCredentialGrant();
-    spotifyWebApi
-      .clientCredentialsGrant()
-      .then(data => {
-        // Save the access token so that it's used in future calls
-        spotifyWebApi.setAccessToken(data.body['access_token']);
-        return spotifyWebApi.getAlbumTracks(id);
-      })
-      .then(data => {
-        res.status(200).json({
-          confirmation: 'success',
-          data: {
-            items: data.body.items
-          }
-        });
-        return;
-      })
-      .catch(err => {
-        console.log(err.message);
-        res.status(404).json({
-          confirmation: 'fail',
-          message: err.message
-        });
+  //callSpotifyWebApiClientCredentialGrant();
+  spotifyWebApi
+    .clientCredentialsGrant()
+    .then(data => {
+      // Save the access token so that it's used in future calls
+      spotifyWebApi.setAccessToken(data.body['access_token']);
+      return spotifyWebApi.getAlbumTracks(id);
+    })
+    .then(data => {
+      let tracks = data.body.items;
+
+      tracks.forEach(track => {
+        track.type = type;
+        let album = {
+          images: images,
+          name: albumName
+        };
+        track.album = album;
       });
-  }
+
+      res.status(200).json({
+        confirmation: 'success',
+        data: {
+          items: tracks
+        }
+      });
+      return;
+    })
+    .catch(err => {
+      console.log(err.message);
+      res.status(404).json({
+        confirmation: 'fail',
+        message: err.message
+      });
+    });
 };

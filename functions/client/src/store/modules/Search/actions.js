@@ -38,7 +38,7 @@ const actions = {
     const selectedItems = getters.getSelectedItems;
     commit('REMOVE_ALL_SELECTED_ITEMS');
 
-    selectedItems.forEach(item => {
+    const promises = Array.from(selectedItems).map(item => {
       if (item.type === 'album') {
         let albumPayload = {
           id: item.id,
@@ -46,94 +46,52 @@ const actions = {
           type: TYPE.album,
           images: item.images
         };
-
-        dispatch('searchForAlbumTracks', albumPayload);
+        return api.fetchAlbumTracks(albumPayload);
       } else {
         let artistPayload = {
           id: item.id,
           type: TYPE.artist
         };
-        dispatch('searchArtistTopTrack', artistPayload);
+        return api.fetchArtistTopTracks(artistPayload);
       }
     });
 
-    // helpers.shuffle(state.playlist);
-    dispatch('setPlaylist', getters.getNewGeneratedPlaylist)
-      .then(() => {
-        dispatch('setSuffle', {
-          shuffle: true,
-          loadingNewPlaylist: true
-        });
-
-        router.push({ path: '/Playlist' });
-      })
-      .catch(err => {
-        // eslint-disable-next-line
-        console.log(err.message);
-      })
-      .finally(() => {
-        commit('SET_LOADING', false);
-      });
-  },
-
-  searchForAlbumTracks({ commit, getters }, { id, albumName, type, images }) {
-    api
-      .fetchAlbumTracks(id)
-      .then(data => {
-        let items = data.data.items;
-
-        items.forEach(item => {
-          const itemPos = getters.getNewGeneratedPlaylist
+    Promise.all(promises).then(responses => {
+      responses.forEach(response => {
+        response.data.items.forEach(track => {
+          const trackPos = getters.getNewGeneratedPlaylist
             .map(function(e) {
               return e.id;
             })
-            .indexOf(item.id);
+            .indexOf(track.id);
 
-          if (itemPos === -1) {
-            item.type = type;
-            let album = {
-              images: images,
-              name: albumName
-            };
-            item.album = album;
-            commit('PUSH_TO_GENERATED_PLAYLIST', item);
+          if (trackPos === -1) {
+            commit('PUSH_TO_GENERATED_PLAYLIST', track);
           }
         });
-
-        helpers.shuffle(getters.getNewGeneratedPlaylist);
-      })
-      .catch(err => {
-        // eslint-disable-next-line
-        console.log(err.message);
       });
-  },
 
-  searchArtistTopTrack({ commit, getters }, { id, type }) {
-    api
-      .fetchArtistTopTracks(id)
-      .then(data => {
-        let items = data.data;
+      helpers.shuffle(getters.getNewGeneratedPlaylist);
 
-        items.forEach(item => {
-          const itemPos = getters.getNewGeneratedPlaylist
-            .map(function(e) {
-              return e.id;
-            })
-            .indexOf(item.id);
+      dispatch('setPlaylist', getters.getNewGeneratedPlaylist)
+        .then(() => {
+          dispatch('setSuffle', {
+            shuffle: true,
+            loadingNewPlaylist: true
+          });
 
-          if (itemPos === -1) {
-            item.type = type;
-            commit('PUSH_TO_GENERATED_PLAYLIST', item);
-          }
+          router.push({ path: '/Playlist' });
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err.message);
+        })
+        .finally(() => {
+          commit('SET_LOADING', false);
         });
-
-        helpers.shuffle(getters.getNewGeneratedPlaylist);
-      })
-      .catch(err => {
-        // eslint-disable-next-line
-        console.log(err.message);
-      });
+    });
   },
+
   setSelectedArtistId: ({ commit }, payload) => {
     commit('SET_SELECTED_ARTIST_ID', payload);
   },

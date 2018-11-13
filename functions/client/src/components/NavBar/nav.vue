@@ -2,7 +2,7 @@
     <div>
         <v-navigation-drawer temporary v-model="sideNav" clipped app>
             <v-list dense>
-               <v-list-tile v-for="item in menuItem" :key="item.title" :to="item.link">
+               <v-list-tile v-for="item in menuItem" :key="item.title" @click="routeItem(item)">
                    <v-list-tile-action>
                        <v-icon> {{ item.icon }} </v-icon>
                    </v-list-tile-action>
@@ -22,7 +22,7 @@
 
             <v-toolbar-items class="hidden-xs-only">
                 <v-btn
-                    flat v-for="item in menuItem" :key="item.title" :to="item.link"
+                    flat v-for="item in menuItem" :key="item.title" :to="item.link" @click="routeItem(item)"
                 >
                     <v-icon left dark>{{ item.icon }}</v-icon>
                 </v-btn>
@@ -53,9 +53,10 @@ export default {
                 { icon: 'lock_open', title: 'Sign In', link: '/signin' },
                 { icon: 'face', title: 'Sign Up', link: '/signup'}
             ];
+            
             if(this.userIsAuth) {
                 menuItemIcons = [
-                    { icon: 'exit_to_app', title: 'Logout', link: '/'}
+                    { icon: 'exit_to_app', title: 'Logout', link: '/landing'}
                 ];
             }
             return menuItemIcons;
@@ -65,6 +66,15 @@ export default {
         }
     },
     methods: {
+        routeItem(item){
+            if(item.title === "Sign In"){
+                this.signIn();
+            }else if(item.title === "Sign Up"){
+                this.signUp();
+            }else{
+                this.logout();
+            }
+        },
         signIn() {
             this.$router.push({path: '/signin'});
         },
@@ -72,7 +82,8 @@ export default {
             this.$router.push({path: '/signup'});
         },
         logout() {
-            this.$router.push({path: '/'});
+            this.$store.dispatch('logoutSpotify');
+            // inside of the dispatched func, this.$router.push({path: '/landing'});
         }
     }
 }

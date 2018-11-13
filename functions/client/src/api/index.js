@@ -1,8 +1,10 @@
 const ROOT_URL_PROD =
   'https://us-central1-spotplaylist-dev.cloudfunctions.net/server';
 
-//const ROOT_URL = ROOT_URL_PROD;
-const ROOT_URL = '/server';
+const ROOT_URL_DEV = '/server';
+const ROOT_URL = window.location.href.includes('localhost')
+  ? ROOT_URL_DEV
+  : ROOT_URL_PROD;
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -20,11 +22,13 @@ export default {
       ? 'http://localhost:5000/spotplaylist-dev/us-central1/server/api/auth/login'
       : `${ROOT_URL_PROD}/api/auth/login`;
   },
-  
-  // temp way to fetch artwork until search by top rated tracks of artists in implement
-  fetchArtwork() {
-    const id = '6NijWPXUijjGcrdkQFcflv';
-    return fetch(`/server/api/artwork/${id}`, {
+
+  fetchSpotifyRefreshToken(refresh_token) {
+    let uri = new URL(
+      'http://localhost:5000/spotplaylist-dev/us-central1/server/api/auth/refresh_token'
+    );
+    uri.searchParams.append('refresh_token', refresh_token);
+    return fetch(uri, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -55,23 +59,25 @@ export default {
       .then(response => response.json());
   },
 
-  fetchArtistTopTracks(artistId) {
-    return fetch(`${ROOT_URL}/api/artists/${artistId}/toptracks`, {
-      method: 'GET',
+  fetchArtistTopTracks(payload) {
+    return fetch(`${ROOT_URL}/api/artists/tracks`, {
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify(payload)
     }).then(response => response.json());
   },
 
-  fetchAlbumTracks(id) {
-    return fetch(`${ROOT_URL}/api/albums/${id}`, {
-      method: 'GET',
+  fetchAlbumTracks(payload) {
+    return fetch(`${ROOT_URL}/api/albums/tracks`, {
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify(payload)
     })
       .then(checkStatus)
       .then(response => response.json());
