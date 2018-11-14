@@ -1,4 +1,5 @@
 import api from '../../../api/index';
+import * as firebase from 'firebase';
 
 const actions = {
   setPlaylist: (context, newPlayist) => {
@@ -7,7 +8,7 @@ const actions = {
     context.commit('SET_PLAYLIST', temp);
     //context.commit('RESET_GENERATED_PLAYLIST');
   },
-  savePlaylist({ commit, getters }) {
+  savePlaylistToSpotify({ commit, getters }) {
     if (!getters.getAccessToken) {
       return Promise.reject({ err: 'Spotify Account has not be linked' });
     }
@@ -20,6 +21,7 @@ const actions = {
       })
       .catch(err => console.log(err));
   },
+  savePlaylistToFirebaseDB({ commit, getters }) {},
   setCurrentTrack: (context, payload) => {
     context.commit('SET_CURRENT_TRACK', payload.currentTrack);
     context.commit('SET_ARTWORK', payload.currentArtwork);

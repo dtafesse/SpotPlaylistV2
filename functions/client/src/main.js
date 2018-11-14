@@ -15,9 +15,6 @@ new Vue({
   store,
   router,
   render: h => h(App),
-  // mounted() {
-  //   this.$store.dispatch('setSpotifyRefreshInterval');
-  // },
   created() {
     firebase.initializeApp({
       apiKey: 'AIzaSyAJkYNu0OoZ-6tgwh4tEUg-R-FEr7OIhso',
