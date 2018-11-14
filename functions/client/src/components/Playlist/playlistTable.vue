@@ -40,9 +40,8 @@
                         
                         <v-text-field 
                             :value="currentPlaylistName"
-                            label="Playlist Name"
                             :readonly="isTextFieldReadOnly"
-                            :append-outer-icon="isTextFieldReadOnly ? 'edit': 'check'"
+                            :append-outer-icon="showEditIcon"
                             @click:append-outer="editIconClicked"
                             @input="updatePlaylistName"
                         >
@@ -92,8 +91,17 @@ export default {
         }
     },
     computed: {
+        isUserLoggedIn(){
+            return this.$store.getters.user ? true: false;
+        },
+        showEditIcon(){
+            if(this.isUserLoggedIn){
+                return this.isTextFieldReadOnly ? 'edit' : 'check';
+            }
+            return '';
+        },
         currentPlaylistName(){
-            return this.$store.getters.getCurrentPlaylistIds ? this.$store.getters.getCurrentPlaylistIds.playlistName : 'Untitled'; 
+            return this.$store.getters.getCurrentPlaylistIds.playlistName ? this.$store.getters.getCurrentPlaylistIds.playlistName : 'Untitled'; 
         },
         currentlySelectedPlaylist() {
             const currentPlayingPlaylist = this.$store.getters.getCurrentPlaylist;
@@ -151,7 +159,7 @@ export default {
             if(this.isTextFieldReadOnly){
                 if(this.newPlaylistName.trim() !== this.currentPlaylistName.trim()){
                     // update playlistName in the store and the database 
-                    this.$store.dispatch('updatedPlaylistName');
+                    this.$store.dispatch('updatedPlaylistName', this.newPlaylistName.trim());
                     
                 }
             }

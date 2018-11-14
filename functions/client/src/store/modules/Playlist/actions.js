@@ -43,7 +43,9 @@ const actions = {
         console.log(err.message);
       });
   },
-  updatedPlaylistName: ({ commit }, newPlaylistName) => {},
+  updatedPlaylistName: ({ commit }, newPlaylistName) => {
+    commit('UPDATE_PLAYLIST_NAME', newPlaylistName);
+  },
   setCurrentTrack: (context, payload) => {
     context.commit('SET_CURRENT_TRACK', payload.currentTrack);
     context.commit('SET_ARTWORK', payload.currentArtwork);
