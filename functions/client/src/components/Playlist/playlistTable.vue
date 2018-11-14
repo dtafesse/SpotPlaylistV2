@@ -8,19 +8,12 @@
                 <v-card v-if="currentlySelectedTrack">
                     <v-container >
                         <v-layout>
-                            <v-flex xs7>
+                            <v-flex xs12>
                                 <v-img 
                                     :src="currentlySelectedTrack.album.images[0].url"
                                     contain
                                 >
                                 </v-img>
-                            </v-flex>
-                            <v-flex xs5>
-                                <v-card-title primary-title>
-                                    <div>
-                                        <div class="headline">Playlist Name!</div>
-                                    </div>
-                                </v-card-title>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -43,7 +36,19 @@
             <!-- <v-flex xs12 sm6 offset-sm3 align-center justify-center fill-height> -->
             <v-flex xs12 sm6 offset-sm1 align-center justify-center fill-height>
                 <v-list three-line>
-                    <v-subheader> Playlist Name: {{ numberOfSongs }}</v-subheader>
+                    <v-subheader> 
+                        
+                        <v-text-field 
+                            :value="currentPlaylistName"
+                            label="Playlist Name"
+                            :readonly="isTextFieldReadOnly"
+                            :append-outer-icon="isTextFieldReadOnly ? 'edit': 'check'"
+                            @click:append-outer="editIconClicked"
+                            @input="updatePlaylistName"
+                        >
+                        </v-text-field>
+                        {{ numberOfSongs }}
+                    </v-subheader>
                     <template v-for="(track, index) in currentlySelectedPlaylist" >
                         <v-list-tile :key="track.id" avatar ripple @click="onClickTrack(index)" class="listItem">
                             <v-list-tile>
@@ -80,7 +85,16 @@ export default {
     components: {
         Loader
     },
+    data() {
+        return {
+            newPlaylistName : '',
+            isTextFieldReadOnly: true
+        }
+    },
     computed: {
+        currentPlaylistName(){
+            return this.$store.getters.getCurrentPlaylistIds ? this.$store.getters.getCurrentPlaylistIds.playlistName : 'Untitled'; 
+        },
         currentlySelectedPlaylist() {
             const currentPlayingPlaylist = this.$store.getters.getCurrentPlaylist;
             return currentPlayingPlaylist !== undefined ? this.$store.getters.getCurrentPlaylist : null;
@@ -104,21 +118,7 @@ export default {
         }
     },
     methods: {
-        // onClickTrack(index) {
-        //     const track = {
-        //         currentTrack: this.currentlySelectedPlaylist[index],
-        //         currentArtwork: this.currentlySelectedPlaylist[index].album.images[0].url,
-        //         currentTrackIndex: index
-        //     };
-        //     this.$store.dispatch('setCurrentTrack', track);
-        //     this.$store.dispatch('setAutoPlay', true);
-        //     this.trackCliked = !this.trackCliked;
-        // },
         onClickTrack(index) {
-            // if(this.$store.getters.isMobileAudioElementFirstClick){
-            //         this.$store.dispatch('setMobileAudioElementFirstClick');
-            //         return;
-            //     }
             const track = {
                 currentTrack: this.currentlySelectedPlaylist[index],
                 currentArtwork: this.currentlySelectedPlaylist[index].album.images[0].url,
@@ -130,10 +130,6 @@ export default {
         },
         onPlay(){
             if(this.currentlySelectedPlaylist){
-                // if(this.$store.getters.isMobileAudioElementFirstClick){
-                //     this.$store.dispatch('setMobileAudioElementFirstClick');
-                //     return;
-                // }
                 this.onClickTrack(0);
             }
         },
@@ -145,6 +141,19 @@ export default {
                     loadingNewPlaylist: false
                 });
                 this.$store.dispatch('setAutoPlay', true);
+            }
+        },
+        updatePlaylistName(newName){
+            this.newPlaylistName = newName;
+        },
+        editIconClicked(){
+            this.isTextFieldReadOnly = !this.isTextFieldReadOnly;
+            if(this.isTextFieldReadOnly){
+                if(this.newPlaylistName.trim() !== this.currentPlaylistName.trim()){
+                    // update playlistName in the store and the database 
+                    this.$store.dispatch('updatedPlaylistName');
+                    
+                }
             }
         }
     }

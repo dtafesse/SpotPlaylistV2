@@ -26,7 +26,7 @@ const actions = {
     let playlistIds = getters.getNewGeneratedPlaylist.map(track => track.id);
 
     let playlist = {
-      playlistName: 'untitled',
+      playlistName: 'Untitled',
       playlistIds: playlistIds
     };
 
@@ -43,6 +43,7 @@ const actions = {
         console.log(err.message);
       });
   },
+  updatedPlaylistName: ({ commit }, newPlaylistName) => {},
   setCurrentTrack: (context, payload) => {
     context.commit('SET_CURRENT_TRACK', payload.currentTrack);
     context.commit('SET_ARTWORK', payload.currentArtwork);
