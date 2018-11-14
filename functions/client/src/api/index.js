@@ -35,12 +35,13 @@ export default {
       .then(response => response.data);
   },
 
-  savePlaylistToSpotify(access_token) {
+  savePlaylistToSpotify(access_token, playlist) {
     return axios
-      .get(`${ROOT_URL}/api/playlist/save`, {
+      .post(`${ROOT_URL}/api/playlist/save`, {
         headers: {
           Authorization: `Bearer ${access_token}`
-        }
+        },
+        data: { playlist }
       })
       .then(response => response.data);
   },

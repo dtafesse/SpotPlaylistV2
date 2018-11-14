@@ -17,7 +17,7 @@ exports.savePlaylist = (req, res, next) => {
 
   console.log(access_token);
 
-  //let { playlist } = req.body.data;
+  let { playlist } = req.body.data;
 
   spotifyWebApi.setAccessToken(access_token);
   spotifyWebApi
