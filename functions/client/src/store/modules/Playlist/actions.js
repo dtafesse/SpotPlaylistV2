@@ -35,8 +35,8 @@ const actions = {
       .ref('/users/' + getters.user.id)
       .child('/playlists/')
       .push(playlist)
-      .then(() => {
-        commit('SET_PLAYLIST_IDS', playlistIds);
+      .then(data => {
+        commit('SET_PLAYLIST_IDS', { ...playlist, fbKey: data.key });
       })
       .catch(err => {
         // eslint-disable-next-line
