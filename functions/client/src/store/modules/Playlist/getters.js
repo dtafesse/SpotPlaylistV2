@@ -1,4 +1,5 @@
 const getters = {
+  getCurrentPlaylistIds: state => state.currentPlaylistIds,
   getCurrentPlaylist: state => state.playlist,
   getCurrentTrack: state => state.currentTrack,
   getCurrentArtwork: state => state.currentArtwork,

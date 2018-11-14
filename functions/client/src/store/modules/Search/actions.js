@@ -73,6 +73,10 @@ const actions = {
 
       helpers.shuffle(getters.getNewGeneratedPlaylist);
 
+      if (getters.user) {
+        dispatch('savePlaylistToFirebaseDB');
+      }
+
       dispatch('setPlaylist', getters.getNewGeneratedPlaylist)
         .then(() => {
           dispatch('setSuffle', {

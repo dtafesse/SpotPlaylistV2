@@ -1,5 +1,6 @@
 const state = {
   playlist: undefined,
+  currentPlaylistIds: [],
   currentTrack: undefined,
   currentArtwork: '',
   audioElement: undefined,

@@ -62,6 +62,7 @@ const actions = {
     }
     firebase.auth().signOut();
     commit('setUser', null);
+    dispatch('resetPlaylist');
 
     router.push('/landing');
   },

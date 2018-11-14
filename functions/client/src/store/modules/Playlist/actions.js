@@ -3,10 +3,11 @@ import * as firebase from 'firebase';
 
 const actions = {
   setPlaylist: (context, newPlayist) => {
-    let temp = newPlayist;
-
-    context.commit('SET_PLAYLIST', temp);
-    //context.commit('RESET_GENERATED_PLAYLIST');
+    context.commit('SET_PLAYLIST', newPlayist);
+  },
+  resetPlaylist: ({ commit }) => {
+    commit('SET_PLAYLIST', undefined);
+    commit('SET_SHUFFLED_PLAYLIST', []);
   },
   savePlaylistToSpotify({ commit, getters }) {
     if (!getters.getAccessToken) {
@@ -21,7 +22,27 @@ const actions = {
       })
       .catch(err => console.log(err));
   },
-  savePlaylistToFirebaseDB({ commit, getters }) {},
+  savePlaylistToFirebaseDB({ commit, getters }) {
+    let playlistIds = getters.getNewGeneratedPlaylist.map(track => track.id);
+
+    let playlist = {
+      playlistName: 'untitled',
+      playlistIds: playlistIds
+    };
+
+    firebase
+      .database()
+      .ref('/users/' + getters.user.id)
+      .child('/playlists/')
+      .push(playlist)
+      .then(() => {
+        commit('SET_PLAYLIST_IDS', playlistIds);
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err.message);
+      });
+  },
   setCurrentTrack: (context, payload) => {
     context.commit('SET_CURRENT_TRACK', payload.currentTrack);
     context.commit('SET_ARTWORK', payload.currentArtwork);

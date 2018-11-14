@@ -4,6 +4,9 @@ const mutations = {
   SET_PLAYLIST: (state, payload) => {
     state.playlist = payload;
   },
+  SET_PLAYLIST_IDS: (state, playlistIds) => {
+    state.currentPlaylistIds = playlistIds;
+  },
   SET_CURRENT_TRACK: (state, payload) => {
     state.currentTrack = payload;
   },
