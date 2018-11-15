@@ -7,23 +7,29 @@ const spotifyWebApi = new SpotifyWebApi({
 });
 
 exports.savePlaylist = (req, res, next) => {
-  let { playlist, access_token } = req.body.data;
+  let { access_token, playlistIds, playlistName } = req.body.data;
 
   spotifyWebApi.setAccessToken(access_token);
   spotifyWebApi
     .getMe()
-    .then(user => {
+    .then(data => {
+      return spotifyWebApi.createPlaylist(data.body.id, playlistName);
+    })
+    .then(data => {
+      return spotifyWebApi.addTracksToPlaylist(data.body.id, playlistIds);
+    })
+    .then(data => {
       res.status(200).json({
         confirmation: 'success',
         data: {
-          items: user
+          items: data.body.snapshot_id
         }
       });
       return;
     })
     .catch(err => {
       console.log(err);
-      if (access_token && err.statusCode === 401) {
+      if (err.statusCode === 401) {
         res.status(401).json({
           confirmation: 'fail',
           message: err.message,

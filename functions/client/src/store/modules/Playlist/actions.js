@@ -44,15 +44,17 @@ const actions = {
     api
       .savePlaylistToSpotify(
         getters.getAccessToken,
-        getters.getCurrentPlaylistMetaData.playlistIds
+        getters.getCurrentPlaylistMetaData.playlistIds,
+        getters.getCurrentPlaylistMetaData.playlistName
       )
-      .then(data => {
-        console.log(data);
-
+      .then(() => {
+        commit('SET_LOADING', false);
         /// return Promise.resolve(true)
       })
-      .catch(err => console.log(err))
-      .finally(() => commit('SET_LOADING', false));
+      .catch(err => {
+        console.log(err);
+        commit('SET_LOADING', false);
+      });
   },
   savePlaylistToFirebaseDB({ commit, getters }) {
     commit('SET_LOADING', true);

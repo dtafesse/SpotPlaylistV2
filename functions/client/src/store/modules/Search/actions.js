@@ -75,7 +75,7 @@ const actions = {
 
       let playlist = {
         playlistName: 'Untitled',
-        playlistIds: getters.getNewGeneratedPlaylist.map(track => track.id),
+        playlistIds: getters.getNewGeneratedPlaylist.map(track => track.uri),
         id: helpers.generateRandom()
       };
 
