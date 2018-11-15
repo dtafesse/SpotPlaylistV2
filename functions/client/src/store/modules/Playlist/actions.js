@@ -5,9 +5,11 @@ const actions = {
   setPlaylist: (context, newPlayist) => {
     context.commit('SET_PLAYLIST', newPlayist);
   },
-  resetPlaylist: ({ commit }) => {
+  clearPlaylistState: ({ commit }) => {
     commit('SET_PLAYLIST', undefined);
     commit('SET_SHUFFLED_PLAYLIST', []);
+    commit('SET_CURRENT_PLAYLIST_META_DATA', []);
+    commit('RESET_RECENTLY_GENERATED_PLAYLISTS');
   },
   savePlaylistToSpotify({ commit, getters }) {
     if (!getters.getAccessToken) {
@@ -23,28 +25,54 @@ const actions = {
       .catch(err => console.log(err));
   },
   savePlaylistToFirebaseDB({ commit, getters }) {
-    let playlistIds = getters.getNewGeneratedPlaylist.map(track => track.id);
-
-    let playlist = {
-      playlistName: 'Untitled',
-      playlistIds: playlistIds
-    };
-
     firebase
       .database()
       .ref('/users/' + getters.user.id)
       .child('/playlists/')
-      .push(playlist)
+      .push(getters.getCurrentPlaylistMetaData)
       .then(data => {
-        commit('SET_PLAYLIST_IDS', { ...playlist, fbKey: data.key });
+        let currentPlaylistMeta = {
+          ...getters.getCurrentPlaylistMetaData,
+          fbKey: data.key
+        };
+
+        commit('SET_CURRENT_PLAYLIST_META_DATA', currentPlaylistMeta);
+        commit('ADD_TO_RECENTLY_GENERATED_PLAYLISTS', currentPlaylistMeta);
       })
       .catch(err => {
         // eslint-disable-next-line
         console.log(err.message);
       });
   },
-  updatedPlaylistName: ({ commit }, newPlaylistName) => {
+  updatedPlaylistName: ({ commit, getters }, newPlaylistName) => {
+    commit('SET_LOADING', true);
     commit('UPDATE_PLAYLIST_NAME', newPlaylistName);
+
+    let id = getters.getCurrentPlaylistMetaData.id;
+    commit('UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER_NAME', {
+      newPlaylistName,
+      id
+    });
+
+    if (getters.user) {
+      // update on firebase as well
+      const fbKey = getters.getCurrentPlaylistMetaData.fbKey;
+      const location =
+        '/users/' + getters.user.id + '/playlists/' + fbKey + '/playlistName/';
+
+      let fbUpdates = {};
+      fbUpdates[location] = newPlaylistName;
+
+      firebase
+        .database()
+        .ref()
+        .update(fbUpdates)
+        .then(() => {
+          commit('SET_LOADING', false);
+        })
+        .catch(err => console.log(err))
+        .finally(() => commit('SET_LOADING', false));
+    }
   },
   setCurrentTrack: (context, payload) => {
     context.commit('SET_CURRENT_TRACK', payload.currentTrack);

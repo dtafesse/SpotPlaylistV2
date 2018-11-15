@@ -41,7 +41,7 @@
                         <v-text-field 
                             :value="currentPlaylistName"
                             :readonly="isTextFieldReadOnly"
-                            :append-outer-icon="showEditIcon"
+                            :append-outer-icon="isTextFieldReadOnly ? 'edit' : 'check'"
                             @click:append-outer="editIconClicked"
                             @input="updatePlaylistName"
                         >
@@ -94,14 +94,10 @@ export default {
         isUserLoggedIn(){
             return this.$store.getters.user ? true: false;
         },
-        showEditIcon(){
-            if(this.isUserLoggedIn){
-                return this.isTextFieldReadOnly ? 'edit' : 'check';
-            }
-            return '';
-        },
         currentPlaylistName(){
-            return this.$store.getters.getCurrentPlaylistIds.playlistName ? this.$store.getters.getCurrentPlaylistIds.playlistName : 'Untitled'; 
+            return this.$store.getters.getCurrentPlaylistMetaData.playlistName 
+                ? this.$store.getters.getCurrentPlaylistMetaData.playlistName 
+                : 'Untitled'; 
         },
         currentlySelectedPlaylist() {
             const currentPlayingPlaylist = this.$store.getters.getCurrentPlaylist;

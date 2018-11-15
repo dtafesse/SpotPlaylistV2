@@ -73,6 +73,15 @@ const actions = {
 
       helpers.shuffle(getters.getNewGeneratedPlaylist);
 
+      let playlist = {
+        playlistName: 'Untitled',
+        playlistIds: getters.getNewGeneratedPlaylist.map(track => track.id),
+        id: helpers.generateRandom()
+      };
+
+      commit('SET_CURRENT_PLAYLIST_META_DATA', playlist);
+      commit('ADD_TO_RECENTLY_GENERATED_PLAYLISTS', playlist);
+
       if (getters.user) {
         dispatch('savePlaylistToFirebaseDB');
       }

@@ -18,6 +18,7 @@ const actions = {
           id: response.user.uid
         };
         commit('setUser', newUser);
+        dispatch('clearPlaylistState');
 
         if (signUpRequest.linkSpotify) {
           window.localStorage.setItem('fbUserId', newUser.id);
@@ -38,6 +39,7 @@ const actions = {
       .signInWithEmailAndPassword(signInRequest.email, signInRequest.password)
       .then(response => {
         commit('SET_LOADING', false);
+        dispatch('clearPlaylistState');
         const oldUser = {
           id: response.user.uid
         };
@@ -62,7 +64,7 @@ const actions = {
     }
     firebase.auth().signOut();
     commit('setUser', null);
-    dispatch('resetPlaylist');
+    dispatch('clearPlaylistState');
 
     router.push('/landing');
   },
