@@ -109,7 +109,9 @@ const actions = {
       });
   },
 
-  fetchUserSpotAuthTokenFromFB({ dispatch }, id) {
+  fetchUserSpotAuthTokenFromFB({ dispatch, commit }, id) {
+    commit('SET_LOADING', true);
+
     firebase
       .database()
       .ref('/users/' + id)
@@ -127,7 +129,11 @@ const actions = {
         }
 
         dispatch('finalizeSpotifyLogin', tokens);
-      });
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => commit('SET_LOADING', false));
   },
 
   logoutSpotify({ commit }) {
@@ -142,6 +148,7 @@ const actions = {
   },
   fetchSpotifyRefreshToken({ commit, getters }) {
     if (!getters.isSpotifyLoggedIn) return;
+    commit('SET_LOADING', true);
     api
       .fetchSpotifyRefreshToken(getters.getRefreshToken)
       .then(({ data }) => {
@@ -157,9 +164,13 @@ const actions = {
           'spotifyAuthRefreshCode',
           data.items.refresh_token
         );
+        commit('SET_LOADING', false);
         return Promise.resolve(true);
       })
-      .catch(err => console.log(err.message));
+      .catch(err => {
+        console.log(err.message);
+        commit('SET_LOADING', false);
+      });
   }
 };
 

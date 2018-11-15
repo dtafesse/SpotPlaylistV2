@@ -15,6 +15,7 @@ const actions = {
     if (!getters.getAccessToken) {
       return Promise.reject({ err: 'Spotify Account has not be linked' });
     }
+    commit('SET_LOADING', true);
     api
       .savePlaylistToSpotify(getters.getAccessToken)
       .then(data => {
@@ -22,9 +23,11 @@ const actions = {
 
         /// return Promise.resolve(true)
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => commit('SET_LOADING', false));
   },
   savePlaylistToFirebaseDB({ commit, getters }) {
+    commit('SET_LOADING', true);
     firebase
       .database()
       .ref('/playlists/' + getters.user.id)
@@ -41,10 +44,12 @@ const actions = {
       .catch(err => {
         // eslint-disable-next-line
         console.log(err.message);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
       });
   },
   updatedPlaylistName: ({ commit, getters }, newPlaylistName) => {
-    commit('SET_LOADING', true);
     commit('UPDATE_PLAYLIST_NAME', newPlaylistName);
 
     let id = getters.getCurrentPlaylistMetaData.id;
@@ -55,6 +60,8 @@ const actions = {
 
     if (getters.user) {
       // update on firebase as well
+      commit('SET_LOADING', true);
+
       const fbKey = getters.getCurrentPlaylistMetaData.fbKey;
       const location =
         '/playlists/' + getters.user.id + '/' + fbKey + '/playlistName/';
