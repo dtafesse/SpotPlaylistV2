@@ -49,7 +49,6 @@ const actions = {
       )
       .then(() => {
         commit('SET_LOADING', false);
-        /// return Promise.resolve(true)
       })
       .catch(err => {
         console.log(err);
@@ -273,17 +272,6 @@ const actions = {
         currentTrackIndex: context.getters.getCurrentTrackIndex
       });
     }
-  },
-  setMobileAudioElementFirstClick: ({ commit, getters, dispatch }, payload) => {
-    commit('SET_MOBILE_AUDIO_ELEMENT_FIRST_CLICK');
-
-    getters.getAudioElement.play().then(() => getters.getAudioElement.pause());
-    getters.getAudioElement.src = getters.currentTrack.preview_url;
-
-    dispatch('playPauseSong', {
-      playing: false,
-      playSong: true
-    });
   }
 };
 

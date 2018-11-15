@@ -17,8 +17,7 @@ const state = {
   autoPlay: false,
   repeat: false,
   mute: false,
-  shuffle: false,
-  mobileAudioElementFirstClick: true
+  shuffle: false
 };
 
 export default state;

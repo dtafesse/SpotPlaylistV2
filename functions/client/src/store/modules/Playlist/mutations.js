@@ -79,9 +79,6 @@ const mutations = {
   },
   SET_AUDIO_ELEMENT_VOLUME_PERCENTAGE: (state, payload) => {
     state.audioElement.volume = payload;
-  },
-  SET_MOBILE_AUDIO_ELEMENT_FIRST_CLICK: state => {
-    state.mobileAudioElementFirstClick = false;
   }
 };
 

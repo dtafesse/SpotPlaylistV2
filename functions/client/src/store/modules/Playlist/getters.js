@@ -17,8 +17,7 @@ const getters = {
   isAutoPlay: state => state.autoPlay,
   isRepeat: state => state.repeat,
   isMute: state => state.mute,
-  isShuffle: state => state.shuffle,
-  isMobileAudioElementFirstClick: state => state.mobileAudioElementFirstClick
+  isShuffle: state => state.shuffle
 };
 
 export default getters;

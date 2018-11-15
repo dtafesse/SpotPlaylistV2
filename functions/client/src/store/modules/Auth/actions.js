@@ -78,48 +78,51 @@ const actions = {
     api.loginSpotify();
   },
 
-  finalizeSpotifyLogin({ commit }, { access_token, refresh_token, refresh }) {
-    commit('setSpotifyAuthCodes', { access_token, refresh_token });
-    window.localStorage.setItem('spotifyAuthAccessCode', access_token);
-    window.localStorage.setItem('spotifyAuthRefreshCode', refresh_token);
+  finalizeSpotifyLogin({ commit }, { access_token, refresh_token, isRefresh }) {
+    return new Promise((resolve, reject) => {
+      commit('setSpotifyAuthCodes', { access_token, refresh_token });
+      window.localStorage.setItem('spotifyAuthAccessCode', access_token);
+      window.localStorage.setItem('spotifyAuthRefreshCode', refresh_token);
 
-    if (refresh) {
-      return Promise.resolve(true);
-    }
-    router.push('/saved/playlists');
-
-    return Promise.resolve(true);
+      if (!isRefresh) {
+        router.push('/saved/playlists');
+      }
+      resolve();
+    });
   },
 
   saveUserSpotAuthTokensToFB({ commit, dispatch }, query) {
-    const userId = window.localStorage.getItem('fbUserId');
+    return new Promise((resolve, reject) => {
+      const userId = window.localStorage.getItem('fbUserId');
 
-    const tokens = {
-      access_token: query.access_token,
-      refresh_token: query.refresh_token
-    };
+      const tokens = {
+        access_token: query.access_token,
+        refresh_token: query.refresh_token
+      };
 
-    commit('SET_LOADING', true);
+      commit('SET_LOADING', true);
 
-    firebase
-      .database()
-      .ref('/users/' + userId)
-      .child('/tokens/')
-      .set(tokens)
-      .then(() => {
-        dispatch('finalizeSpotifyLogin', {
-          ...tokens,
-          refresh: query.refresh
-        }).then(() => {
-          return Promise.resolve(true);
+      firebase
+        .database()
+        .ref('/users/' + userId)
+        .child('/tokens/')
+        .set(tokens)
+        .then(() => {
+          dispatch('finalizeSpotifyLogin', {
+            ...tokens,
+            isRefresh: query.refresh
+          }).then(() => {
+            resolve(true);
+          });
+        })
+        .catch(err => {
+          console.log(err.message);
+          reject(err);
+        })
+        .finally(() => {
+          commit('SET_LOADING', false);
         });
-      })
-      .catch(err => {
-        console.log(err.message);
-      })
-      .finally(() => {
-        commit('SET_LOADING', false);
-      });
+    });
   },
 
   fetchUserSpotAuthTokenFromFB({ dispatch, commit }, id) {
@@ -152,23 +155,29 @@ const actions = {
   },
 
   fetchSpotifyRefreshToken({ commit, getters, dispatch }) {
-    if (!getters.isSpotifyLoggedIn) return;
-    commit('SET_LOADING', true);
-    api
-      .fetchSpotifyRefreshToken(getters.getRefreshToken)
-      .then(({ data }) => {
-        dispatch('saveUserSpotAuthTokensToFB', {
-          ...data.items,
-          refresh: true
-        }).then(() => {
+    return new Promise((resolve, reject) => {
+      if (!getters.isSpotifyLoggedIn) {
+        reject(new Error('Spotify account is Not linked!'));
+      }
+
+      commit('SET_LOADING', true);
+      api
+        .fetchSpotifyRefreshToken(getters.getRefreshToken)
+        .then(({ data }) => {
+          dispatch('saveUserSpotAuthTokensToFB', {
+            ...data.items,
+            isRefresh: true
+          }).then(() => {
+            commit('SET_LOADING', false);
+            resolve(true);
+          });
+        })
+        .catch(err => {
+          console.log(err.message);
           commit('SET_LOADING', false);
-          return Promise.resolve(true);
+          reject(err);
         });
-      })
-      .catch(err => {
-        console.log(err.message);
-        commit('SET_LOADING', false);
-      });
+    });
   }
 };
 
