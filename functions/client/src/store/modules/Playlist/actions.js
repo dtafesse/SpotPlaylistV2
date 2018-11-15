@@ -27,8 +27,7 @@ const actions = {
   savePlaylistToFirebaseDB({ commit, getters }) {
     firebase
       .database()
-      .ref('/users/' + getters.user.id)
-      .child('/playlists/')
+      .ref('/playlists/' + getters.user.id)
       .push(getters.getCurrentPlaylistMetaData)
       .then(data => {
         let currentPlaylistMeta = {
@@ -58,7 +57,7 @@ const actions = {
       // update on firebase as well
       const fbKey = getters.getCurrentPlaylistMetaData.fbKey;
       const location =
-        '/users/' + getters.user.id + '/playlists/' + fbKey + '/playlistName/';
+        '/playlists/' + getters.user.id + '/' + fbKey + '/playlistName/';
 
       let fbUpdates = {};
       fbUpdates[location] = newPlaylistName;
