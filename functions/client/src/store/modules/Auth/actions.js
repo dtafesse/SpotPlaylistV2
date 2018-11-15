@@ -52,11 +52,12 @@ const actions = {
         console.log(error);
       });
   },
-  autoSignIn({ commit }, payload) {
+  autoSignIn({ commit, dispatch }, payload) {
     const user = {
       id: payload.uid
     };
     commit('setUser', user);
+    dispatch('fetchPlaylistsFromFB');
   },
   logout({ commit, getters, dispatch }) {
     if (getters.isSpotifyLoggedIn) {

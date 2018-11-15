@@ -7,8 +7,8 @@ const mutations = {
   SET_CURRENT_PLAYLIST_META_DATA: (state, playlistIds) => {
     state.currentPlaylistMetaData = playlistIds;
   },
-  RESET_RECENTLY_GENERATED_PLAYLISTS: state => {
-    state.recentlyGeneratedPlaylist = [];
+  SET_RECENTLY_GENERATED_PLAYLISTS: (state, playlists) => {
+    state.recentlyGeneratedPlaylist = playlists;
   },
   ADD_TO_RECENTLY_GENERATED_PLAYLISTS: (state, playlist) => {
     state.recentlyGeneratedPlaylist.push(playlist);

@@ -9,7 +9,35 @@ const actions = {
     commit('SET_PLAYLIST', undefined);
     commit('SET_SHUFFLED_PLAYLIST', []);
     commit('SET_CURRENT_PLAYLIST_META_DATA', []);
-    commit('RESET_RECENTLY_GENERATED_PLAYLISTS');
+    commit('SET_RECENTLY_GENERATED_PLAYLISTS', []);
+  },
+  fetchPlaylistsFromFB: ({ commit, getters }) => {
+    commit('SET_LOADING', true);
+
+    firebase
+      .database()
+      .ref('/playlists/' + getters.user.id)
+      .once('value')
+      .then(data => {
+        let savedPlaylists = [];
+        const obj = data.val();
+
+        for (let key in obj) {
+          savedPlaylists.push({
+            id: obj[key].id,
+            playlistIds: obj[key].playlistIds,
+            playlistName: obj[key].playlistName
+          });
+        }
+
+        if (savedPlaylists) {
+          commit('SET_RECENTLY_GENERATED_PLAYLISTS', savedPlaylists);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => commit('SET_LOADING', false));
   },
   savePlaylistToSpotify({ commit, getters }) {
     if (!getters.getAccessToken) {

@@ -80,10 +80,11 @@ const actions = {
       };
 
       commit('SET_CURRENT_PLAYLIST_META_DATA', playlist);
-      commit('ADD_TO_RECENTLY_GENERATED_PLAYLISTS', playlist);
 
       if (getters.user) {
         dispatch('savePlaylistToFirebaseDB');
+      } else {
+        commit('ADD_TO_RECENTLY_GENERATED_PLAYLISTS', playlist);
       }
 
       dispatch('setPlaylist', getters.getNewGeneratedPlaylist)
