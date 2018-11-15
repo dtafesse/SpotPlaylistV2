@@ -1,52 +1,73 @@
 <template>
-    <v-container grid-list-md text-xs-center my-5 pt-2 >
-
+    <v-container grid-list-md text-xs-center my-5 pt-2>
         <Loader v-if="loading" :width="7" :size="70" />
-        
         <v-layout v-else row>
-            <v-flex sm5 v-if="$vuetify.breakpoint.smAndUp">
-                <v-card v-if="currentlySelectedTrack">
-                    <v-container >
-                        <v-layout>
-                            <v-flex xs12>
-                                <v-img 
-                                    :src="currentlySelectedTrack.album.images[0].url"
-                                    contain
-                                >
-                                </v-img>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
-                </v-card>
-                <v-container>
+            <v-flex sm5 offset-sm1 v-if="$vuetify.breakpoint.smAndUp">
+                <v-card 
+                    v-if="currentlySelectedTrack" 
+                    max-width="380px"
+                >          
                     <v-layout>
-                        <v-flex sm6 text-xs-center>
-                            <div @click="onPlay">
-                                <v-btn large>Play </v-btn>
-                            </div>
+                        <v-flex xs12 mt-2 >
+                            <v-img 
+                                :src="currentlySelectedTrack.album.images[0].url"
+                                contain
+                                height="320px"
+                            >
+                            </v-img>
                         </v-flex>
-                        <v-flex sm6 text-xs-center>
-                            <div @click="onShuffle">
-                                <v-btn large>Shuffle</v-btn>
-                            </div>
-                        </v-flex>
-                    </v-layout>
-                </v-container>   
+                 
+                    </v-layout> 
+                    <v-divider light></v-divider>    
+                    <v-card-actions>
+                        <v-btn  
+                            flat
+                            @click="onPlay"
+                            color="primary"
+                            >Play 
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn 
+                            flat
+                            @click="onShuffle"
+                            color="primary"
+                            >Shuffle
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn  
+                            flat
+                            @click="onSaveToSpotify"
+                            color="#1DB954"
+                            >Save to Spotify! 
+                        </v-btn>
+                        
+                    </v-card-actions>  
+                </v-card>           
             </v-flex>
             <!-- <v-flex xs12 sm6 offset-sm3 align-center justify-center fill-height> -->
             <v-flex xs12 sm6 offset-sm1 align-center justify-center fill-height>
                 <v-list three-line>
                     <v-subheader> 
-                        
                         <v-text-field 
                             :value="currentPlaylistName"
                             :readonly="isTextFieldReadOnly"
                             :append-outer-icon="isTextFieldReadOnly ? 'edit' : 'check'"
                             @click:append-outer="editIconClicked"
                             @input="updatePlaylistName"
+                            :rules="playlistNameRules"
+                            maxlength="25"
+                            label="Playlist Name"
                         >
                         </v-text-field>
-                        {{ numberOfSongs }}
+                        <span v-if="$vuetify.breakpoint.smAndUp" >{{ numberOfSongs }}</span>
+                        <v-btn 
+                            v-if="$vuetify.breakpoint.xs" 
+                            flat
+                            small
+                            @click="onSaveToSpotify"
+                            color="#1DB954"
+                            >Save to Spotify! 
+                        </v-btn>
                     </v-subheader>
                     <template v-for="(track, index) in currentlySelectedPlaylist" >
                         <v-list-tile :key="track.id" avatar ripple @click="onClickTrack(index)" class="listItem">
@@ -87,7 +108,8 @@ export default {
     data() {
         return {
             newPlaylistName : '',
-            isTextFieldReadOnly: true
+            isTextFieldReadOnly: true,
+            playlistNameRules: [v => v.length <= 25 || 'Max 25 characters']
         }
     },
     computed: {
@@ -159,6 +181,9 @@ export default {
                     
                 }
             }
+        },
+        onSaveToSpotify(){
+            
         }
     }
 }
