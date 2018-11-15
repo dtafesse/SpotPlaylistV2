@@ -128,7 +128,7 @@ export default {
             return currentPlayingPlaylist !== undefined ? this.$store.getters.getCurrentPlaylist : null;
         },
         currentlySelectedTrack(){
-            return this.$store.getters.getCurrentTrack ? this.$store.getters.getCurrentTrack: null;
+            return this.$store.getters.getCurrentTrack ? this.$store.getters.getCurrentTrack: this.currentlySelectedPlaylist[0];
         },
         currentlySelectedTrackName(){
             let trackName = null;
