@@ -35,12 +35,12 @@
                         </v-btn>
                         <v-spacer></v-spacer>
                         <v-btn  
+                            v-if="isUserLoggedIn"
                             flat
                             @click="onSaveToSpotify"
                             color="#1DB954"
                             >Save to Spotify! 
                         </v-btn>
-                        
                     </v-card-actions>  
                 </v-card>           
             </v-flex>
@@ -61,7 +61,7 @@
                         </v-text-field>
                         <span v-if="$vuetify.breakpoint.smAndUp" >{{ numberOfSongs }}</span>
                         <v-btn 
-                            v-if="$vuetify.breakpoint.xs" 
+                            v-if="$vuetify.breakpoint.xs && isUserLoggedIn" 
                             flat
                             small
                             @click="onSaveToSpotify"
@@ -88,7 +88,6 @@
                                     library_music
                                 </v-icon>
                             </v-list-tile-action>
-
                         </v-list-tile>
                     </template>
                 </v-list>
@@ -115,6 +114,9 @@ export default {
     computed: {
         isUserLoggedIn(){
             return this.$store.getters.user ? true: false;
+        },
+        isSpotifyAccountLinked(){
+            return this.$store.getters.isSpotifyLoggedIn;
         },
         currentPlaylistName(){
             return this.$store.getters.getCurrentPlaylistMetaData.playlistName 
@@ -183,7 +185,11 @@ export default {
             }
         },
         onSaveToSpotify(){
-            
+            if(this.isSpotifyAccountLinked){
+                this.$store.dispatch('savePlaylistToSpotify');
+            }else{
+                this.$store.dispatch('loginSpotify');
+            }
         }
     }
 }

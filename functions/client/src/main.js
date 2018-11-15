@@ -32,11 +32,14 @@ new Vue({
     // intercept all error responses, if error is 401 then referesh spotify access token
 
     axios.interceptors.response.use(undefined, err => {
+      console.log(err.config);
+
       return new Promise((resolve, reject) => {
         if (err.response.status === 401 && err.config) {
           this.$store.dispatch('fetchSpotifyRefreshToken').then(() => {
-            err.config.headers.Authorization =
-              'Bearer ' + this.$store.getters.getAccessToken;
+            // err.config.headers.Authorization =
+            //   'Bearer ' + this.$store.getters.getAccessToken;
+            err.config.headers.data.access_token = this.$store.getters.getAccessToken;
             return axios(err.config);
           });
         }

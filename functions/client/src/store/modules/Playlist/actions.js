@@ -40,12 +40,12 @@ const actions = {
       .finally(() => commit('SET_LOADING', false));
   },
   savePlaylistToSpotify({ commit, getters }) {
-    if (!getters.getAccessToken) {
-      return Promise.reject({ err: 'Spotify Account has not be linked' });
-    }
     commit('SET_LOADING', true);
     api
-      .savePlaylistToSpotify(getters.getAccessToken)
+      .savePlaylistToSpotify(
+        getters.getAccessToken,
+        getters.getCurrentPlaylistMetaData.playlistIds
+      )
       .then(data => {
         console.log(data);
 

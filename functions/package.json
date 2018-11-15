@@ -10,7 +10,7 @@
     "logs": "firebase functions:log",
     "client": "npm run serve --prefix client",
     "dev": "concurrently \"npm run serve\" \"npm run client\"",
-    "deploy-hosting" : "npm run build --prefix client && firebase deploy --only hosting"
+    "deploy-hosting": "npm run build --prefix client && firebase deploy --only hosting"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

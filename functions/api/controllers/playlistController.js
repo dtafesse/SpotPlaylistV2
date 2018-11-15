@@ -7,17 +7,7 @@ const spotifyWebApi = new SpotifyWebApi({
 });
 
 exports.savePlaylist = (req, res, next) => {
-  let access_token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.split(' ')[0] === 'Bearer'
-  ) {
-    access_token = req.headers.authorization.split(' ')[1];
-  }
-
-  console.log(access_token);
-
-  let { playlist } = req.body.data;
+  let { playlist, access_token } = req.body.data;
 
   spotifyWebApi.setAccessToken(access_token);
   spotifyWebApi
@@ -33,7 +23,7 @@ exports.savePlaylist = (req, res, next) => {
     })
     .catch(err => {
       console.log(err);
-      if (err.statusCode === 401) {
+      if (access_token && err.statusCode === 401) {
         res.status(401).json({
           confirmation: 'fail',
           message: err.message,
