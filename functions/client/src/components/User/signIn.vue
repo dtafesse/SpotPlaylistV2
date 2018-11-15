@@ -18,9 +18,6 @@
                                 <v-btn @click="navSignUp" color="primary">Sign Up</v-btn>
                                 <v-btn type="submit" color="primary" :disabled="loading" :loading="loading">
                                     Log In
-                                    <span v-if="loading">
-                                        <Loader :width="7" :size="50" />
-                                    </span>
                                 </v-btn>
                             </v-layout>
                         </v-form>

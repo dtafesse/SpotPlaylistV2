@@ -40,7 +40,6 @@
                             @click="onSaveToSpotify"
                             color="#1DB954"
                             >Save to Spotify! 
-                            
                         </v-btn>
                     </v-card-actions>  
                 </v-card>           

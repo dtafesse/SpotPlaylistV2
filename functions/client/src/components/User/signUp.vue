@@ -56,9 +56,6 @@
                                     :loading="loading"
                                 >
                                     Create Account
-                                    <span v-if="loading">
-                                        <Loader :width="7" :size="50" />
-                                    </span>
                                 </v-btn>
                             </v-layout>
                         </v-form>
