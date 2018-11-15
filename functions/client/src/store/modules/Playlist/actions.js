@@ -6,10 +6,12 @@ const actions = {
     context.commit('SET_PLAYLIST', newPlayist);
   },
   clearPlaylistState: ({ commit }) => {
+    commit('SET_CURRENT_TRACK', undefined);
     commit('SET_PLAYLIST', undefined);
     commit('SET_SHUFFLED_PLAYLIST', []);
     commit('SET_CURRENT_PLAYLIST_META_DATA', []);
     commit('SET_RECENTLY_GENERATED_PLAYLISTS', []);
+    commit('SET_AUDIO_ELEMENT', undefined);
   },
   fetchPlaylistsFromFB: ({ commit, getters }) => {
     commit('SET_LOADING', true);
