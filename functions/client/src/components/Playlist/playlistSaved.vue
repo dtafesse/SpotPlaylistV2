@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container fluid mt-5>
         <v-layout row>
             <v-flex xs12 align-center justify-center fill-height>
                 Previously listened to..
