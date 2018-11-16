@@ -12,7 +12,6 @@
                     <v-text-field v-model="email" prepend-icon="person" name="email" label="Email" type="email" color="primary" required></v-text-field>
                     <v-text-field v-model="password" prepend-icon="lock" name="password" label="Password" id="password" type="password" color="primary" required></v-text-field>
                     <v-layout align-center justify-center>
-                        <v-btn @click="navHome" color="primary">Cancel</v-btn>
                         <v-btn @click="navSignUp" color="primary">Sign Up</v-btn>
                         <v-btn type="submit" color="primary" :disabled="loading" :loading="loading">
                             Log In
@@ -64,9 +63,6 @@ export default {
         },
         onDismissed () {
             this.$store.dispatch('clearError');
-        },
-        navHome() {
-            this.$router.push({path: '/saved/playlists'});
         },
         navSignUp() {
             this.$router.push({path: '/signup'});

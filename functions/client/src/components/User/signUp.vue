@@ -45,7 +45,6 @@
                     >
                     </v-switch>
                     <v-layout wrap align-center justify-center>
-                        <v-btn @click="navHome" color="primary">Cancel</v-btn>
                         <v-btn @click="navSignIn" color="primary">Sign In</v-btn>
                         <v-btn 
                             type="submit" 
@@ -112,9 +111,6 @@ export default {
         },
         onDismissed () {
             this.$store.dispatch('clearError');
-        },
-        navHome() {
-            this.$router.push({path: '/saved/playlists'});
         },
         navSignIn() {
             this.$router.push({path: '/signin'});
