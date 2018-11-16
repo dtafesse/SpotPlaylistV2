@@ -57,7 +57,7 @@ export default {
             
             if(this.userIsAuth) {
                 menuItemIcons = [
-                    { icon: 'exit_to_app', title: 'Logout', link: '/landing'}
+                    { icon: 'exit_to_app', title: 'Logout', link: '/signin'}
                 ];
             }
             return menuItemIcons;
