@@ -35,13 +35,29 @@ export default {
       .then(response => response.data);
   },
 
-  savePlaylistToSpotify(access_token, playlistIds, playlistName) {
+  createPlaylistOnSpotify(access_token, playlistName) {
     return axios
-      .post(`${ROOT_URL}/api/playlist/save`, {
+      .post(`${ROOT_URL}/api/playlist/create`, {
+        data: { access_token, playlistName }
+      })
+      .then(response => response.data);
+  },
+
+  addTracksToCreatedPlaylistOnSpotify(
+    access_token,
+    listOfPlaylistUris,
+    playlistId
+  ) {
+    return axios
+      .post(`${ROOT_URL}/api/playlist/addtracks`, {
         // headers: {
         //   Authorization: `Bearer ${access_token}`
         // },
-        data: { access_token, playlistIds, playlistName }
+        data: {
+          access_token,
+          listOfPlaylistUris,
+          playlistId
+        }
       })
       .then(response => response.data);
   },
