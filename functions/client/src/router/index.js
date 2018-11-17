@@ -11,7 +11,7 @@ import SearchResults from '../components/Search/index';
 import AlbumAndArtistResult from '../components/Search/AlbumAndArtistResult';
 import RenderAll from '../components/Search/displayAll';
 
-import PlaylistTable from '../components/Playlist/playlistTable';
+import PlaylistTable from '../components/Playlist/PlaylistTable/index';
 import SavedPlaylists from '../components/Playlist/playlistSaved';
 import Landing from '../components/Landing/landing';
 Vue.use(Router);

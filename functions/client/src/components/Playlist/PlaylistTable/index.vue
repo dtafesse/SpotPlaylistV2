@@ -2,47 +2,15 @@
     <v-container grid-list-md text-xs-center my-5 pt-2>
         <Loader v-if="loading" :width="7" :size="70" />
         <v-layout v-else row>
-            <v-flex sm5 v-if="$vuetify.breakpoint.smAndUp">
-                <v-card 
-                    v-if="currentlySelectedTrack" 
-                    max-width="380px"
-                >          
-                    <v-layout>
-                        <v-flex xs12 mt-2 >
-                            <v-img 
-                                :src="currentlySelectedTrack.album.images[0].url"
-                                contain
-                                height="320px"
-                            >
-                            </v-img>
-                        </v-flex>
-                    </v-layout> 
-                    <v-divider light></v-divider>    
-                    <v-card-actions>
-                        <v-btn  
-                            flat
-                            @click="onPlay"
-                            color="primary"
-                            >Play 
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn 
-                            flat
-                            @click="onShuffle"
-                            color="primary"
-                            >Shuffle
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn  
-                            v-if="isUserLoggedIn"
-                            flat
-                            @click="onSpotifyButton"
-                            color="#1DB954"
-                            > {{ spotifyButtonValue }}
-                        </v-btn>
-                    </v-card-actions>  
-                </v-card>           
-            </v-flex>
+            <card 
+                :currentlySelectedTrack="currentlySelectedTrack" 
+                :isUserLoggedIn="isUserLoggedIn"
+                :spotifyButtonValue="spotifyButtonValue"
+                @onPlay="onPlay" 
+                @onShuffle="onShuffle" 
+                @onSpotifyButton="onSpotifyButton"     
+            />
+
             <v-flex xs12 sm6 offset-sm1 align-center justify-center fill-height>
                 <v-list three-line>
                     <v-subheader> 
@@ -59,7 +27,7 @@
                         </v-text-field>
                         <span v-if="$vuetify.breakpoint.smAndUp" >{{ numberOfSongs }}</span>
                         <v-btn 
-                            v-if="$vuetify.breakpoint.xs && isUserLoggedIn" 
+                            v-if="$vuetify.breakpoint.xs && isUserLoggedIn && isTextFieldReadOnly" 
                             flat
                             small
                             @click="onSpotifyButton"
@@ -99,13 +67,15 @@
 </template>
 
 <script>
-import Loader from '../Shared/Loader';
-import config from '../../../config';
+import Loader from '../../Shared/Loader';
+import config from '../../../../config';
+import card from './card';
 
 export default {
     name: 'playlistTable',
     components: {
-        Loader
+        Loader,
+        card
     },
     data() {
         return {
