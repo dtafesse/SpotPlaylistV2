@@ -2,7 +2,7 @@
     <v-container grid-list-md text-xs-center my-5 pt-2>
         <Loader v-if="loading" :width="7" :size="70" />
         <v-layout v-else row>
-            <v-flex sm5 offset-sm1 v-if="$vuetify.breakpoint.smAndUp">
+            <v-flex sm5 v-if="$vuetify.breakpoint.smAndUp">
                 <v-card 
                     v-if="currentlySelectedTrack" 
                     max-width="380px"
@@ -16,7 +16,6 @@
                             >
                             </v-img>
                         </v-flex>
-                 
                     </v-layout> 
                     <v-divider light></v-divider>    
                     <v-card-actions>
@@ -44,7 +43,6 @@
                     </v-card-actions>  
                 </v-card>           
             </v-flex>
-            <!-- <v-flex xs12 sm6 offset-sm3 align-center justify-center fill-height> -->
             <v-flex xs12 sm6 offset-sm1 align-center justify-center fill-height>
                 <v-list three-line>
                     <v-subheader> 
@@ -84,8 +82,12 @@
                             </v-list-tile-content>
 
                             <v-list-tile-action>
-                                <v-icon v-if="track.name === currentlySelectedTrackName" color="primary">
-                                    {{ spotifyIcon  }}
+                                <v-icon 
+                                    v-if="track.name === currentlySelectedTrackName" 
+                                    color="primary"
+                                     @click="onListenToTrackOnSpotify"
+                                >
+                                    library_music
                                 </v-icon>
                             </v-list-tile-action>
                         </v-list-tile>
@@ -200,6 +202,9 @@ export default {
             }else{
                 this.onSaveToSpotify();
             }
+        },
+        onListenToTrackOnSpotify(){
+            let newTab = window.open(`https://open.spotify.com/track/${this.currentlySelectedTrack.id}`)
         },
         onSaveToSpotify(){
             if(this.isSpotifyAccountLinked){
