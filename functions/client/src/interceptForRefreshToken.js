@@ -9,7 +9,7 @@ function subscribeTokenRefresh(cb) {
 }
 
 function onRrefreshed(token) {
-  subscribers.map(cb => cb(token));
+  subscribers.forEach(cb => cb(token));
 }
 
 export default {
@@ -19,8 +19,6 @@ export default {
         if (!isRefreshing) {
           isRefreshing = true;
           store.dispatch('fetchSpotifyRefreshToken').then(() => {
-            // err.config.headers.Authorization =
-            //   'Bearer ' + this.$store.getters.getAccessToken;
             isRefreshing = false;
             onRrefreshed(store.getters.getAccessToken);
             subscribers = [];
@@ -28,6 +26,10 @@ export default {
         }
         const requestSubscribers = new Promise(resolve => {
           subscribeTokenRefresh(token => {
+            // err.config.headers.Authorization =
+            //   'Bearer ' + this.$store.getters.getAccessToken;
+            // for some reason placing the access token in the header is
+            // giving a lots of erros on the backend
             let parsedData = JSON.parse(err.config.data);
             parsedData.data.access_token = token;
 
