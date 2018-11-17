@@ -72,7 +72,7 @@
 
 <script>
 import Loader from '../../Shared/Loader';
-import config from '../../../../config';
+import config from '../../../config';
 import card from './card';
 
 export default {
