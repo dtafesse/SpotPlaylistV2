@@ -93,13 +93,6 @@ export default {
             return this.$store.getters.isLoading
         }
     },
-    watch: {
-        user (value) {
-            if (value !== null && value !== undefined) {
-                this.navHome();
-            }
-        }
-    },
     methods: {
         onSubmit(){
             this.$store.dispatch('firebaseSignUpUser',{

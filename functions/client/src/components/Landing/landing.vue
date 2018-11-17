@@ -2,13 +2,17 @@
     <v-container fluid>
         <v-layout align-center justify-center row wrap fill-height >
             <v-flex xs12 sm6>
-                <v-layout v-if="!user">
-                    <p> Hello welcome to spot playlist!</p>
-                    <router-link to="../saved/playlists">Enter as Guest</router-link>    
+                <v-layout wrap ml-5>
+                    <v-flex xs12>
+                        <p> Hello welcome to spot playlist!</p>
+                    </v-flex>
+                    
+                    <v-flex xs12>
+                        <v-btn color="primary" to="/saved/playlists">
+                            Enter as Guest
+                        </v-btn>  
+                    </v-flex>
                 </v-layout>   
-                <v-layout v-else>
-                    <router-link to="../saved/playlists">Welcome Back!</router-link> 
-                </v-layout>
             </v-flex>
             <v-flex xs12 sm6>
                 <router-view></router-view>
@@ -21,11 +25,6 @@
 
 export default {
     name: 'landing',
-    computed: {
-        user(){
-           return this.$store.getters.user;
-        }
-    },
     methods: {
          login() {
             this.$router.push('/signin');

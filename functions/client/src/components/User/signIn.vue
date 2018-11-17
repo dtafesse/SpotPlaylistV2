@@ -50,13 +50,6 @@ export default {
             return this.$store.getters.isLoading
         }
     },
-    watch: {
-        user (value) {
-            if (value !== null && value !== undefined) {
-                this.navHome(); 
-            }
-        }
-    },
     methods: {
         signIn () {
             this.$store.dispatch('firebaseSignInUser',{email: this.email, password: this.password});
