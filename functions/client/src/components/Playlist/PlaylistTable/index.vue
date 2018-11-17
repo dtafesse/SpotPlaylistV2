@@ -36,27 +36,31 @@
                         </v-btn>
                     </v-subheader>
                     <template v-for="(track, index) in currentlySelectedPlaylist" >
-                        <v-list-tile :key="track.id" avatar ripple @click="onClickTrack(index)" class="listItem">
-                            <v-list-tile>
+                        <v-list-tile :key="track.id" avatar ripple class="listItem">
+                            <v-list-tile @click="onClickTrack(index)">
                                 <img 
                                     :src="track.album.images[0].url"
                                     max-width="50"
                                     height="50"
                                 >
                             </v-list-tile>
-                            <v-list-tile-content>
+                            <v-list-tile-content @click="onClickTrack(index)">
                                 <v-list-tile-title v-html="track.name"></v-list-tile-title>
                                  <v-list-tile-sub-title v-html="track.album.name"></v-list-tile-sub-title>
                             </v-list-tile-content>
 
                             <v-list-tile-action>
-                                <v-icon 
-                                    v-if="track.name === currentlySelectedTrackName" 
-                                    color="primary"
-                                     @click="onListenToTrackOnSpotify"
-                                >
-                                    library_music
-                                </v-icon>
+                                <v-tooltip top>
+                                     <v-icon 
+                                        v-if="track.name === currentlySelectedTrackName" 
+                                        color="primary"
+                                        @click="onListenToTrackOnSpotify"
+                                        slot="activator"
+                                    >
+                                        launch
+                                    </v-icon>
+                                    <span>Listen On Spotify!</span>
+                                </v-tooltip>
                             </v-list-tile-action>
                         </v-list-tile>
                     </template>
