@@ -135,7 +135,14 @@ const actions = {
       .once('value')
       .then(data => {
         const tokens = data.val();
-        dispatch('finalizeSpotifyLogin', tokens);
+        if (tokens) {
+          dispatch('finalizeSpotifyLogin', tokens);
+        } else {
+          dispatch('finalizeSpotifyLogin', {
+            access_token: null,
+            refresh_token: null
+          });
+        }
       })
       .catch(err => {
         console.log(err);
