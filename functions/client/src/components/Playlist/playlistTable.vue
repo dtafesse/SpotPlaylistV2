@@ -37,9 +37,9 @@
                         <v-btn  
                             v-if="isUserLoggedIn"
                             flat
-                            @click="onSaveToSpotify"
+                            @click="onSpotifyButton"
                             color="#1DB954"
-                            >Save to Spotify! 
+                            > {{ spotifyButtonValue }}
                         </v-btn>
                     </v-card-actions>  
                 </v-card>           
@@ -64,9 +64,9 @@
                             v-if="$vuetify.breakpoint.xs && isUserLoggedIn" 
                             flat
                             small
-                            @click="onSaveToSpotify"
+                            @click="onSpotifyButton"
                             color="#1DB954"
-                            >Save to Spotify! 
+                            > {{ spotifyButtonValue }}
                         </v-btn>
                     </v-subheader>
                     <template v-for="(track, index) in currentlySelectedPlaylist" >
@@ -85,7 +85,7 @@
 
                             <v-list-tile-action>
                                 <v-icon v-if="track.name === currentlySelectedTrackName" color="primary">
-                                    library_music
+                                    {{ spotifyIcon  }}
                                 </v-icon>
                             </v-list-tile-action>
                         </v-list-tile>
@@ -98,6 +98,7 @@
 
 <script>
 import Loader from '../Shared/Loader';
+import config from '../../../config';
 
 export default {
     name: 'playlistTable',
@@ -108,7 +109,8 @@ export default {
         return {
             newPlaylistName : '',
             isTextFieldReadOnly: true,
-            playlistNameRules: [v => v.length <= 25 || 'Max 25 characters']
+            playlistNameRules: [v => v.length <= 25 || 'Max 25 characters'],
+            spotifyIcon: config.spotifyIcon
         }
     },
     computed: {
@@ -118,10 +120,17 @@ export default {
         isSpotifyAccountLinked(){
             return this.$store.getters.isSpotifyLoggedIn;
         },
+        isPlaylistSavedOnSpotify(){
+            // Save to Spotify! 
+            return this.$store.getters.isCurrentPlaylistSavedOnSpotify;
+        },
         currentPlaylistName(){
             return this.$store.getters.getCurrentPlaylistMetaData.playlistName 
                 ? this.$store.getters.getCurrentPlaylistMetaData.playlistName 
                 : 'Untitled'; 
+        },
+        spotifyButtonValue(){
+            return this.isPlaylistSavedOnSpotify ? 'Listen On Spotify' : 'Save to Spotify!';
         },
         currentlySelectedPlaylist() {
             const currentPlayingPlaylist = this.$store.getters.getCurrentPlaylist;
@@ -180,8 +189,16 @@ export default {
                 if(this.newPlaylistName.trim() !== this.currentPlaylistName.trim()){
                     // update playlistName in the store and the database 
                     this.$store.dispatch('updatedPlaylistName', this.newPlaylistName.trim());
-                    
                 }
+            }
+        },
+        onSpotifyButton(){
+            if(this.isPlaylistSavedOnSpotify){
+                // Listen uri 
+                let newTab = window.open(`https://open.spotify.com/playlist/${this.$store.getters.getCurrentPlaylistMetaData.spotifyGeneratedPlaylistId}`)
+                newTab.opener = null;
+            }else{
+                this.onSaveToSpotify();
             }
         },
         onSaveToSpotify(){
