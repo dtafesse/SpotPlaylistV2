@@ -34,7 +34,7 @@
                     v-if="isUserLoggedIn"
                     flat
                     @click="$emit('onSpotifyButton')"
-                    color="#1DB954"
+                    color="spotifyColor"
                     > {{ spotifyButtonValue }}
                 </v-btn>
             </v-card-actions>  

@@ -53,7 +53,7 @@
                                 <v-tooltip top>
                                      <v-icon 
                                         v-if="track.name === currentlySelectedTrackName" 
-                                        color="#1DB954"
+                                        color="spotifyColor"
                                         @click="onListenToTrackOnSpotify"
                                         slot="activator"
                                     >
