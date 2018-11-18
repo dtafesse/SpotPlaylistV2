@@ -26,14 +26,18 @@
                         >
                         </v-text-field>
                         <span v-if="$vuetify.breakpoint.smAndUp" >{{ numberOfSongs }}</span>
-                        <v-btn 
-                            v-if="$vuetify.breakpoint.xs && isUserLoggedIn && isTextFieldReadOnly" 
-                            flat
-                            small
-                            @click="onSpotifyButton"
-                            color="#1DB954"
-                            > {{ spotifyButtonValue }}
-                        </v-btn>
+                        <v-tooltip top>
+                            <v-btn 
+                                v-if="$vuetify.breakpoint.xs && isUserLoggedIn && isTextFieldReadOnly" 
+                                flat
+                                small
+                                @click="onSpotifyButton"
+                                color="#1DB954"
+                                slot="activator"
+                                > {{ spotifyButtonValue }}
+                            </v-btn>
+                            <span> {{ spotifyButtonToolTipValue }} </span>
+                        </v-tooltip>
                     </v-subheader>
                     <template v-for="(track, index) in currentlySelectedPlaylist" >
                         <v-list-tile :key="track.id" avatar ripple class="listItem">
@@ -107,6 +111,12 @@ export default {
         },
         spotifyButtonValue(){
             return this.isPlaylistSavedOnSpotify ? 'Listen On Spotify' : 'Save to Spotify!';
+        },
+        spotifyButtonToolTipValue(){
+            if(this.spotifyButtonValue === 'Save to Spotify!'){
+                return !this.isSpotifyAccountLinked ? 'Link Spotify account first': 'First save playlist to listen on Spotify';
+            }
+            return 'Click to listen on Spotify!';
         },
         currentlySelectedPlaylist() {
             const currentPlayingPlaylist = this.$store.getters.getCurrentPlaylist;
@@ -184,7 +194,10 @@ export default {
             if(this.isSpotifyAccountLinked){
                 this.$store.dispatch('savePlaylistToSpotify');
             }else{
-                this.$store.dispatch('loginSpotify');
+                window.localStorage.setItem('loginFromPlaylistPage', true);
+                this.$store.dispatch('saveCurrentGeneratedPlaylistToFirebaseForUserThatHasNotLinkedSpotify')
+                    .then(() => this.$store.dispatch('loginSpotify'));
+                
             }
         }
     }

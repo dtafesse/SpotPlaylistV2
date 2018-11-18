@@ -1,4 +1,5 @@
 import api from '../../../api/index';
+import router from '../../../router/index';
 import * as firebase from 'firebase';
 
 const actions = {
@@ -30,7 +31,9 @@ const actions = {
             playlistIds: obj[key].playlistIds,
             playlistName: obj[key].playlistName,
             spotifyGeneratedPlaylistId: obj[key].spotifyGeneratedPlaylistId,
-            snapshot_id: obj[key].snapshot_id
+            snapshot_id: obj[key].snapshot_id,
+            generatedPlaylist: obj[key].generatedPlaylist,
+            fbKey: obj[key].fbKey
           });
         }
 
@@ -86,6 +89,8 @@ const actions = {
         dispatch('updateCurrentPlaylistMetaDataToFB', {
           node: '/snapshot_id/',
           newItemToReplace: snapshot_id
+        }).then(() => {
+          router.push({ path: '/Playlist' });
         });
 
         commit('SET_LOADING', false);
@@ -137,26 +142,92 @@ const actions = {
     { commit, getters },
     { node, newItemToReplace }
   ) => {
-    if (getters.user) {
-      // update on firebase as well
-      commit('SET_LOADING', true);
+    return new Promise((resolve, reject) => {
+      if (getters.user) {
+        // update on firebase as well
+        commit('SET_LOADING', true);
 
-      const fbKey = getters.getCurrentPlaylistMetaData.fbKey;
-      const location = '/playlists/' + getters.user.id + '/' + fbKey + node;
+        const fbKey = getters.getCurrentPlaylistMetaData.fbKey;
+        const location = '/playlists/' + getters.user.id + '/' + fbKey + node;
 
-      let fbUpdates = {};
-      fbUpdates[location] = newItemToReplace;
+        let fbUpdates = {};
+        fbUpdates[location] = newItemToReplace;
 
-      firebase
-        .database()
-        .ref()
-        .update(fbUpdates)
-        .then(() => {
-          commit('SET_LOADING', false);
-        })
-        .catch(err => console.log(err))
-        .finally(() => commit('SET_LOADING', false));
-    }
+        firebase
+          .database()
+          .ref()
+          .update(fbUpdates)
+          .then(() => {
+            commit('SET_LOADING', false);
+            resolve();
+          })
+          .catch(err => {
+            console.log(err);
+            reject();
+          })
+          .finally(() => commit('SET_LOADING', false));
+      }
+    });
+  },
+  checkIfLoginIntitiatedFromPlaylistPage: ({ commit, dispatch, getters }) => {
+    return new Promise((resolve, reject) => {
+      let isLoginIntitiatedFromPlaylistPage = window.localStorage.getItem(
+        'loginFromPlaylistPage'
+      );
+
+      if (isLoginIntitiatedFromPlaylistPage) {
+        commit('SET_LOADING', true);
+        window.localStorage.removeItem('loginFromPlaylistPage');
+
+        let postion = getters.getRecentlyGeneratedPlaylist.length - 1;
+
+        commit(
+          'SET_CURRENT_PLAYLIST_META_DATA',
+          getters.getRecentlyGeneratedPlaylist[postion]
+        );
+
+        dispatch(
+          'setPlaylist',
+          getters.getRecentlyGeneratedPlaylist[postion].generatedPlaylist
+        )
+          .then(() => {
+            dispatch('setSuffle', {
+              shuffle: true,
+              loadingNewPlaylist: true
+            });
+            router.push({ path: '/Playlist' });
+            resolve();
+          })
+          .catch(err => {
+            // eslint-disable-next-line
+            console.log(err.message);
+            reject(err);
+          })
+          .finally(() => {
+            commit('SET_LOADING', false);
+          });
+      }
+    });
+  },
+  saveCurrentGeneratedPlaylistToFirebaseForUserThatHasNotLinkedSpotify: ({
+    dispatch,
+    getters
+  }) => {
+    // after user links spotify account from the playlist page, the page refreshs
+    // thus, we loose the currentlyGeneratedPlaylist from our store
+    // so save it first before letting the user link their account
+
+    return new Promise(resolve => {
+      dispatch('updateCurrentPlaylistMetaDataToFB', {
+        node: '/generatedPlaylist/',
+        newItemToReplace: getters.getCurrentPlaylist
+      }).then(() => {
+        dispatch('updateCurrentPlaylistMetaDataToFB', {
+          node: '/fbKey/',
+          newItemToReplace: getters.getCurrentPlaylistMetaData.fbKey
+        }).then(() => resolve());
+      });
+    });
   }
 };
 
