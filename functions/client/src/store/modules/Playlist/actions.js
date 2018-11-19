@@ -1,9 +1,115 @@
+import api from '../../../api/index';
+import * as firebase from 'firebase';
+
 const actions = {
   setPlaylist: (context, newPlayist) => {
-    let temp = newPlayist;
+    context.commit('SET_PLAYLIST', newPlayist);
+  },
+  clearPlaylistState: ({ commit }) => {
+    commit('SET_CURRENT_TRACK', undefined);
+    commit('SET_PLAYLIST', undefined);
+    commit('SET_SHUFFLED_PLAYLIST', []);
+    commit('SET_CURRENT_PLAYLIST_META_DATA', []);
+    commit('SET_RECENTLY_GENERATED_PLAYLISTS', []);
+    commit('SET_AUDIO_ELEMENT', undefined);
+  },
+  fetchPlaylistsFromFB: ({ commit, getters }) => {
+    commit('SET_LOADING', true);
 
-    context.commit('SET_PLAYLIST', temp);
-    //context.commit('RESET_GENERATED_PLAYLIST');
+    firebase
+      .database()
+      .ref('/playlists/' + getters.user.id)
+      .once('value')
+      .then(data => {
+        let savedPlaylists = [];
+        const obj = data.val();
+
+        for (let key in obj) {
+          savedPlaylists.push({
+            id: obj[key].id,
+            playlistIds: obj[key].playlistIds,
+            playlistName: obj[key].playlistName
+          });
+        }
+
+        if (savedPlaylists) {
+          commit('SET_RECENTLY_GENERATED_PLAYLISTS', savedPlaylists);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => commit('SET_LOADING', false));
+  },
+  savePlaylistToSpotify({ commit, getters }) {
+    commit('SET_LOADING', true);
+    api
+      .savePlaylistToSpotify(
+        getters.getAccessToken,
+        getters.getCurrentPlaylistMetaData.playlistIds,
+        getters.getCurrentPlaylistMetaData.playlistName
+      )
+      .then(() => {
+        commit('SET_LOADING', false);
+      })
+      .catch(err => {
+        console.log(err);
+        commit('SET_LOADING', false);
+      });
+  },
+  savePlaylistToFirebaseDB({ commit, getters }) {
+    commit('SET_LOADING', true);
+    firebase
+      .database()
+      .ref('/playlists/' + getters.user.id)
+      .push(getters.getCurrentPlaylistMetaData)
+      .then(data => {
+        let currentPlaylistMeta = {
+          ...getters.getCurrentPlaylistMetaData,
+          fbKey: data.key
+        };
+
+        commit('SET_CURRENT_PLAYLIST_META_DATA', currentPlaylistMeta);
+        commit('ADD_TO_RECENTLY_GENERATED_PLAYLISTS', currentPlaylistMeta);
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err.message);
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      });
+  },
+  updatedPlaylistName: ({ commit, getters }, newPlaylistName) => {
+    commit('UPDATE_PLAYLIST_NAME', newPlaylistName);
+
+    let id = getters.getCurrentPlaylistMetaData.id;
+    commit('UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER_NAME', {
+      newPlaylistName,
+      id
+    });
+
+    if (getters.user) {
+      // update on firebase as well
+      commit('SET_LOADING', true);
+
+      const fbKey = getters.getCurrentPlaylistMetaData.fbKey;
+      const location =
+        '/playlists/' + getters.user.id + '/' + fbKey + '/playlistName/';
+
+      let fbUpdates = {};
+      fbUpdates[location] = newPlaylistName;
+
+      firebase
+        .database()
+        .ref()
+        .update(fbUpdates)
+        .then(() => {
+          commit('SET_LOADING', false);
+        })
+        .catch(err => console.log(err))
+        .finally(() => commit('SET_LOADING', false));
+    }
   },
   setCurrentTrack: (context, payload) => {
     context.commit('SET_CURRENT_TRACK', payload.currentTrack);
@@ -168,17 +274,6 @@ const actions = {
         currentTrackIndex: context.getters.getCurrentTrackIndex
       });
     }
-  },
-  setMobileAudioElementFirstClick: ({ commit, getters, dispatch }, payload) => {
-    commit('SET_MOBILE_AUDIO_ELEMENT_FIRST_CLICK');
-
-    getters.getAudioElement.play().then(() => getters.getAudioElement.pause());
-    getters.getAudioElement.src = getters.currentTrack.preview_url;
-
-    dispatch('playPauseSong', {
-      playing: false,
-      playSong: true
-    });
   }
 };
 

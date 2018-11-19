@@ -17,7 +17,9 @@ let spotifyWebApi = new SpotifyWebApi({
 });
 
 router.get('/login', (req, res) => {
-  var scope = 'user-read-private user-read-email';
+  var scope =
+    'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private';
+
   res.redirect(
     'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
@@ -57,8 +59,15 @@ router.get('/callback', (req, res) => {
 });
 
 router.get('/refresh_token', (req, res) => {
-  spotifyWebApi.setRefreshToken(req.query.refresh_token);
+  let refresh_token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(' ')[0] === 'Bearer'
+  ) {
+    refresh_token = req.headers.authorization.split(' ')[1];
+  }
 
+  spotifyWebApi.setRefreshToken(refresh_token);
   spotifyWebApi
     .refreshAccessToken()
     .then(data => {
@@ -67,7 +76,7 @@ router.get('/refresh_token', (req, res) => {
         data: {
           items: {
             access_token: data.body.access_token,
-            refresh_token: req.query.refresh_token,
+            refresh_token: refresh_token,
             expires_in: data.body.expires_in
           }
         }

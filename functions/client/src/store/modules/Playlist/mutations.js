@@ -4,6 +4,26 @@ const mutations = {
   SET_PLAYLIST: (state, payload) => {
     state.playlist = payload;
   },
+  SET_CURRENT_PLAYLIST_META_DATA: (state, playlistIds) => {
+    state.currentPlaylistMetaData = playlistIds;
+  },
+  SET_RECENTLY_GENERATED_PLAYLISTS: (state, playlists) => {
+    state.recentlyGeneratedPlaylist = playlists;
+  },
+  ADD_TO_RECENTLY_GENERATED_PLAYLISTS: (state, playlist) => {
+    state.recentlyGeneratedPlaylist.push(playlist);
+  },
+  UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER_NAME: (
+    state,
+    { newPlaylistName, id }
+  ) => {
+    let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id == id);
+
+    state.recentlyGeneratedPlaylist[index].playlistName = newPlaylistName;
+  },
+  UPDATE_PLAYLIST_NAME: (state, newName) => {
+    state.currentPlaylistMetaData.playlistName = newName;
+  },
   SET_CURRENT_TRACK: (state, payload) => {
     state.currentTrack = payload;
   },
@@ -59,9 +79,6 @@ const mutations = {
   },
   SET_AUDIO_ELEMENT_VOLUME_PERCENTAGE: (state, payload) => {
     state.audioElement.volume = payload;
-  },
-  SET_MOBILE_AUDIO_ELEMENT_FIRST_CLICK: state => {
-    state.mobileAudioElementFirstClick = false;
   }
 };
 

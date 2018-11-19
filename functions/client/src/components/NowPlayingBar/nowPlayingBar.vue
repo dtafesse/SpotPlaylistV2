@@ -72,7 +72,7 @@ export default {
             }        
         },
         handleUpdateTimeProgressBar(){
-            if(this.$store.getters.getAudioElement.duration){
+            if(this.$store.getters.getAudioElement && this.$store.getters.getAudioElement.duration){
     
                 this.$store.dispatch('setCurrentTime', 
                     helpers.formatTime(this.$store.getters.getAudioElement.currentTime)

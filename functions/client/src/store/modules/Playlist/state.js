@@ -1,5 +1,7 @@
 const state = {
   playlist: undefined,
+  currentPlaylistMetaData: undefined,
+  recentlyGeneratedPlaylist: [],
   currentTrack: undefined,
   currentArtwork: '',
   audioElement: undefined,
@@ -15,8 +17,7 @@ const state = {
   autoPlay: false,
   repeat: false,
   mute: false,
-  shuffle: false,
-  mobileAudioElementFirstClick: true
+  shuffle: false
 };
 
 export default state;

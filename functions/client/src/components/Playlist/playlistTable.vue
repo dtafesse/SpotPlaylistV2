@@ -1,49 +1,74 @@
 <template>
-    <v-container grid-list-md text-xs-center my-5 pt-2 >
-
+    <v-container grid-list-md text-xs-center my-5 pt-2>
         <Loader v-if="loading" :width="7" :size="70" />
-        
         <v-layout v-else row>
-            <v-flex sm5 v-if="$vuetify.breakpoint.smAndUp">
-                <v-card v-if="currentlySelectedTrack">
-                    <v-container >
-                        <v-layout>
-                            <v-flex xs7>
-                                <v-img 
-                                    :src="currentlySelectedTrack.album.images[0].url"
-                                    contain
-                                >
-                                </v-img>
-                            </v-flex>
-                            <v-flex xs5>
-                                <v-card-title primary-title>
-                                    <div>
-                                        <div class="headline">Playlist Name!</div>
-                                    </div>
-                                </v-card-title>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
-                </v-card>
-                <v-container>
+            <v-flex sm5 offset-sm1 v-if="$vuetify.breakpoint.smAndUp">
+                <v-card 
+                    v-if="currentlySelectedTrack" 
+                    max-width="380px"
+                >          
                     <v-layout>
-                        <v-flex sm6 text-xs-center>
-                            <div @click="onPlay">
-                                <v-btn large>Play </v-btn>
-                            </div>
+                        <v-flex xs12 mt-2 >
+                            <v-img 
+                                :src="currentlySelectedTrack.album.images[0].url"
+                                contain
+                                height="320px"
+                            >
+                            </v-img>
                         </v-flex>
-                        <v-flex sm6 text-xs-center>
-                            <div @click="onShuffle">
-                                <v-btn large>Shuffle</v-btn>
-                            </div>
-                        </v-flex>
-                    </v-layout>
-                </v-container>   
+                 
+                    </v-layout> 
+                    <v-divider light></v-divider>    
+                    <v-card-actions>
+                        <v-btn  
+                            flat
+                            @click="onPlay"
+                            color="primary"
+                            >Play 
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn 
+                            flat
+                            @click="onShuffle"
+                            color="primary"
+                            >Shuffle
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn  
+                            v-if="isUserLoggedIn"
+                            flat
+                            @click="onSaveToSpotify"
+                            color="#1DB954"
+                            >Save to Spotify! 
+                        </v-btn>
+                    </v-card-actions>  
+                </v-card>           
             </v-flex>
             <!-- <v-flex xs12 sm6 offset-sm3 align-center justify-center fill-height> -->
             <v-flex xs12 sm6 offset-sm1 align-center justify-center fill-height>
                 <v-list three-line>
-                    <v-subheader> Playlist Name: {{ numberOfSongs }}</v-subheader>
+                    <v-subheader> 
+                        <v-text-field 
+                            :value="currentPlaylistName"
+                            :readonly="isTextFieldReadOnly"
+                            :append-outer-icon="isTextFieldReadOnly ? 'edit' : 'check'"
+                            @click:append-outer="editIconClicked"
+                            @input="updatePlaylistName"
+                            :rules="playlistNameRules"
+                            maxlength="25"
+                            label="Playlist Name"
+                        >
+                        </v-text-field>
+                        <span v-if="$vuetify.breakpoint.smAndUp" >{{ numberOfSongs }}</span>
+                        <v-btn 
+                            v-if="$vuetify.breakpoint.xs && isUserLoggedIn" 
+                            flat
+                            small
+                            @click="onSaveToSpotify"
+                            color="#1DB954"
+                            >Save to Spotify! 
+                        </v-btn>
+                    </v-subheader>
                     <template v-for="(track, index) in currentlySelectedPlaylist" >
                         <v-list-tile :key="track.id" avatar ripple @click="onClickTrack(index)" class="listItem">
                             <v-list-tile>
@@ -63,7 +88,6 @@
                                     library_music
                                 </v-icon>
                             </v-list-tile-action>
-
                         </v-list-tile>
                     </template>
                 </v-list>
@@ -80,13 +104,31 @@ export default {
     components: {
         Loader
     },
+    data() {
+        return {
+            newPlaylistName : '',
+            isTextFieldReadOnly: true,
+            playlistNameRules: [v => v.length <= 25 || 'Max 25 characters']
+        }
+    },
     computed: {
+        isUserLoggedIn(){
+            return this.$store.getters.user ? true: false;
+        },
+        isSpotifyAccountLinked(){
+            return this.$store.getters.isSpotifyLoggedIn;
+        },
+        currentPlaylistName(){
+            return this.$store.getters.getCurrentPlaylistMetaData.playlistName 
+                ? this.$store.getters.getCurrentPlaylistMetaData.playlistName 
+                : 'Untitled'; 
+        },
         currentlySelectedPlaylist() {
             const currentPlayingPlaylist = this.$store.getters.getCurrentPlaylist;
             return currentPlayingPlaylist !== undefined ? this.$store.getters.getCurrentPlaylist : null;
         },
         currentlySelectedTrack(){
-            return this.$store.getters.getCurrentTrack ? this.$store.getters.getCurrentTrack: null;
+            return this.$store.getters.getCurrentTrack ? this.$store.getters.getCurrentTrack: this.currentlySelectedPlaylist[0];
         },
         currentlySelectedTrackName(){
             let trackName = null;
@@ -104,21 +146,7 @@ export default {
         }
     },
     methods: {
-        // onClickTrack(index) {
-        //     const track = {
-        //         currentTrack: this.currentlySelectedPlaylist[index],
-        //         currentArtwork: this.currentlySelectedPlaylist[index].album.images[0].url,
-        //         currentTrackIndex: index
-        //     };
-        //     this.$store.dispatch('setCurrentTrack', track);
-        //     this.$store.dispatch('setAutoPlay', true);
-        //     this.trackCliked = !this.trackCliked;
-        // },
         onClickTrack(index) {
-            // if(this.$store.getters.isMobileAudioElementFirstClick){
-            //         this.$store.dispatch('setMobileAudioElementFirstClick');
-            //         return;
-            //     }
             const track = {
                 currentTrack: this.currentlySelectedPlaylist[index],
                 currentArtwork: this.currentlySelectedPlaylist[index].album.images[0].url,
@@ -130,10 +158,6 @@ export default {
         },
         onPlay(){
             if(this.currentlySelectedPlaylist){
-                // if(this.$store.getters.isMobileAudioElementFirstClick){
-                //     this.$store.dispatch('setMobileAudioElementFirstClick');
-                //     return;
-                // }
                 this.onClickTrack(0);
             }
         },
@@ -145,6 +169,26 @@ export default {
                     loadingNewPlaylist: false
                 });
                 this.$store.dispatch('setAutoPlay', true);
+            }
+        },
+        updatePlaylistName(newName){
+            this.newPlaylistName = newName;
+        },
+        editIconClicked(){
+            this.isTextFieldReadOnly = !this.isTextFieldReadOnly;
+            if(this.isTextFieldReadOnly){
+                if(this.newPlaylistName.trim() !== this.currentPlaylistName.trim()){
+                    // update playlistName in the store and the database 
+                    this.$store.dispatch('updatedPlaylistName', this.newPlaylistName.trim());
+                    
+                }
+            }
+        },
+        onSaveToSpotify(){
+            if(this.isSpotifyAccountLinked){
+                this.$store.dispatch('savePlaylistToSpotify');
+            }else{
+                this.$store.dispatch('loginSpotify');
             }
         }
     }

@@ -16,6 +16,7 @@ import landingPage from './Landing/landing';
 import nowPlayingBar from './NowPlayingBar/nowPlayingBar';
 import navBar from './NavBar/nav';
 import Loader from './Shared/Loader';
+import Alert from './Shared/Alert';
 
 export default {
   name: 'Home',
@@ -23,7 +24,8 @@ export default {
     nowPlayingBar,
     navBar,
     Loader,
-    landingPage
+    landingPage,
+    Alert
   },
   computed: {
     loading(){
@@ -34,6 +36,9 @@ export default {
         return true;
       }
       return false;
+    },
+    error() {
+      return this.$store.getters.error;
     }
   },
   created() {

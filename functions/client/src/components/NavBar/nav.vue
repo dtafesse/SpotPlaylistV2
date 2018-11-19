@@ -4,7 +4,7 @@
             <v-list dense>
                <v-list-tile v-for="item in menuItem" :key="item.title" @click="routeItem(item)">
                    <v-list-tile-action>
-                       <v-icon> {{ item.icon }} </v-icon>
+                        <v-icon> {{ item.icon }} </v-icon>
                    </v-list-tile-action>
                    <v-list-tile-content> {{ item.title }} </v-list-tile-content>
                </v-list-tile>
@@ -25,6 +25,7 @@
                     flat v-for="item in menuItem" :key="item.title" :to="item.link" @click="routeItem(item)"
                 >
                     <v-icon left dark>{{ item.icon }}</v-icon>
+                     {{item.title}}
                 </v-btn>
             </v-toolbar-items>
 
@@ -50,18 +51,19 @@ export default {
     computed: {
         menuItem(){
             let menuItemIcons = [
-                {
-                    icon: 'lock_open', title: 'Sign In', link: '/signin'
-                },
-                {
-                    icon: 'face', title: 'Sign Up', link: '/signup'
-                },
-                {
-                    icon: 'exit_to_app', title: 'Logout', link: '/landing'
-                }
+                { icon: 'lock_open', title: 'Sign In', link: '/signin' },
+                { icon: 'face', title: 'Sign Up', link: '/signup'}
             ];
-            // if(this.userIsAuth) => change icons
+            
+            if(this.userIsAuth) {
+                menuItemIcons = [
+                    { icon: 'exit_to_app', title: 'Logout', link: '/landing'}
+                ];
+            }
             return menuItemIcons;
+        },
+        userIsAuth() {
+            return this.$store.getters.user !== null && this.$store.getters.user !== undefined
         }
     },
     methods: {
@@ -81,19 +83,8 @@ export default {
             this.$router.push({path: '/signup'});
         },
         logout() {
-            this.$store.dispatch('logoutSpotify');
+            this.$store.dispatch('logout');
             // inside of the dispatched func, this.$router.push({path: '/landing'});
-        },
-        onScrollTop(value){
-            if(this.dropDownSugDivRef){
-                this.dropDownSugDivRef.scrollTop = value;
-            }
-        },
-        onSetDropDownSugDivRef(ref){
-            this.dropDownSugDivRef = ref;
-        },
-        onSetSelectedIndex(index){
-            this.selectedIndex = index;
         }
     }
 }
