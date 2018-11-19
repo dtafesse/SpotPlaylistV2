@@ -48,19 +48,21 @@ export default new Router({
       ]
     },
     {
-      path: '/signin',
-      name: 'Signin',
-      component: SignIn
-    },
-    {
-      path: '/signup',
-      name: 'Signup',
-      component: SignUp
-    },
-    {
       path: '/landing',
       name: 'Landing',
-      component: Landing
+      component: Landing,
+      children: [
+        {
+          path: '/signin',
+          name: 'Signin',
+          component: SignIn
+        },
+        {
+          path: '/signup',
+          name: 'Signup',
+          component: SignUp
+        }
+      ]
     },
     {
       path: '/oauth/callback',

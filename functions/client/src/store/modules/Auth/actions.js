@@ -69,7 +69,7 @@ const actions = {
     commit('setUser', null);
     dispatch('clearPlaylistState');
 
-    router.push('/landing');
+    router.push('/signin');
   },
   clearError({ commit }) {
     commit('clearError');
