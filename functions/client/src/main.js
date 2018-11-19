@@ -7,7 +7,7 @@ import router from './router';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import * as firebase from 'firebase';
-import axios from 'axios';
+import requestInterceptor from './interceptForRefreshToken';
 
 Vue.config.productionTip = false;
 
@@ -30,23 +30,6 @@ new Vue({
     });
 
     // intercept all error responses, if error is 401 then referesh spotify access token
-
-    axios.interceptors.response.use(undefined, err => {
-      return new Promise((resolve, reject) => {
-        if (err.response.status === 401 && err.config) {
-          this.$store.dispatch('fetchSpotifyRefreshToken').then(() => {
-            // err.config.headers.Authorization =
-            //   'Bearer ' + this.$store.getters.getAccessToken;
-
-            let parsedData = JSON.parse(err.config.data);
-            parsedData.data.access_token = this.$store.getters.getAccessToken;
-
-            err.config.data = JSON.stringify(parsedData);
-            return axios(err.config);
-          });
-        }
-        throw err;
-      });
-    });
+    requestInterceptor.interceptRefresh();
   }
 }).$mount('#app');

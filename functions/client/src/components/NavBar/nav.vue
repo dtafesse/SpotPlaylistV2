@@ -14,11 +14,11 @@
         <v-toolbar fixed flat dark color="primary">
             <v-toolbar-side-icon @click.stop="sideNav = !sideNav" class="hidden-sm-and-up"></v-toolbar-side-icon>
             <v-toolbar-title class="title mr-4">
-                <router-link to="/" tag="span" style="cursor: pointer">SpotPlaylist</router-link>
+                <router-link to="/" tag="span" style="cursor: pointer">{{ title }}</router-link>
             </v-toolbar-title>
             
             <!-- SEARCH BAR -->
-            <searchBar />
+            <searchBar @onHideTitle="onHideTitle" />
 
             <v-toolbar-items class="hidden-xs-only">
                 <v-btn
@@ -45,7 +45,8 @@ export default {
     },
     data(){
         return {
-            sideNav: false,        
+            sideNav: false,    
+            hideTitle: false    
         }
     },
     computed: {
@@ -64,9 +65,15 @@ export default {
         },
         userIsAuth() {
             return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+        },
+        title(){
+            return this.hideTitle && this.$vuetify.breakpoint.xs? '' : 'SpotPlaylist';
         }
     },
     methods: {
+        onHideTitle(value){
+            this.hideTitle = value;
+        },
         routeItem(item){
             if(item.title === "Sign In"){
                 this.signIn();

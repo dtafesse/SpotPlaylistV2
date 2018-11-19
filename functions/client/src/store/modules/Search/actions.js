@@ -76,7 +76,9 @@ const actions = {
       let playlist = {
         playlistName: 'Untitled',
         playlistIds: getters.getNewGeneratedPlaylist.map(track => track.uri),
-        id: helpers.generateRandom()
+        id: helpers.generateRandom(),
+        spotifyGeneratedPlaylistId: null,
+        snapshot_id: null
       };
 
       commit('SET_CURRENT_PLAYLIST_META_DATA', playlist);

@@ -14,6 +14,8 @@
                     autocomplete="off"
                     autocorrect="off"
                     spellcheck="false"
+                    @focus="$emit('onHideTitle', true)"
+                    @blur="$emit('onHideTitle', false)"
                 >            
                 </v-text-field>
             </v-form>
@@ -35,10 +37,6 @@ export default {
     },
     methods: {
         onInputChange() {
-            // perfrom search 
-            // unhide results component based on if query is not null
-            // console.log(this.$store.state.searchQuery);
-
             if(this.query === ''){
                 this.$store.commit('UPDATE_SEARCH_QUERY_CLEAR', true);
                 return;

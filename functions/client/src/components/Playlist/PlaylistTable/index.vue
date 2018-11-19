@@ -2,49 +2,15 @@
     <v-container grid-list-md text-xs-center my-5 pt-2>
         <Loader v-if="loading" :width="7" :size="70" />
         <v-layout v-else row>
-            <v-flex sm5 offset-sm1 v-if="$vuetify.breakpoint.smAndUp">
-                <v-card 
-                    v-if="currentlySelectedTrack" 
-                    max-width="380px"
-                >          
-                    <v-layout>
-                        <v-flex xs12 mt-2 >
-                            <v-img 
-                                :src="currentlySelectedTrack.album.images[0].url"
-                                contain
-                                height="320px"
-                            >
-                            </v-img>
-                        </v-flex>
-                 
-                    </v-layout> 
-                    <v-divider light></v-divider>    
-                    <v-card-actions>
-                        <v-btn  
-                            flat
-                            @click="onPlay"
-                            color="primary"
-                            >Play 
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn 
-                            flat
-                            @click="onShuffle"
-                            color="primary"
-                            >Shuffle
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn  
-                            v-if="isUserLoggedIn"
-                            flat
-                            @click="onSaveToSpotify"
-                            color="#1DB954"
-                            >Save to Spotify! 
-                        </v-btn>
-                    </v-card-actions>  
-                </v-card>           
-            </v-flex>
-            <!-- <v-flex xs12 sm6 offset-sm3 align-center justify-center fill-height> -->
+            <card 
+                :currentlySelectedTrack="currentlySelectedTrack" 
+                :isUserLoggedIn="isUserLoggedIn"
+                :spotifyButtonValue="spotifyButtonValue"
+                @onPlay="onPlay" 
+                @onShuffle="onShuffle" 
+                @onSpotifyButton="onSpotifyButton"     
+            />
+
             <v-flex xs12 sm6 offset-sm1 align-center justify-center fill-height>
                 <v-list three-line>
                     <v-subheader> 
@@ -60,33 +26,45 @@
                         >
                         </v-text-field>
                         <span v-if="$vuetify.breakpoint.smAndUp" >{{ numberOfSongs }}</span>
-                        <v-btn 
-                            v-if="$vuetify.breakpoint.xs && isUserLoggedIn" 
-                            flat
-                            small
-                            @click="onSaveToSpotify"
-                            color="#1DB954"
-                            >Save to Spotify! 
-                        </v-btn>
+                        <v-tooltip top>
+                            <v-btn 
+                                v-if="$vuetify.breakpoint.xs && isUserLoggedIn && isTextFieldReadOnly" 
+                                flat
+                                small
+                                @click="onSpotifyButton"
+                                color="#1DB954"
+                                slot="activator"
+                                > {{ spotifyButtonValue }}
+                            </v-btn>
+                            <span> {{ spotifyButtonToolTipValue }} </span>
+                        </v-tooltip>
                     </v-subheader>
                     <template v-for="(track, index) in currentlySelectedPlaylist" >
-                        <v-list-tile :key="track.id" avatar ripple @click="onClickTrack(index)" class="listItem">
-                            <v-list-tile>
+                        <v-list-tile :key="track.id" avatar ripple class="listItem">
+                            <v-list-tile @click="onClickTrack(index)">
                                 <img 
                                     :src="track.album.images[0].url"
                                     max-width="50"
                                     height="50"
                                 >
                             </v-list-tile>
-                            <v-list-tile-content>
+                            <v-list-tile-content @click="onClickTrack(index)">
                                 <v-list-tile-title v-html="track.name"></v-list-tile-title>
                                  <v-list-tile-sub-title v-html="track.album.name"></v-list-tile-sub-title>
                             </v-list-tile-content>
 
                             <v-list-tile-action>
-                                <v-icon v-if="track.name === currentlySelectedTrackName" color="primary">
-                                    library_music
-                                </v-icon>
+                                <v-tooltip top>
+                                     <v-icon 
+                                        v-if="track.name === currentlySelectedTrackName" 
+                                        color="spotifyColor"
+                                        @click="onListenToTrackOnSpotify"
+                                        slot="activator"
+                                    >
+                                        launch
+                                    </v-icon>
+                                    <span>Listen On Spotify!</span>
+                                </v-tooltip>
                             </v-list-tile-action>
                         </v-list-tile>
                     </template>
@@ -97,18 +75,22 @@
 </template>
 
 <script>
-import Loader from '../Shared/Loader';
+import Loader from '../../Shared/Loader';
+import config from '../../../config';
+import card from './card';
 
 export default {
     name: 'playlistTable',
     components: {
-        Loader
+        Loader,
+        card
     },
     data() {
         return {
             newPlaylistName : '',
             isTextFieldReadOnly: true,
-            playlistNameRules: [v => v.length <= 25 || 'Max 25 characters']
+            playlistNameRules: [v => v.length <= 25 || 'Max 25 characters'],
+            spotifyIcon: config.spotifyIcon
         }
     },
     computed: {
@@ -118,10 +100,23 @@ export default {
         isSpotifyAccountLinked(){
             return this.$store.getters.isSpotifyLoggedIn;
         },
+        isPlaylistSavedOnSpotify(){
+            // Save to Spotify! 
+            return this.$store.getters.isCurrentPlaylistSavedOnSpotify;
+        },
         currentPlaylistName(){
             return this.$store.getters.getCurrentPlaylistMetaData.playlistName 
                 ? this.$store.getters.getCurrentPlaylistMetaData.playlistName 
                 : 'Untitled'; 
+        },
+        spotifyButtonValue(){
+            return this.isPlaylistSavedOnSpotify ? 'Listen On Spotify' : 'Save to Spotify!';
+        },
+        spotifyButtonToolTipValue(){
+            if(this.spotifyButtonValue === 'Save to Spotify!'){
+                return !this.isSpotifyAccountLinked ? 'Link Spotify account first': 'First save playlist to listen on Spotify';
+            }
+            return 'Click to listen on Spotify!';
         },
         currentlySelectedPlaylist() {
             const currentPlayingPlaylist = this.$store.getters.getCurrentPlaylist;
@@ -180,15 +175,29 @@ export default {
                 if(this.newPlaylistName.trim() !== this.currentPlaylistName.trim()){
                     // update playlistName in the store and the database 
                     this.$store.dispatch('updatedPlaylistName', this.newPlaylistName.trim());
-                    
                 }
             }
+        },
+        onSpotifyButton(){
+            if(this.isPlaylistSavedOnSpotify){
+                // Listen uri 
+                let newTab = window.open(`https://open.spotify.com/playlist/${this.$store.getters.getCurrentPlaylistMetaData.spotifyGeneratedPlaylistId}`)
+                newTab.opener = null;
+            }else{
+                this.onSaveToSpotify();
+            }
+        },
+        onListenToTrackOnSpotify(){
+            let newTab = window.open(`https://open.spotify.com/track/${this.currentlySelectedTrack.id}`)
         },
         onSaveToSpotify(){
             if(this.isSpotifyAccountLinked){
                 this.$store.dispatch('savePlaylistToSpotify');
             }else{
-                this.$store.dispatch('loginSpotify');
+                window.localStorage.setItem('loginFromPlaylistPage', true);
+                this.$store.dispatch('saveCurrentGeneratedPlaylistToFirebaseForUserThatHasNotLinkedSpotify')
+                    .then(() => this.$store.dispatch('loginSpotify'));
+                
             }
         }
     }
