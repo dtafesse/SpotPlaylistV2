@@ -1,5 +1,6 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
+import Track from './modules/Track';
 import Playlist from './modules/Playlist';
 import Search from './modules/Search';
 import PlayerControl from './modules/PlayerControl';
@@ -11,6 +12,7 @@ export default new Vuex.Store({
     Playlist,
     Search,
     Auth,
-    PlayerControl
+    PlayerControl,
+    Track
   }
 });

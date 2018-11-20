@@ -3,13 +3,13 @@ const mutations = {
     state.playlist = payload;
   },
   SET_CURRENT_PLAYLIST_META_DATA: (state, playlistIds) => {
-    state.currentPlaylistMetaData = playlistIds;
+    state.currentPlaylistMetaData = { ...playlistIds };
   },
   SET_RECENTLY_GENERATED_PLAYLISTS: (state, playlists) => {
     state.recentlyGeneratedPlaylist = playlists;
   },
   ADD_TO_RECENTLY_GENERATED_PLAYLISTS: (state, playlist) => {
-    state.recentlyGeneratedPlaylist.push(playlist);
+    state.recentlyGeneratedPlaylist.push({ ...playlist });
   },
   UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER: (state, { key, newValue, id }) => {
     let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id == id);
@@ -23,6 +23,34 @@ const mutations = {
   },
   SET_SPOTIFY_GENERATED_SNAPSHOT_ID: (state, snapshot_id) => {
     state.currentPlaylistMetaData.snapshot_id = snapshot_id;
+  },
+  UPDATE_CURRENT_PLAYLIST_WITH_NEW_TRACK: (state, { track, index }) => {
+    // state.playlist[index] = track;
+    // state.playlist = state.playlist.map(t => t); // neccesary for it to be reactive
+
+    // remove one element at given idex with given track
+    state.playlist.splice(index, 1, track);
+  },
+  UPDATE_CURRENT_PLAYLIST_META_DATA_WITH_NEW_TRACK_URI_ID: (
+    state,
+    { track, index }
+  ) => {
+    let temp = [...state.currentPlaylistMetaData.playlistIds];
+    temp[index] = track;
+    state.currentPlaylistMetaData.playlistIds = [...temp];
+
+    //state.currentPlaylistMetaData.playlistIds.splice(index, 1, track);
+  },
+  UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER_WITH_NEW_TRACK_URI_ID: (
+    state,
+    { trackUri, id, trackUriPosition }
+  ) => {
+    let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id == id);
+
+    let temp = [...state.recentlyGeneratedPlaylist[index].playlistIds];
+    temp[trackUriPosition] = trackUri;
+
+    state.recentlyGeneratedPlaylist[index].playlistIds = [...temp];
   }
 };
 

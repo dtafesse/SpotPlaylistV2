@@ -39,8 +39,14 @@
                             <span> {{ spotifyButtonToolTipValue }} </span>
                         </v-tooltip>
                     </v-subheader>
-                    <template v-for="(track, index) in currentlySelectedPlaylist" >
-                        <v-list-tile :key="track.id" avatar ripple class="listItem">
+                    <template v-for="(track, index) in currentlySelectedPlaylist">
+                        <v-list-tile 
+                            :key="index" 
+                            avatar ripple 
+                            class="listItem" 
+                            @mouseenter="selectedTrakToBeModified = index"
+                           
+                        >
                             <v-list-tile @click="onClickTrack(index)">
                                 <img 
                                     :src="track.album.images[0].url"
@@ -54,6 +60,31 @@
                             </v-list-tile-content>
 
                             <v-list-tile-action>
+                                 <div class="text-xs-center">
+                                    <v-menu open-on-hover left :disabled="menuDisabled">
+                                        <v-icon
+                                            slot="activator"
+                                            color="primary"
+                                            dark
+                                        >
+                                            more_horiz
+                                        </v-icon>
+
+                                        <v-list>
+                                            <v-list-tile
+                                            v-for="(option, index) in menuOptions"
+                                            :key="index"
+                                            @click="onSelectOption(option, track, index)"
+                                            >
+                                                <v-list-tile-title>{{ option.title }}</v-list-tile-title>
+                                            </v-list-tile>
+                                        </v-list>
+                                     
+                                            
+                                    </v-menu>
+                                </div>
+
+
                                 <v-tooltip top>
                                      <v-icon 
                                         v-if="track.name === currentlySelectedTrackName" 
@@ -90,7 +121,13 @@ export default {
             newPlaylistName : '',
             isTextFieldReadOnly: true,
             playlistNameRules: [v => v.length <= 25 || 'Max 25 characters'],
-            spotifyIcon: config.spotifyIcon
+            spotifyIcon: config.spotifyIcon,
+            menuOptions: [
+                { title: 'Replace' },
+                { title: 'Remove' }
+            ],
+            menuDisabled: false,
+            selectedTrakToBeModified: 0
         }
     },
     computed: {
@@ -120,7 +157,11 @@ export default {
         },
         currentlySelectedPlaylist() {
             const currentPlayingPlaylist = this.$store.getters.getCurrentPlaylist;
-            return currentPlayingPlaylist !== undefined ? this.$store.getters.getCurrentPlaylist : null;
+            if(currentPlayingPlaylist){
+                return currentPlayingPlaylist.map((track => track));
+            }
+            
+            return null;
         },
         currentlySelectedTrack(){
             return this.$store.getters.getCurrentTrack ? this.$store.getters.getCurrentTrack: this.currentlySelectedPlaylist[0];
@@ -189,6 +230,7 @@ export default {
         },
         onListenToTrackOnSpotify(){
             let newTab = window.open(`https://open.spotify.com/track/${this.currentlySelectedTrack.id}`)
+            newTab.opener = null;
         },
         onSaveToSpotify(){
             if(this.isSpotifyAccountLinked){
@@ -199,6 +241,57 @@ export default {
                     .then(() => this.$store.dispatch('loginSpotify'));
                 
             }
+        },
+        onSelectOption(option, track){
+            let index = this.selectedTrakToBeModified;
+            let currentTrackUri = this.currentlySelectedPlaylist[index].uri;
+        
+            //this.menuDisabled = !this.menuDisabled;
+            if(option.title === "Replace"){
+                // replace with a similar track in the same index postion, update firebase, update user's saved spotify playlist
+                this.$store.dispatch('findRelatedTrack', this.currentlySelectedPlaylist[index].id)
+                    .then((track) => {
+                        this.$store.dispatch('updateCurrentPlaylistWithNewTrack', {
+                            track: track,
+                            index: index
+                        })
+                            .then(() => {
+                                this.$store.dispatch('updateCurrentPlaylistMetaDataPlaylistUriId', {
+                                    track: this.currentlySelectedPlaylist[index].uri,
+                                    index
+                                })
+                                    .then(() => {
+                                        this.$store.dispatch('updatedTrackForPlaylistFromRecentlyGeneratedPlaylists', {
+                                            trackUri: this.currentlySelectedPlaylist[index].uri,
+                                            index
+                                        })
+                                            .then(() => {
+                                                this.$store.dispatch('updatePlaylistOnFirebase', {
+                                                    trackUri: this.currentlySelectedPlaylist[index].uri,
+                                                    index
+                                                })
+                                                    .then(() => {
+                                                        if(!this.isSpotifyAccountLinked || !this.isPlaylistSavedOnSpotify) { 
+                                                            console.log("break");
+                                                            return;
+                                                        }
+                                                        this.$store.dispatch('updateSavedSpotifyPlaylist',{
+                                                            snapshot_id: this.$store.getters.getCurrentPlaylistMetaData.snapshot_id,
+                                                            index,
+                                                            currentTrackUri,
+                                                            newTrackUri: this.currentlySelectedPlaylist[index].uri,
+                                                            spotifyGeneratedPlaylistId: this.$store.getters.getCurrentPlaylistMetaData.spotifyGeneratedPlaylistId
+                                                        })
+                                                    })
+                                            })
+                                    })
+                            })
+                                
+                    })
+            }else{
+                // remove track from playlist, update firebase, update user's saved spotify playlist using index
+            }
+
         }
     }
 }

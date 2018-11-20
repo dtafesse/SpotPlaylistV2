@@ -8,6 +8,7 @@ const artistRoutes = require('./api/routes/artists');
 const albumRoutes = require('./api/routes/albums');
 const searchRoutes = require('./api/routes/search');
 const playlistRoutes = require('./api/routes/playlist');
+const trackRoutes = require('./api/routes/tracks');
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,6 +33,7 @@ app.use('/api/artists', artistRoutes);
 app.use('/api/albums', albumRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/playlist', playlistRoutes);
+app.use('/api/track', trackRoutes);
 
 // middleware - routes that artistRoutes could not handle thus, send an error
 app.use((req, res, next) => {

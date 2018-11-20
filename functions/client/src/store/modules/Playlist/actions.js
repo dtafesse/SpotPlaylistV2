@@ -163,7 +163,7 @@ const actions = {
           })
           .catch(err => {
             console.log(err);
-            reject();
+            reject(err);
           })
           .finally(() => commit('SET_LOADING', false));
       }
