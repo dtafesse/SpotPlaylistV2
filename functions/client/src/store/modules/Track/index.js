@@ -7,6 +7,9 @@ const actions = {
       api
         .fetchRelatedTrack(id)
         .then(({ items }) => {
+          if (items.length === 0) {
+            reject(new Error('Could not find related track!'));
+          }
           resolve(items[0]);
         })
         .catch(err => {

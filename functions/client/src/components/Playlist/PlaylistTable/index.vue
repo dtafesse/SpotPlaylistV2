@@ -1,5 +1,13 @@
 <template>
     <v-container grid-list-md text-xs-center my-5 pt-2>
+        <v-alert
+            v-model="alert"
+            dismissible
+            :type="alertType"
+            >
+            {{ alertMessage }}
+        </v-alert>
+
         <Loader v-if="loading" :width="7" :size="70" />
         <v-layout v-else row>
             <card 
@@ -44,7 +52,7 @@
                             :key="index" 
                             avatar ripple 
                             class="listItem" 
-                            @mouseenter="selectedTrakToBeModified = index"
+                            @mouseenter="selectedTrackToBeModified = index"
                            
                         >
                             <v-list-tile @click="onClickTrack(index)">
@@ -78,12 +86,9 @@
                                             >
                                                 <v-list-tile-title>{{ option.title }}</v-list-tile-title>
                                             </v-list-tile>
-                                        </v-list>
-                                     
-                                            
+                                        </v-list>     
                                     </v-menu>
                                 </div>
-
 
                                 <v-tooltip top>
                                      <v-icon 
@@ -127,7 +132,10 @@ export default {
                 { title: 'Remove' }
             ],
             menuDisabled: false,
-            selectedTrakToBeModified: 0
+            selectedTrackToBeModified: 0,
+            alert: false,
+            alertType: undefined,
+            alertMessage: undefined
         }
     },
     computed: {
@@ -242,56 +250,70 @@ export default {
                 
             }
         },
+        replaceTrack(index, currentTrackUri){
+            this.menuDisabled = !this.menuDisabled;
+
+            // replace with a similar track in the same index postion, update firebase, update user's saved spotify playlist
+            this.$store.dispatch('findRelatedTrack', this.currentlySelectedPlaylist[index].id)
+                .then((track) => {
+                    return this.$store.dispatch('updateCurrentPlaylistWithNewTrack', {
+                        track: track,
+                        index: index
+                    });
+                })
+                .then(() => {
+                    return this.$store.dispatch('updateCurrentPlaylistMetaDataPlaylistUriId', {
+                        track: this.currentlySelectedPlaylist[index].uri,
+                        index
+                    });
+                })
+                .then(() => {
+                    return this.$store.dispatch('updatedTrackForPlaylistFromRecentlyGeneratedPlaylists', {
+                        trackUri: this.currentlySelectedPlaylist[index].uri,
+                        index
+                    });
+                })
+                .then(() => {
+                    if(!this.isUserLoggedIn) return;
+
+                    return this.$store.dispatch('updatePlaylistOnFirebase', {
+                        trackUri: this.currentlySelectedPlaylist[index].uri,
+                        index
+                    });
+                })
+                .then(() => {
+                    if(!this.isSpotifyAccountLinked || !this.isPlaylistSavedOnSpotify) { 
+                        return;
+                    }
+
+                    this.$store.dispatch('updateSavedSpotifyPlaylist',{
+                        snapshot_id: this.$store.getters.getCurrentPlaylistMetaData.snapshot_id,
+                        index,
+                        currentTrackUri,
+                        newTrackUri: this.currentlySelectedPlaylist[index].uri,
+                        spotifyGeneratedPlaylistId: this.$store.getters.getCurrentPlaylistMetaData.spotifyGeneratedPlaylistId
+                    });
+                })
+                .catch(err => {
+                    if(err.message === 'Could not find related track!'){
+                        this.alert = true;
+                        this.alertType = "warning";
+                        this.alertMessage = "Could not find related track!";
+                    }
+                })
+                .finally(() => this.menuDisabled = !this.menuDisabled);
+        },
+        removeTrack(){},
         onSelectOption(option, track){
-            let index = this.selectedTrakToBeModified;
+            let index = this.selectedTrackToBeModified;
             let currentTrackUri = this.currentlySelectedPlaylist[index].uri;
         
-            //this.menuDisabled = !this.menuDisabled;
             if(option.title === "Replace"){
-                // replace with a similar track in the same index postion, update firebase, update user's saved spotify playlist
-                this.$store.dispatch('findRelatedTrack', this.currentlySelectedPlaylist[index].id)
-                    .then((track) => {
-                        this.$store.dispatch('updateCurrentPlaylistWithNewTrack', {
-                            track: track,
-                            index: index
-                        })
-                            .then(() => {
-                                this.$store.dispatch('updateCurrentPlaylistMetaDataPlaylistUriId', {
-                                    track: this.currentlySelectedPlaylist[index].uri,
-                                    index
-                                })
-                                    .then(() => {
-                                        this.$store.dispatch('updatedTrackForPlaylistFromRecentlyGeneratedPlaylists', {
-                                            trackUri: this.currentlySelectedPlaylist[index].uri,
-                                            index
-                                        })
-                                            .then(() => {
-                                                this.$store.dispatch('updatePlaylistOnFirebase', {
-                                                    trackUri: this.currentlySelectedPlaylist[index].uri,
-                                                    index
-                                                })
-                                                    .then(() => {
-                                                        if(!this.isSpotifyAccountLinked || !this.isPlaylistSavedOnSpotify) { 
-                                                            console.log("break");
-                                                            return;
-                                                        }
-                                                        this.$store.dispatch('updateSavedSpotifyPlaylist',{
-                                                            snapshot_id: this.$store.getters.getCurrentPlaylistMetaData.snapshot_id,
-                                                            index,
-                                                            currentTrackUri,
-                                                            newTrackUri: this.currentlySelectedPlaylist[index].uri,
-                                                            spotifyGeneratedPlaylistId: this.$store.getters.getCurrentPlaylistMetaData.spotifyGeneratedPlaylistId
-                                                        })
-                                                    })
-                                            })
-                                    })
-                            })
-                                
-                    })
+                this.replaceTrack(index, currentTrackUri)
             }else{
                 // remove track from playlist, update firebase, update user's saved spotify playlist using index
             }
-
+            
         }
     }
 }
