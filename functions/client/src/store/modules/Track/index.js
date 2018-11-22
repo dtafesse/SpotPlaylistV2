@@ -120,6 +120,29 @@ const actions = {
         })
         .then(data => resolve());
     });
+  },
+
+  removeTrackFromFirebasePlaylist: ({ getters }, index) => {
+    return new Promise((resolve, reject) => {
+      const fbKey = getters.getCurrentPlaylistMetaData.fbKey;
+      const location =
+        '/playlists/' + getters.user.id + '/' + fbKey + '/playlistIds/';
+
+      // sync down from server
+      let list = [];
+
+      let playlistIdsRef = firebase.database().ref(location);
+      playlistIdsRef.on('value', function(snap) {
+        list = snap.val();
+      });
+
+      // remove track uri at position of index, save it back to firebase
+      list.splice(index, 1);
+      playlistIdsRef
+        .set(getters.getCurrentPlaylistMetaData.playlistIds)
+        .then(() => resolve())
+        .catch(err => reject(err));
+    });
   }
 };
 

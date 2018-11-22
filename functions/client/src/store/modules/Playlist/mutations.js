@@ -34,6 +34,9 @@ const mutations = {
     // remove one element at given idex with given track
     state.playlist.splice(index, 1, track);
   },
+  REMOVE_TRACK_FROM_CURRENT_PLAYLIST: (state, index) => {
+    state.playlist.splice(index, 1);
+  },
   UPDATE_CURRENT_PLAYLIST_META_DATA_WITH_NEW_TRACK_URI_ID: (
     state,
     { track, index }
@@ -44,6 +47,11 @@ const mutations = {
 
     //state.currentPlaylistMetaData.playlistIds.splice(index, 1, track);
   },
+  REMOVE_TRACK_URI_ID_FROM_CURRENT_PLAYLIST_META_DATA: (state, index) => {
+    let temp = [...state.currentPlaylistMetaData.playlistIds];
+    temp.splice(index, 1);
+    state.currentPlaylistMetaData.playlistIds = [...temp];
+  },
   UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER_WITH_NEW_TRACK_URI_ID: (
     state,
     { trackUri, id, trackUriPosition }
@@ -52,6 +60,17 @@ const mutations = {
 
     let temp = [...state.recentlyGeneratedPlaylist[index].playlistIds];
     temp[trackUriPosition] = trackUri;
+
+    state.recentlyGeneratedPlaylist[index].playlistIds = [...temp];
+  },
+  REMOVE_TRACK_URI_ID_FROM_RECENTLY_GENERATED_PLAYLIST_MEMBER: (
+    state,
+    { id, trackUriPosition }
+  ) => {
+    let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id == id);
+
+    let temp = [...state.recentlyGeneratedPlaylist[index].playlistIds];
+    temp.splice(trackUriPosition, 1);
 
     state.recentlyGeneratedPlaylist[index].playlistIds = [...temp];
   }

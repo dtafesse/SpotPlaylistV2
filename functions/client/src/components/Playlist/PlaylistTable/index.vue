@@ -312,6 +312,20 @@ export default {
                 this.replaceTrack(index, currentTrackUri)
             }else{
                 // remove track from playlist, update firebase, update user's saved spotify playlist using index
+                this.$store.commit('REMOVE_TRACK_FROM_CURRENT_PLAYLIST', index);
+                this.$store.commit('REMOVE_TRACK_URI_ID_FROM_CURRENT_PLAYLIST_META_DATA', index);
+                this.$store.commit('REMOVE_TRACK_URI_ID_FROM_RECENTLY_GENERATED_PLAYLIST_MEMBER', { 
+                    id: this.$store.getters.getCurrentPlaylistMetaData.id,
+                    trackUriPosition: index
+                });
+
+                if(this.isUserLoggedIn){
+                    this.$store.dispatch('removeTrackFromFirebasePlaylist', index)
+                    .then(() => {
+                        if(!this.isSpotifyAccountLinked || !this.isPlaylistSavedOnSpotify) return;
+                        
+                    })
+                }
             }
             
         }
