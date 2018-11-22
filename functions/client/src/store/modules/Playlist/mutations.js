@@ -18,6 +18,9 @@ const mutations = {
   UPDATE_PLAYLIST_NAME: (state, newName) => {
     state.currentPlaylistMetaData.playlistName = newName;
   },
+  UPDATE_PLAYLIST_SNAPSHOT_ID: (state, id) => {
+    state.currentPlaylistMetaData.snapshot_id = id;
+  },
   SET_SPOTIFY_GENERATED_PLAYLIST_ID: (state, playlistId) => {
     state.currentPlaylistMetaData.spotifyGeneratedPlaylistId = playlistId;
   },

@@ -138,6 +138,22 @@ const actions = {
       newItemToReplace: newPlaylistName
     });
   },
+  updatedPlaylistSnapshotId: ({ commit, getters, dispatch }, snapshot_id) => {
+    commit('UPDATE_PLAYLIST_SNAPSHOT_ID', snapshot_id);
+
+    let id = getters.getCurrentPlaylistMetaData.id;
+    commit('UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER', {
+      key: 'snapshot_id',
+      newValue: snapshot_id,
+      id
+    });
+
+    dispatch('updateCurrentPlaylistMetaDataToFB', {
+      node: '/snapshot_id/',
+      newItemToReplace: snapshot_id
+    });
+  },
+
   updateCurrentPlaylistMetaDataToFB: (
     { commit, getters },
     { node, newItemToReplace }

@@ -98,6 +98,7 @@ const actions = {
         .then(data => {
           let new_snapshot_id = data.items;
           // update snapshot_id in currentlyPlaylistMetaData and recentlySavedPlaylits, and finally firebase
+          dispatch('updatedPlaylistSnapshotId', new_snapshot_id);
         });
     });
   },
