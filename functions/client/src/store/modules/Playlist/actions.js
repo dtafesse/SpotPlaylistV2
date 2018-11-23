@@ -139,18 +139,22 @@ const actions = {
     });
   },
   updatedPlaylistSnapshotId: ({ commit, getters, dispatch }, snapshot_id) => {
-    commit('UPDATE_PLAYLIST_SNAPSHOT_ID', snapshot_id);
+    return new Promise((resolve, reject) => {
+      commit('UPDATE_PLAYLIST_SNAPSHOT_ID', snapshot_id);
 
-    let id = getters.getCurrentPlaylistMetaData.id;
-    commit('UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER', {
-      key: 'snapshot_id',
-      newValue: snapshot_id,
-      id
-    });
+      let id = getters.getCurrentPlaylistMetaData.id;
+      commit('UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER', {
+        key: 'snapshot_id',
+        newValue: snapshot_id,
+        id
+      });
 
-    dispatch('updateCurrentPlaylistMetaDataToFB', {
-      node: '/snapshot_id/',
-      newItemToReplace: snapshot_id
+      dispatch('updateCurrentPlaylistMetaDataToFB', {
+        node: '/snapshot_id/',
+        newItemToReplace: snapshot_id
+      })
+        .then(() => resolve())
+        .catch(err => reject(err));
     });
   },
 

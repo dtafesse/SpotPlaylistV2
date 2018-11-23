@@ -101,24 +101,32 @@ const actions = {
         .then(data => {
           let new_snapshot_id = data.items;
           // update snapshot_id in currentlyPlaylistMetaData and recentlySavedPlaylits, and finally firebase
-          dispatch('updatedPlaylistSnapshotId', new_snapshot_id);
-        });
+          return dispatch('updatedPlaylistSnapshotId', new_snapshot_id);
+        })
+        .then(() => resolve())
+        .catch(err => reject(err));
     });
   },
 
   removeTrackFromSavedSpotifyPlaylists: (
-    context,
-    { access_token, snapshot_id, index, spotifyGeneratedPlaylistId }
+    { dispatch, getters },
+    { snapshot_id, index, spotifyGeneratedPlaylistId }
   ) => {
     return new Promise((resolve, reject) => {
       api
         .removeTrackFromSavedSpotifyPlaylist({
-          access_token,
+          access_token: getters.getAccessToken,
           snapshot_id,
           index,
           spotifyGeneratedPlaylistId
         })
-        .then(data => resolve());
+        .then(data => {
+          let snapshot_id = data.items.snapshot_id;
+          // update snapshot_id in currentlyPlaylistMetaData and recentlySavedPlaylits, and finally firebase
+          return dispatch('updatedPlaylistSnapshotId', snapshot_id);
+        })
+        .then(() => resolve())
+        .catch(err => reject(err));
     });
   },
 

@@ -311,6 +311,8 @@ export default {
             if(option.title === "Replace"){
                 this.replaceTrack(index, currentTrackUri)
             }else{
+                this.menuDisabled = !this.menuDisabled;
+
                 // remove track from playlist, update firebase, update user's saved spotify playlist using index
                 this.$store.commit('REMOVE_TRACK_FROM_CURRENT_PLAYLIST', index);
                 this.$store.commit('REMOVE_TRACK_URI_ID_FROM_CURRENT_PLAYLIST_META_DATA', index);
@@ -324,7 +326,15 @@ export default {
                     .then(() => {
                         if(!this.isSpotifyAccountLinked || !this.isPlaylistSavedOnSpotify) return;
                         
+                        return this.$store.dispatch('removeTrackFromSavedSpotifyPlaylists',{
+                            access_token: this.$store.getters.getAccessToken,
+                            snapshot_id: this.$store.getters.getCurrentPlaylistMetaData.snapshot_id,
+                            index,
+                            spotifyGeneratedPlaylistId: this.$store.getters.getCurrentPlaylistMetaData.spotifyGeneratedPlaylistId
+                        });
                     })
+                    .catch(err => console.log(err))
+                    .finally(() =>  this.menuDisabled = !this.menuDisabled);
                 }
             }
             
