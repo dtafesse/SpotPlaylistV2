@@ -60,7 +60,6 @@ exports.reorderTrack = (req, res, next) => {
       { range_length: rangeLength, snapshot_id }
     )
     .then(data => {
-      console.log(data.body);
       res.status(200).json({
         confirmation: 'success',
         data: {
