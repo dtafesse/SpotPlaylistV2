@@ -121,9 +121,10 @@ const actions = {
           spotifyGeneratedPlaylistId
         })
         .then(data => {
-          let snapshot_id = data.items.snapshot_id;
+          let new_snapshot_id = data.items;
+          
           // update snapshot_id in currentlyPlaylistMetaData and recentlySavedPlaylits, and finally firebase
-          return dispatch('updatedPlaylistSnapshotId', snapshot_id);
+          return dispatch('updatedPlaylistSnapshotId', new_snapshot_id);
         })
         .then(() => resolve())
         .catch(err => reject(err));
