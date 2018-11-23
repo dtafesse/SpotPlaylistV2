@@ -19,8 +19,7 @@ exports.getRelatedTracks = (req, res, next) => {
       spotifyWebApi.setAccessToken(data.body['access_token']);
       return spotifyWebApi.getRecommendations({
         seed_tracks: [trackId],
-        limit: 1,
-        target_popularity: 60
+        limit: 1
       });
     })
     .then(data => {
