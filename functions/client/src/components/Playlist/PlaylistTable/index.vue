@@ -303,7 +303,33 @@ export default {
                 })
                 .finally(() => this.menuDisabled = !this.menuDisabled);
         },
-        removeTrack(){},
+        removeTrack(index){
+            this.menuDisabled = !this.menuDisabled;
+
+            // remove track from playlist, update firebase, update user's saved spotify playlist using index
+            this.$store.commit('REMOVE_TRACK_FROM_CURRENT_PLAYLIST', index);
+            this.$store.commit('REMOVE_TRACK_URI_ID_FROM_CURRENT_PLAYLIST_META_DATA', index);
+            this.$store.commit('REMOVE_TRACK_URI_ID_FROM_RECENTLY_GENERATED_PLAYLIST_MEMBER', { 
+                id: this.$store.getters.getCurrentPlaylistMetaData.id,
+                trackUriPosition: index
+            });
+
+            if(this.isUserLoggedIn){
+                this.$store.dispatch('removeTrackFromFirebasePlaylist', index)
+                .then(() => {
+                    if(!this.isSpotifyAccountLinked || !this.isPlaylistSavedOnSpotify) return;
+                    
+                    return this.$store.dispatch('removeTrackFromSavedSpotifyPlaylists',{
+                        access_token: this.$store.getters.getAccessToken,
+                        snapshot_id: this.$store.getters.getCurrentPlaylistMetaData.snapshot_id,
+                        index,
+                        spotifyGeneratedPlaylistId: this.$store.getters.getCurrentPlaylistMetaData.spotifyGeneratedPlaylistId
+                    });
+                })
+                .catch(err => console.log(err))
+                .finally(() =>  this.menuDisabled = !this.menuDisabled);
+            }
+        },
         onSelectOption(option, track){
             let index = this.selectedTrackToBeModified;
             let currentTrackUri = this.currentlySelectedPlaylist[index].uri;
@@ -311,31 +337,7 @@ export default {
             if(option.title === "Replace"){
                 this.replaceTrack(index, currentTrackUri)
             }else{
-                this.menuDisabled = !this.menuDisabled;
-
-                // remove track from playlist, update firebase, update user's saved spotify playlist using index
-                this.$store.commit('REMOVE_TRACK_FROM_CURRENT_PLAYLIST', index);
-                this.$store.commit('REMOVE_TRACK_URI_ID_FROM_CURRENT_PLAYLIST_META_DATA', index);
-                this.$store.commit('REMOVE_TRACK_URI_ID_FROM_RECENTLY_GENERATED_PLAYLIST_MEMBER', { 
-                    id: this.$store.getters.getCurrentPlaylistMetaData.id,
-                    trackUriPosition: index
-                });
-
-                if(this.isUserLoggedIn){
-                    this.$store.dispatch('removeTrackFromFirebasePlaylist', index)
-                    .then(() => {
-                        if(!this.isSpotifyAccountLinked || !this.isPlaylistSavedOnSpotify) return;
-                        
-                        return this.$store.dispatch('removeTrackFromSavedSpotifyPlaylists',{
-                            access_token: this.$store.getters.getAccessToken,
-                            snapshot_id: this.$store.getters.getCurrentPlaylistMetaData.snapshot_id,
-                            index,
-                            spotifyGeneratedPlaylistId: this.$store.getters.getCurrentPlaylistMetaData.spotifyGeneratedPlaylistId
-                        });
-                    })
-                    .catch(err => console.log(err))
-                    .finally(() =>  this.menuDisabled = !this.menuDisabled);
-                }
+                this.removeTrack(index);
             }
             
         }
