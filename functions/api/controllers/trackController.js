@@ -50,15 +50,6 @@ exports.reorderTrack = (req, res, next) => {
     spotifyGeneratedPlaylistId
   } = req.body.data;
 
-  console.log({
-    access_token,
-    snapshot_id,
-    rangeStart,
-    rangeLength,
-    insertBefore,
-    spotifyGeneratedPlaylistId
-  });
-
   spotifyWebApi.setAccessToken(access_token);
   spotifyWebApi
     .reorderTracksInPlaylist(
