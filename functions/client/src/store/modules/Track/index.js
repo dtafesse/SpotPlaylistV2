@@ -114,7 +114,7 @@ const actions = {
   ) => {
     return new Promise((resolve, reject) => {
       api
-        .removeTrackFromSavedSpotifyPlaylist({
+        .removeTrackFromSavedSpotifyPlaylistByPostion({
           access_token: getters.getAccessToken,
           snapshot_id,
           index,
