@@ -11,6 +11,9 @@ const mutations = {
   setSpotifyAuthCodes: (state, { access_token, refresh_token }) => {
     state.spotifyAuthAccessCode = access_token;
     state.spotifyAuthRefreshCode = refresh_token;
+  },
+  setUserSpotifyTopArtists: (state, artists) => {
+    state.userSpotifyTopArtists = artists;
   }
 };
 

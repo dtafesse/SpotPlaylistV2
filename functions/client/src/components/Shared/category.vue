@@ -54,65 +54,66 @@
 </template>
 
 <script>
-import config from '../../config/index';
+import config from "../../config/index";
 
 export default {
-    name: 'category',
-    props: {
-        type: String,
-        items: Array,
-        selectedItems: Array,
-        size: Number
-    },
-    computed: {
-        limitItemSize(){
-            if(this.items){
-                if(this.items.length > this.size) {
-                    return this.items.slice(0, this.size);
-                }else{
-                    return this.items;
-                }
-            }
-        },
-        showMoreButton(){
-            if(this.items){
-                if(this.items.length > this.size) {
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-        },
-        moreText(){
-            return this.type === "Albums" ? 'See all albums' : 'See all artists';
-        },
-        imageType(){
-            if(this.type === "Albums"){
-                return true;
-            }else{
-                return false;
-            }
-        },
-        defaultImage(){
-            return config.defaultImage
+  name: "category",
+  props: {
+    type: String,
+    items: Array,
+    selectedItems: Array,
+    size: Number,
+    showSeeAllButton: Boolean
+  },
+  computed: {
+    limitItemSize() {
+      if (this.items) {
+        if (this.items.length > this.size) {
+          return this.items.slice(0, this.size);
+        } else {
+          return this.items;
         }
+      }
     },
-    methods: {
-        onClick(index){
-            this.$emit('onClick', { 'type': this.type.toLowerCase(), 'index' : index});
-        },
-        onShowAllClick(){
-            this.$emit('onShowAllClick', this.type.toLowerCase() );
+    showMoreButton() {
+      if (this.items && this.showSeeAllButton) {
+        if (this.items.length > this.size) {
+          return true;
+        } else {
+          return false;
         }
+      }
+    },
+    moreText() {
+      return this.type === "Albums" ? "See all albums" : "See all artists";
+    },
+    imageType() {
+      if (this.type === "Albums") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    defaultImage() {
+      return config.defaultImage;
     }
-}
+  },
+  methods: {
+    onClick(index) {
+      this.$emit("onClick", { type: this.type.toLowerCase(), index: index });
+    },
+    onShowAllClick() {
+      this.$emit("onShowAllClick", this.type.toLowerCase());
+    }
+  }
+};
 </script>
 
 <style scoped>
-    .listItem {
-        cursor: pointer;
-    }
-    .listItem:hover {
-        background-color: rgb(228,231,234);
-    }
+.listItem {
+  cursor: pointer;
+}
+.listItem:hover {
+  background-color: rgb(228, 231, 234);
+}
 </style>
