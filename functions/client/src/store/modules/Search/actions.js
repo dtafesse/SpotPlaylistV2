@@ -35,6 +35,7 @@ const actions = {
     commit("SET_LOADING", true);
     commit("RESET_GENERATED_PLAYLIST");
 
+    // TODO: fix this and the commit
     const selectedItems = getters.getSelectedItems;
     commit("REMOVE_ALL_SELECTED_ITEMS");
 

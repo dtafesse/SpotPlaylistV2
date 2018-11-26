@@ -1,5 +1,12 @@
 <template>
      <v-container grid-list-md my-5 pt-2 >
+        <v-alert
+            :value="isError"
+            type="error"
+            >
+            {{ `Please Select up to ${selectionLimit} times Only `}}
+        </v-alert>
+
          <v-content v-if="loading">
              <Loader :width="7" :size="70" />
          </v-content>
@@ -40,6 +47,7 @@
 <script>
 import selector from "../Shared/selector";
 import Loader from "../Shared/Loader";
+import config from "../../config";
 
 export default {
   name: "searchResults",
@@ -47,9 +55,24 @@ export default {
     selector,
     Loader
   },
+  data() {
+    return {
+      selectionLimit: config.LIMIT
+    };
+  },
   computed: {
     loading() {
       return this.$store.getters.isLoading;
+    },
+    isError() {
+      let selectedItems = [
+        ...this.$store.getters.getSelectedAlbums,
+        ...this.$store.getters.getSelectedArtists
+      ];
+
+      if (selectedItems) {
+        return selectedItems.length > config.LIMIT;
+      }
     },
     selectedItems() {
       return [
@@ -92,7 +115,9 @@ export default {
       this.$store.dispatch("removeAllSelectedItems");
     },
     onGeneratePlaylist() {
-      this.$store.dispatch("generatePlaylist");
+      if (!this.isError) {
+        this.$store.dispatch("generatePlaylist");
+      }
     }
   }
 };
