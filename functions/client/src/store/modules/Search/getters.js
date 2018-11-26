@@ -3,7 +3,8 @@ const getters = {
   isSearchQueryCleared: state => state.searchQueryCleared,
   getQueryResult: state => state.queryResult,
   isLoading: state => state.loading,
-  getSelectedItems: state => state.selectedItems,
+  getSelectedAlbums: state => state.selectedAlbums,
+  getSelectedArtists: state => state.selectedArtists,
   getNewGeneratedPlaylist: state => state.newGeneratedPlaylist
 };
 

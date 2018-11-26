@@ -111,24 +111,41 @@ const actions = {
   setSelectedArtistId: ({ commit }, payload) => {
     commit("SET_SELECTED_ARTIST_ID", payload);
   },
-  addToSelectedItems: ({ dispatch, commit, getters }, item) => {
-    const itemPos = getters.getSelectedItems
+  addToSelectedAlbums: ({ dispatch, commit, getters }, item) => {
+    const itemPos = getters.getSelectedAlbums
       .map(function(e) {
         return e.id;
       })
       .indexOf(item.id);
 
     if (itemPos === -1) {
-      commit("ADD_TO_SELECTED_ITEMS", item);
+      commit("ADD_TO_SELECTED_ALBUMS", item);
     } else {
-      dispatch("removeItemFromSelectedItems", itemPos);
+      dispatch("removeItemFromSelectedAlbums", itemPos);
     }
   },
-  removeItemFromSelectedItems: ({ commit }, index) => {
-    commit("REMOVE_ITEM_FROM_SELECTED_ITEMS", index);
+  addToSelectedArtists: ({ dispatch, commit, getters }, item) => {
+    const itemPos = getters.getSelectedArtists
+      .map(function(e) {
+        return e.id;
+      })
+      .indexOf(item.id);
+
+    if (itemPos === -1) {
+      commit("ADD_TO_SELECTED_ARTISTS", item);
+    } else {
+      dispatch("removeItemFromSelectedArtists", itemPos);
+    }
+  },
+  removeItemFromSelectedAlbums: ({ commit }, index) => {
+    commit("REMOVE_ITEM_FROM_SELECTED_ALBUMS", index);
+  },
+  removeItemFromSelectedArtists: ({ commit }, index) => {
+    commit("REMOVE_ITEM_FROM_SELECTED_ARTISTS", index);
   },
   removeAllSelectedItems: ({ commit }) => {
-    commit("REMOVE_ALL_SELECTED_ITEMS");
+    commit("REMOVE_ALL_SELECTED_ALBUMS");
+    commit("REMOVE_ALL_SELECTED_ARTISTS");
   },
   clearSearchState: ({ commit }) => {
     commit("REMOVE_ALL_SELECTED_ITEMS");

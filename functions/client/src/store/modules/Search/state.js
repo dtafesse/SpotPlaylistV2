@@ -1,7 +1,8 @@
 const state = {
-  selectedArtistId: '',
+  selectedArtistId: "",
   queryResult: [],
-  selectedItems: [],
+  selectedArtists: [],
+  selectedAlbums: [],
   searchQueryCleared: false,
   suggestionsDivVisible: false,
   loading: false,

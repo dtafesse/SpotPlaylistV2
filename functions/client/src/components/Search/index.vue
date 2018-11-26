@@ -52,7 +52,10 @@ export default {
       return this.$store.getters.isLoading;
     },
     selectedItems() {
-      return this.$store.getters.getSelectedItems;
+      return [
+        ...this.$store.getters.getSelectedAlbums,
+        ...this.$store.getters.getSelectedArtists
+      ];
     },
     albums() {
       return this.$store.getters.getQueryResult.albums
@@ -67,7 +70,23 @@ export default {
   },
   methods: {
     handleRemoveSelected(index) {
-      this.$store.dispatch("removeItemFromSelectedItems", index);
+      // TODO: figure out possibly using id, wheather to remove from selected artist or albums
+      if (this.selectedItems[index].type === "album") {
+        let indexInAlbumList = this.$store.getters.getSelectedAlbums.findIndex(
+          album => album.id === this.selectedItems[index].id
+        );
+
+        this.$store.dispatch("removeItemFromSelectedAlbums", indexInAlbumList);
+      } else {
+        let indexInArtistList = this.$store.getters.getSelectedArtists.findIndex(
+          artist => artist.id === this.selectedItems[index].id
+        );
+
+        this.$store.dispatch(
+          "removeItemFromSelectedArtists",
+          indexInArtistList
+        );
+      }
     },
     onClearAll() {
       this.$store.dispatch("removeAllSelectedItems");

@@ -17,14 +17,23 @@ const mutations = {
   SET_LOADING: (state, payload) => {
     state.loading = payload;
   },
-  ADD_TO_SELECTED_ITEMS: (state, item) => {
-    state.selectedItems.push(item);
+  ADD_TO_SELECTED_ALBUMS: (state, item) => {
+    state.selectedAlbums.push(item);
   },
-  REMOVE_ITEM_FROM_SELECTED_ITEMS: (state, index) => {
-    state.selectedItems.splice(index, 1);
+  ADD_TO_SELECTED_ARTISTS: (state, item) => {
+    state.selectedArtists.push(item);
   },
-  REMOVE_ALL_SELECTED_ITEMS: state => {
-    state.selectedItems = [];
+  REMOVE_ITEM_FROM_SELECTED_ALBUMS: (state, index) => {
+    state.selectedAlbums.splice(index, 1);
+  },
+  REMOVE_ITEM_FROM_SELECTED_ARTISTS: (state, index) => {
+    state.selectedArtists.splice(index, 1);
+  },
+  REMOVE_ALL_SELECTED_ALBUMS: state => {
+    state.selectedAlbums = [];
+  },
+  REMOVE_ALL_SELECTED_ARTISTS: state => {
+    state.selectedArtists = [];
   }
 };
 
