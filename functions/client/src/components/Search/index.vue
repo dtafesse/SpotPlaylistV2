@@ -1,5 +1,12 @@
 <template>
      <v-container grid-list-md my-5 pt-2 >
+        <v-alert
+            :value="isError"
+            type="error"
+            >
+            {{ `Please Select up to ${selectionLimit} times Only `}}
+        </v-alert>
+
          <v-content v-if="loading">
              <Loader :width="7" :size="70" />
          </v-content>
@@ -40,6 +47,7 @@
 <script>
 import selector from "../Shared/selector";
 import Loader from "../Shared/Loader";
+import config from "../../config";
 
 export default {
   name: "searchResults",
@@ -47,12 +55,30 @@ export default {
     selector,
     Loader
   },
+  data() {
+    return {
+      selectionLimit: config.LIMIT
+    };
+  },
   computed: {
     loading() {
       return this.$store.getters.isLoading;
     },
+    isError() {
+      let selectedItems = [
+        ...this.$store.getters.getSelectedAlbums,
+        ...this.$store.getters.getSelectedArtists
+      ];
+
+      if (selectedItems) {
+        return selectedItems.length > config.LIMIT;
+      }
+    },
     selectedItems() {
-      return this.$store.getters.getSelectedItems;
+      return [
+        ...this.$store.getters.getSelectedAlbums,
+        ...this.$store.getters.getSelectedArtists
+      ];
     },
     albums() {
       return this.$store.getters.getQueryResult.albums
@@ -67,13 +93,31 @@ export default {
   },
   methods: {
     handleRemoveSelected(index) {
-      this.$store.dispatch("removeItemFromSelectedItems", index);
+      // TODO: figure out possibly using id, wheather to remove from selected artist or albums
+      if (this.selectedItems[index].type === "album") {
+        let indexInAlbumList = this.$store.getters.getSelectedAlbums.findIndex(
+          album => album.id === this.selectedItems[index].id
+        );
+
+        this.$store.dispatch("removeItemFromSelectedAlbums", indexInAlbumList);
+      } else {
+        let indexInArtistList = this.$store.getters.getSelectedArtists.findIndex(
+          artist => artist.id === this.selectedItems[index].id
+        );
+
+        this.$store.dispatch(
+          "removeItemFromSelectedArtists",
+          indexInArtistList
+        );
+      }
     },
     onClearAll() {
       this.$store.dispatch("removeAllSelectedItems");
     },
     onGeneratePlaylist() {
-      this.$store.dispatch("generatePlaylist");
+      if (!this.isError) {
+        this.$store.dispatch("generatePlaylist");
+      }
     }
   }
 };

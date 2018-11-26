@@ -49,7 +49,11 @@ export default {
         : null;
     },
     selectedItemsIds() {
-      let selectedItems = this.$store.getters.getSelectedItems;
+      let selectedItems = [
+        ...this.$store.getters.getSelectedAlbums,
+        ...this.$store.getters.getSelectedArtists
+      ];
+
       let selectedIds = [];
       if (selectedItems) {
         selectedItems.forEach(item => {
@@ -67,16 +71,18 @@ export default {
       if (selectedItem.type === "albums") {
         if (this.albums) {
           itemToAdd = this.albums[selectedItem.index];
+          this.$store.dispatch("addToSelectedAlbums", itemToAdd);
         }
       } else {
         if (this.artists) {
           itemToAdd = this.artists[selectedItem.index];
+          this.$store.dispatch("addToSelectedArtists", itemToAdd);
         }
       }
 
-      if (itemToAdd) {
-        this.$store.dispatch("addToSelectedItems", itemToAdd);
-      }
+      // if (itemToAdd) {
+      //   this.$store.dispatch("addToSelectedItems", itemToAdd);
+      // }
     },
     handleShowAllChick(type) {
       if (type === "album") {

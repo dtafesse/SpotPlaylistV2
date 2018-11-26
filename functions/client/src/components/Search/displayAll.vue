@@ -50,61 +50,70 @@
 </template>
 
 <script>
-import config from '../../config/index';
+import config from "../../config/index";
 
 export default {
-    name: 'renderAll',
-    computed: {
-        items(){
-            if(this.$route.params.type === "albums"){
-                return this.$store.getters.getQueryResult.albums 
-                    ? this.$store.getters.getQueryResult.albums.items
-                    : null;
-            }else{
-                return this.$store.getters.getQueryResult.artists
-                    ? this.$store.getters.getQueryResult.artists.items
-                    : null;
-            }
-        },
-        selectedItemsIds(){
-            let selectedItems = this.$store.getters.getSelectedItems;
-            let selectedIds = [];
-            if(selectedItems) {
-                selectedItems.forEach(item => {
-                    selectedIds.push(item.id);
-                })
-                return selectedIds;
-            }else{
-                return null;
-            }
-        },
-        imageType(){
-            if(this.$route.params.type === "albums"){
-                return true;
-            }else{
-                return false;
-            }
-        },
-        defaultImage(){
-            return config.defaultImage
-        }
+  name: "renderAll",
+  computed: {
+    items() {
+      if (this.$route.params.type === "albums") {
+        return this.$store.getters.getQueryResult.albums
+          ? this.$store.getters.getQueryResult.albums.items
+          : null;
+      } else {
+        return this.$store.getters.getQueryResult.artists
+          ? this.$store.getters.getQueryResult.artists.items
+          : null;
+      }
     },
-    methods: {
-        selected(index){
-            //console.log({ 'type': this.$route.params.type, 'index': index });
-            let itemToAdd;
+    selectedItemsIds() {
+      let selectedItems = [
+        ...this.$store.getters.getSelectedAlbums,
+        ...this.$store.getters.getSelectedArtists
+      ];
 
-            if(this.items){
-                itemToAdd = this.items[index];
-                this.$store.dispatch('addToSelectedItems', itemToAdd);
-            }
-        }
+      let selectedIds = [];
+      if (selectedItems) {
+        selectedItems.forEach(item => {
+          selectedIds.push(item.id);
+        });
+        return selectedIds;
+      } else {
+        return null;
+      }
+    },
+    imageType() {
+      if (this.$route.params.type === "albums") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    defaultImage() {
+      return config.defaultImage;
     }
-}
+  },
+  methods: {
+    selected(index) {
+      //console.log({ 'type': this.$route.params.type, 'index': index });
+      let itemToAdd;
+
+      if (this.items) {
+        itemToAdd = this.items[index];
+
+        if (this.$route.params.type === "albums") {
+          this.$store.dispatch("addToSelectedAlbums", itemToAdd);
+        } else {
+          this.$store.dispatch("addToSelectedArtists", itemToAdd);
+        }
+      }
+    }
+  }
+};
 </script>
 
 <style scoped>
-    .card:hover{
-        cursor: pointer;
-    }
+.card:hover {
+  cursor: pointer;
+}
 </style>
