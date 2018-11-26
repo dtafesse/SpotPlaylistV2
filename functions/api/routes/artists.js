@@ -3,11 +3,11 @@ const router = express.Router();
 
 const ArtistController = require("../controllers/artistsController");
 
-// routes
-router.post("/tracks", ArtistController.getArtistTopTracks);
-router.post("/user/top", ArtistController.getUserTopTracks);
-
-// TODO: uncomment this route, once the controller is implemented
-//router.post("/recommend/tracks", ArtistController.suggestTracksBasedOnArtist);
+router.post("/tracks/top", ArtistController.getArtistTopTracks);
+router.post(
+  "/tracks/recommended",
+  ArtistController.getSuggestedTracksBasedOnArtists
+);
+router.post("/user/top", ArtistController.getUserTopArtists);
 
 module.exports = router;

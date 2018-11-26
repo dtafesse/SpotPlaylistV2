@@ -1,26 +1,26 @@
-import api from '../../../api/index';
-import router from '../../../router/index';
-import * as firebase from 'firebase';
+import api from "../../../api/index";
+import router from "../../../router/index";
+import * as firebase from "firebase";
 
 const actions = {
   setPlaylist: (context, newPlayist) => {
-    context.commit('SET_PLAYLIST', newPlayist);
+    context.commit("SET_PLAYLIST", newPlayist);
   },
   clearPlaylistState: ({ commit }) => {
-    commit('SET_CURRENT_TRACK', undefined);
-    commit('SET_PLAYLIST', undefined);
-    commit('SET_SHUFFLED_PLAYLIST', []);
-    commit('SET_CURRENT_PLAYLIST_META_DATA', []);
-    commit('SET_RECENTLY_GENERATED_PLAYLISTS', []);
-    commit('SET_AUDIO_ELEMENT', undefined);
+    commit("SET_CURRENT_TRACK", undefined);
+    commit("SET_PLAYLIST", undefined);
+    commit("SET_SHUFFLED_PLAYLIST", []);
+    commit("SET_CURRENT_PLAYLIST_META_DATA", []);
+    commit("SET_RECENTLY_GENERATED_PLAYLISTS", []);
+    commit("SET_AUDIO_ELEMENT", undefined);
   },
   fetchPlaylistsFromFB: ({ commit, getters }) => {
-    commit('SET_LOADING', true);
+    commit("SET_LOADING", true);
 
     firebase
       .database()
-      .ref('/playlists/' + getters.user.id)
-      .once('value')
+      .ref("/playlists/" + getters.user.id)
+      .once("value")
       .then(data => {
         let savedPlaylists = [];
         const obj = data.val();
@@ -38,16 +38,16 @@ const actions = {
         }
 
         if (savedPlaylists) {
-          commit('SET_RECENTLY_GENERATED_PLAYLISTS', savedPlaylists);
+          commit("SET_RECENTLY_GENERATED_PLAYLISTS", savedPlaylists);
         }
       })
       .catch(err => {
         console.log(err);
       })
-      .finally(() => commit('SET_LOADING', false));
+      .finally(() => commit("SET_LOADING", false));
   },
   savePlaylistToSpotify({ commit, getters, dispatch }) {
-    commit('SET_LOADING', true);
+    commit("SET_LOADING", true);
     api
       .createPlaylistOnSpotify(
         getters.getAccessToken,
@@ -55,17 +55,17 @@ const actions = {
       )
       .then(data => {
         let spotifyGeneratedPlaylistId = data.data.items.id;
-        commit('SET_SPOTIFY_GENERATED_PLAYLIST_ID', spotifyGeneratedPlaylistId);
+        commit("SET_SPOTIFY_GENERATED_PLAYLIST_ID", spotifyGeneratedPlaylistId);
 
         let id = getters.getCurrentPlaylistMetaData.id;
-        commit('UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER', {
-          key: 'spotifyGeneratedPlaylistId',
+        commit("UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER", {
+          key: "spotifyGeneratedPlaylistId",
           newValue: spotifyGeneratedPlaylistId,
           id
         });
 
-        dispatch('updateCurrentPlaylistMetaDataToFB', {
-          node: '/spotifyGeneratedPlaylistId/',
+        dispatch("updateCurrentPlaylistMetaDataToFB", {
+          node: "/spotifyGeneratedPlaylistId/",
           newItemToReplace: spotifyGeneratedPlaylistId
         });
 
@@ -77,34 +77,34 @@ const actions = {
       })
       .then(data => {
         let { snapshot_id } = data.data.items;
-        commit('SET_SPOTIFY_GENERATED_SNAPSHOT_ID', snapshot_id);
+        commit("SET_SPOTIFY_GENERATED_SNAPSHOT_ID", snapshot_id);
 
         let id = getters.getCurrentPlaylistMetaData.id;
-        commit('UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER', {
-          key: 'snapshot_id',
+        commit("UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER", {
+          key: "snapshot_id",
           newValue: snapshot_id,
           id
         });
 
-        dispatch('updateCurrentPlaylistMetaDataToFB', {
-          node: '/snapshot_id/',
+        dispatch("updateCurrentPlaylistMetaDataToFB", {
+          node: "/snapshot_id/",
           newItemToReplace: snapshot_id
         }).then(() => {
-          router.push({ path: '/Playlist' });
+          router.push({ path: "/Playlist" });
         });
 
-        commit('SET_LOADING', false);
+        commit("SET_LOADING", false);
       })
       .catch(err => {
         console.log(err);
-        commit('SET_LOADING', false);
+        commit("SET_LOADING", false);
       });
   },
   savePlaylistToFirebaseDB({ commit, getters }) {
-    commit('SET_LOADING', true);
+    commit("SET_LOADING", true);
     firebase
       .database()
-      .ref('/playlists/' + getters.user.id)
+      .ref("/playlists/" + getters.user.id)
       .push(getters.getCurrentPlaylistMetaData)
       .then(data => {
         let currentPlaylistMeta = {
@@ -112,45 +112,45 @@ const actions = {
           fbKey: data.key
         };
 
-        commit('SET_CURRENT_PLAYLIST_META_DATA', currentPlaylistMeta);
-        commit('ADD_TO_RECENTLY_GENERATED_PLAYLISTS', currentPlaylistMeta);
+        commit("SET_CURRENT_PLAYLIST_META_DATA", currentPlaylistMeta);
+        commit("ADD_TO_RECENTLY_GENERATED_PLAYLISTS", currentPlaylistMeta);
       })
       .catch(err => {
         // eslint-disable-next-line
         console.log(err.message);
       })
       .finally(() => {
-        commit('SET_LOADING', false);
+        commit("SET_LOADING", false);
       });
   },
   updatedPlaylistName: ({ commit, getters, dispatch }, newPlaylistName) => {
-    commit('UPDATE_PLAYLIST_NAME', newPlaylistName);
+    commit("UPDATE_PLAYLIST_NAME", newPlaylistName);
 
     let id = getters.getCurrentPlaylistMetaData.id;
-    commit('UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER', {
-      key: 'playlistName',
+    commit("UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER", {
+      key: "playlistName",
       newValue: newPlaylistName,
       id
     });
 
-    dispatch('updateCurrentPlaylistMetaDataToFB', {
-      node: '/playlistName/',
+    dispatch("updateCurrentPlaylistMetaDataToFB", {
+      node: "/playlistName/",
       newItemToReplace: newPlaylistName
     });
   },
   updatedPlaylistSnapshotId: ({ commit, getters, dispatch }, snapshot_id) => {
     return new Promise((resolve, reject) => {
-      commit('UPDATE_PLAYLIST_SNAPSHOT_ID', snapshot_id);
+      commit("UPDATE_PLAYLIST_SNAPSHOT_ID", snapshot_id);
 
       let id = getters.getCurrentPlaylistMetaData.id;
-      commit('UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER', {
-        key: 'snapshot_id',
+      commit("UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER", {
+        key: "snapshot_id",
         newValue: snapshot_id,
         id
       });
 
-      dispatch('updateCurrentPlaylistMetaDataToFB', {
-        node: '/snapshot_id/',
+      dispatch("updateCurrentPlaylistMetaDataToFB", {
+        node: "/snapshot_id/",
         newItemToReplace: snapshot_id
       })
         .then(() => resolve())
@@ -165,10 +165,10 @@ const actions = {
     return new Promise((resolve, reject) => {
       if (getters.user) {
         // update on firebase as well
-        commit('SET_LOADING', true);
+        commit("SET_LOADING", true);
 
         const fbKey = getters.getCurrentPlaylistMetaData.fbKey;
-        const location = '/playlists/' + getters.user.id + '/' + fbKey + node;
+        const location = "/playlists/" + getters.user.id + "/" + fbKey + node;
 
         let fbUpdates = {};
         fbUpdates[location] = newItemToReplace;
@@ -178,44 +178,44 @@ const actions = {
           .ref()
           .update(fbUpdates)
           .then(() => {
-            commit('SET_LOADING', false);
+            commit("SET_LOADING", false);
             resolve();
           })
           .catch(err => {
             console.log(err);
             reject(err);
           })
-          .finally(() => commit('SET_LOADING', false));
+          .finally(() => commit("SET_LOADING", false));
       }
     });
   },
   checkIfLoginIntitiatedFromPlaylistPage: ({ commit, dispatch, getters }) => {
     return new Promise((resolve, reject) => {
       let isLoginIntitiatedFromPlaylistPage = window.localStorage.getItem(
-        'loginFromPlaylistPage'
+        "loginFromPlaylistPage"
       );
 
       if (isLoginIntitiatedFromPlaylistPage) {
-        commit('SET_LOADING', true);
-        window.localStorage.removeItem('loginFromPlaylistPage');
+        commit("SET_LOADING", true);
+        window.localStorage.removeItem("loginFromPlaylistPage");
 
         let postion = getters.getRecentlyGeneratedPlaylist.length - 1;
 
         commit(
-          'SET_CURRENT_PLAYLIST_META_DATA',
+          "SET_CURRENT_PLAYLIST_META_DATA",
           getters.getRecentlyGeneratedPlaylist[postion]
         );
 
         dispatch(
-          'setPlaylist',
+          "setPlaylist",
           getters.getRecentlyGeneratedPlaylist[postion].generatedPlaylist
         )
           .then(() => {
-            dispatch('setSuffle', {
+            dispatch("setSuffle", {
               shuffle: true,
               loadingNewPlaylist: true
             });
-            router.push({ path: '/Playlist' });
+            router.push({ path: "/Playlist" });
             resolve();
           })
           .catch(err => {
@@ -224,7 +224,7 @@ const actions = {
             reject(err);
           })
           .finally(() => {
-            commit('SET_LOADING', false);
+            commit("SET_LOADING", false);
           });
       }
     });
@@ -238,12 +238,12 @@ const actions = {
     // so save it first before letting the user link their account
 
     return new Promise(resolve => {
-      dispatch('updateCurrentPlaylistMetaDataToFB', {
-        node: '/generatedPlaylist/',
+      dispatch("updateCurrentPlaylistMetaDataToFB", {
+        node: "/generatedPlaylist/",
         newItemToReplace: getters.getCurrentPlaylist
       }).then(() => {
-        dispatch('updateCurrentPlaylistMetaDataToFB', {
-          node: '/fbKey/',
+        dispatch("updateCurrentPlaylistMetaDataToFB", {
+          node: "/fbKey/",
           newItemToReplace: getters.getCurrentPlaylistMetaData.fbKey
         }).then(() => resolve());
       });

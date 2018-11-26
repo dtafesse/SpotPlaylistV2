@@ -79,19 +79,28 @@ export default {
 
   fetchArtistTopTracks(payload) {
     return axios
-      .post(`${ROOT_URL}/api/artists/tracks`, {
+      .post(`${ROOT_URL}/api/artists/tracks/top`, {
         data: payload
       })
-      .then(response => response.data);
+      .then(response => response.data.data);
   },
 
-  fetchAlbumTracks(payload) {
+  fetchRecommendedTracksForArtists(payload) {
+    return axios
+      .post(`${ROOT_URL}/api/artists/tracks/recommended`, {
+        data: payload
+      })
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
+  fetchRecommendedTracksForAlbum(payload) {
     return axios
       .post(`${ROOT_URL}/api/albums/tracks`, {
         data: payload
       })
       .then(checkStatus)
-      .then(response => response.data);
+      .then(response => response.data.data);
   },
 
   fetchRelatedTrack(id) {

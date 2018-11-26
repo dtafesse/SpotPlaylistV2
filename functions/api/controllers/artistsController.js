@@ -8,7 +8,6 @@ const spotifyWebApi = new SpotifyWebApi({
 
 exports.getArtistTopTracks = (req, res, next) => {
   let artistId = req.body.data.id;
-  let type = req.body.data.type;
 
   spotifyWebApi
     .clientCredentialsGrant()
@@ -20,9 +19,6 @@ exports.getArtistTopTracks = (req, res, next) => {
     })
     .then(data => {
       let { tracks } = data.body;
-      tracks.forEach(track => {
-        track.type = type;
-      });
 
       res.status(200).json({
         confirmation: "success",
@@ -41,7 +37,7 @@ exports.getArtistTopTracks = (req, res, next) => {
     });
 };
 
-exports.getUserTopTracks = (req, res, next) => {
+exports.getUserTopArtists = (req, res, next) => {
   let { access_token } = req.body.data;
 
   spotifyWebApi.setAccessToken(access_token);
@@ -74,6 +70,34 @@ exports.getUserTopTracks = (req, res, next) => {
     });
 };
 
-exports.suggestTracksBasedOnArtists = (req, res, next) => {
-  // TODO: maybe implement this instead of just getting an artist top tracks
+exports.getSuggestedTracksBasedOnArtists = (req, res, next) => {
+  let { selectedArtistIds } = req.body.data;
+
+  spotifyWebApi
+    .clientCredentialsGrant()
+    .then(data => {
+      // Save the access token so that it's used in future calls
+      spotifyWebApi.setAccessToken(data.body["access_token"]);
+
+      // limit of 5 track ids.. rule set by this endpoing on spotify
+      return spotifyWebApi.getRecommendations({
+        seed_artists: selectedArtistIds,
+        limit: 25
+      });
+    })
+    .then(data => {
+      return res.status(200).json({
+        confirmation: "success",
+        data: {
+          items: data.body.tracks
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(404).json({
+        confirmation: "fail",
+        message: err.message
+      });
+    });
 };

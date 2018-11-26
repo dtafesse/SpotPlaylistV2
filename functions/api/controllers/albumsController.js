@@ -7,7 +7,7 @@ const spotifyWebApi = new SpotifyWebApi({
 });
 
 exports.getAlbumTracks = (req, res, next) => {
-  let { id, type, images, albumName } = req.body.data;
+  let { id } = req.body.data;
 
   spotifyWebApi
     .clientCredentialsGrant()
@@ -17,27 +17,7 @@ exports.getAlbumTracks = (req, res, next) => {
       return spotifyWebApi.getAlbumTracks(id);
     })
     .then(data => {
-      // let tracks = data.body.items;
-
-      // tracks.forEach(track => {
-      //   track.type = type;
-      //   let album = {
-      //     images: images,
-      //     name: albumName
-      //   };
-      //   track.album = album;
-      // });
-
-      // res.status(200).json({
-      //   confirmation: "success",
-      //   data: {
-      //     items: tracks
-      //   }
-      // });
-
       let tracks = data.body.items;
-
-      //
       let trackIds = tracks.map(track => track.id);
 
       if (trackIds.length > 5) {
