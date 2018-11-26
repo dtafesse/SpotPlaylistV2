@@ -8,26 +8,10 @@
              <v-container>
                 <v-layout row wrap v-if="albums || artists">
                     <v-flex sm8>
-                        <v-chip
-                            v-if="selectedItems"
-                            v-for="(item, index) in selectedItems"
-                            :key="index"
-                            close
-                            label 
-                            class="chip--select-multi"
-                            @input="removeSelected(index)" 
-                        >
-                        <v-avatar>
-                            <img 
-                                v-if="item.images.length > 0" 
-                                :src="item.images[0].url"
-                            >
-                            <v-icon v-else > 
-                                {{ 'person_outline' }} 
-                            </v-icon>
-                        </v-avatar>    
-                        {{ item.name }}
-                        </v-chip>
+                        <selector 
+                            :selectedItems="selectedItems"  
+                            @onRemoveSelected="handleRemoveSelected"
+                        />
                     </v-flex>
                     <v-flex 
                         sm4
@@ -54,45 +38,45 @@
 
 
 <script>
-import category from './category';
-import Loader from '../Shared/Loader';
+import selector from "../Shared/selector";
+import Loader from "../Shared/Loader";
 
 export default {
-    name: 'searchResults',
-    components: {
-        category,
-        Loader
+  name: "searchResults",
+  components: {
+    selector,
+    Loader
+  },
+  computed: {
+    loading() {
+      return this.$store.getters.isLoading;
     },
-    computed: {
-        loading(){
-            return this.$store.getters.isLoading;
-        },
-        selectedItems(){
-            return this.$store.getters.getSelectedItems;
-        },
-        albums(){
-            return this.$store.getters.getQueryResult.albums 
-                ? this.$store.getters.getQueryResult.albums.items
-                : null;
-        },
-        artists(){
-            return this.$store.getters.getQueryResult.artists
-                ? this.$store.getters.getQueryResult.artists.items
-                : null;
-        },
+    selectedItems() {
+      return this.$store.getters.getSelectedItems;
     },
-    methods: {
-        removeSelected(index){
-            this.$store.dispatch('removeItemFromSelectedItems', index);
-        },
-        onClearAll(){
-            this.$store.dispatch('removeAllSelectedItems');
-        },
-        onGeneratePlaylist(){
-            this.$store.dispatch('generatePlaylist');
-        }
+    albums() {
+      return this.$store.getters.getQueryResult.albums
+        ? this.$store.getters.getQueryResult.albums.items
+        : null;
+    },
+    artists() {
+      return this.$store.getters.getQueryResult.artists
+        ? this.$store.getters.getQueryResult.artists.items
+        : null;
     }
-}
+  },
+  methods: {
+    handleRemoveSelected(index) {
+      this.$store.dispatch("removeItemFromSelectedItems", index);
+    },
+    onClearAll() {
+      this.$store.dispatch("removeAllSelectedItems");
+    },
+    onGeneratePlaylist() {
+      this.$store.dispatch("generatePlaylist");
+    }
+  }
+};
 </script>
 
 
