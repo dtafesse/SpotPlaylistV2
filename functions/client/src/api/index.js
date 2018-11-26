@@ -84,5 +84,54 @@ export default {
       })
       .then(checkStatus)
       .then(response => response.data);
+  },
+
+  fetchRelatedTrack(id) {
+    return axios
+      .get(`${ROOT_URL}/api/track/related/${id}`)
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
+  reorderTrackInSavedSpotiyPlaylist({
+    access_token,
+    snapshot_id,
+    rangeStart,
+    rangeLength,
+    insertBefore,
+    spotifyGeneratedPlaylistId
+  }) {
+    return axios
+      .post(`${ROOT_URL}/api/track/reorder`, {
+        data: {
+          access_token,
+          snapshot_id,
+          rangeStart,
+          rangeLength,
+          insertBefore,
+          spotifyGeneratedPlaylistId
+        }
+      })
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
+  removeTrackFromSavedSpotifyPlaylistByPostion({
+    access_token,
+    snapshot_id,
+    index,
+    spotifyGeneratedPlaylistId
+  }) {
+    return axios
+      .post(`${ROOT_URL}/api/track/remove`, {
+        data: {
+          access_token,
+          snapshot_id,
+          index,
+          spotifyGeneratedPlaylistId
+        }
+      })
+      .then(checkStatus)
+      .then(response => response.data.data);
   }
 };
