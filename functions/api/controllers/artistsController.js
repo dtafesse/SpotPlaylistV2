@@ -73,3 +73,7 @@ exports.getUserTopTracks = (req, res, next) => {
       }
     });
 };
+
+exports.suggestTracksBasedOnArtists = (req, res, next) => {
+  // TODO: maybe implement this instead of just getting an artist top tracks
+};
