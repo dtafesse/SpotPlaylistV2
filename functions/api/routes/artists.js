@@ -6,6 +6,8 @@ const ArtistController = require("../controllers/artistsController");
 // routes
 router.post("/tracks", ArtistController.getArtistTopTracks);
 router.post("/user/top", ArtistController.getUserTopTracks);
-router.post("/recommend/tracks", ArtistController.suggestTracksBasedOnArtist);
+
+// TODO: uncomment this route, once the controller is implemented
+//router.post("/recommend/tracks", ArtistController.suggestTracksBasedOnArtist);
 
 module.exports = router;
