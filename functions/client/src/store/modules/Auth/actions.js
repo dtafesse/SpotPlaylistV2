@@ -51,7 +51,7 @@ const actions = {
         console.log(error);
       });
   },
-  autoSignIn({ commit, dispatch }, payload) {
+  autoSignIn({ commit, dispatch, getters }, payload) {
     const user = {
       id: payload.uid
     };
@@ -59,9 +59,11 @@ const actions = {
     window.localStorage.setItem("fbUserId", user.id);
 
     dispatch("fetchPlaylistsFromFB");
-    dispatch("fetchUserSpotAuthTokenFromFB", user.id).then(() =>
-      dispatch("fetchSpotifyUsersTopArtists")
-    );
+    dispatch("fetchUserSpotAuthTokenFromFB", user.id).then(() => {
+      if (getters.isSpotifyLoggedIn) {
+        dispatch("fetchSpotifyUsersTopArtists");
+      }
+    });
   },
   logout({ commit, getters, dispatch }) {
     if (getters.isSpotifyLoggedIn) {
