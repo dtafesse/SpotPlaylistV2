@@ -64,7 +64,7 @@ export default {
   methods: {
     handleOnClick({ index }) {
       if (this.topArtists) {
-        itemToAdd = this.topArtists[index];
+        let itemToAdd = this.topArtists[index];
         this.$store.dispatch("addToSelectedArtists", itemToAdd);
       }
     },
