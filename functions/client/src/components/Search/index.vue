@@ -12,7 +12,7 @@
           <v-flex sm8>
             <selector :selectedItems="selectedItems" @onRemoveSelected="handleRemoveSelected"/>
           </v-flex>
-          <v-flex sm4 v-if="selectedItems.length > 0" mt-3>
+          <v-flex sm4 v-if="selectedItems.length > 0" mt-4>
             <v-layout justify-end>
               <v-btn @click="onGeneratePlaylist">Generate
                 <v-icon color="primary">library_music</v-icon>

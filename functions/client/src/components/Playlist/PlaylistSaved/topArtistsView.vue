@@ -7,13 +7,13 @@
       >{{ `Please Select up to ${selectionLimit} times Only `}}</v-alert>
     </v-container>
 
-    <v-layout row>
-      <v-flex xs8>
+    <v-layout row wrap>
+      <v-flex sm8>
         <selector :selectedItems="selectedArtists" @onRemoveSelected="handleRemoveSelected"/>
       </v-flex>
 
-      <v-flex xs4 v-if="selectedArtists.length > 0" mt-3>
-        <v-layout justify-end>
+      <v-flex sm4 v-if="selectedArtists.length > 0" mt-4>
+        <v-layout row align-center justify-end>
           <v-btn @click="onGeneratePlaylist">Generate
             <v-icon color="primary">library_music</v-icon>
           </v-btn>
