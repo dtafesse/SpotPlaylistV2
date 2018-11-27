@@ -1,46 +1,33 @@
 <template>
-     <v-container grid-list-md my-5 pt-2 >
-        <v-alert
-            :value="isError"
-            type="error"
-            >
-            {{ `Please Select up to ${selectionLimit} times Only `}}
-        </v-alert>
+  <v-container grid-list-md my-5 pt-2>
+    <v-alert :value="isError" type="error">{{ `Please Select up to ${selectionLimit} times Only `}}</v-alert>
 
-         <v-content v-if="loading">
-             <Loader :width="7" :size="70" />
-         </v-content>
+    <v-content v-if="loading">
+      <Loader :width="7" :size="70"/>
+    </v-content>
 
-         <v-content v-else>
-             <v-container>
-                <v-layout row wrap v-if="albums || artists">
-                    <v-flex sm8>
-                        <selector 
-                            :selectedItems="selectedItems"  
-                            @onRemoveSelected="handleRemoveSelected"
-                        />
-                    </v-flex>
-                    <v-flex 
-                        sm4
-                        v-if="selectedItems.length > 0"
-                    >
-                        <v-btn @click="onGeneratePlaylist" >
-                            Generate Playlist!
-                            <v-icon color="primary">library_music</v-icon>
-                        </v-btn>
-                        <v-btn @click="onClearAll">
-                            Clear All
-                            <v-icon color="red lighten-2">clear</v-icon>
-                        </v-btn>
-                    </v-flex>
-                </v-layout>
-             </v-container>
+    <v-content v-else>
+      <v-container>
+        <v-layout row wrap v-if="albums || artists">
+          <v-flex sm8>
+            <selector :selectedItems="selectedItems" @onRemoveSelected="handleRemoveSelected"/>
+          </v-flex>
+          <v-flex sm4 v-if="selectedItems.length > 0" mt-3>
+            <v-layout justify-end>
+              <v-btn @click="onGeneratePlaylist">Generate
+                <v-icon color="primary">library_music</v-icon>
+              </v-btn>
+              <v-btn @click="onClearAll">Clear All
+                <v-icon color="red lighten-2">clear</v-icon>
+              </v-btn>
+            </v-layout>
+          </v-flex>
+        </v-layout>
+      </v-container>
 
-           <router-view></router-view>
-         </v-content>
-
-     </v-container>
-
+      <router-view></router-view>
+    </v-content>
+  </v-container>
 </template>
 
 
