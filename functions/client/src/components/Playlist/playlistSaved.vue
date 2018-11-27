@@ -1,19 +1,43 @@
 <template>
-  <v-container fluid mt-5>
+  <v-container grid-list-md my-5 pt-2>
+    <Loader v-if="loading" :width="7" :size="70"/>
     <v-layout row wrap v-if="isUserLoggedIn && isSpotifyAccountLinked">
-      <v-alert
-        :value="isError"
-        type="error"
-      >{{ `Please Select up to ${selectionLimit} times Only `}}</v-alert>
-
       <v-flex xs12>
-        <!-- TODO: insert selected, follow the same steps as in src/componets/Search/index  -->
-        <!-- TODO: insert category with type - 'Artists', look inside src/componets/Search/AlbumAndArtist -->
-        <!-- Set :showSeeAllButton="false" instead of true -->
-        <!-- TODO: uses vuetify paganiation (look up), dived up topArtists into pages, with a page size of 5 for ex -->
-        <!-- TODO: for selector component, copy over, replace selectedItems with selectedArtists
-            and implement handleRemoveSelected method below, tips there below
-        -->
+        <v-flex xs12>
+          <v-alert
+            :value="isError"
+            type="error"
+          >{{ `Please Select up to ${selectionLimit} times Only `}}</v-alert>
+        </v-flex>
+
+        <v-layout row>
+          <v-flex xs8>
+            <selector :selectedItems="selectedArtists" @onRemoveSelected="handleRemoveSelected"/>
+          </v-flex>
+
+          <v-flex xs4 v-if="selectedArtists.length > 0">
+            <v-btn @click="onGeneratePlaylist">Generate Playlist!
+              <v-icon color="primary">library_music</v-icon>
+            </v-btn>
+            <v-btn @click="onClearAll">Clear All
+              <v-icon color="red lighten-2">clear</v-icon>
+            </v-btn>
+          </v-flex>
+        </v-layout>
+
+        <category
+          :type="'Artists'"
+          :headerMessage="'Here are your top Artists, generate a playlist based on them?'"
+          :items="topArtistsInCurrentPage"
+          :selectedItems="selectedArtistIds"
+          :size="pageSize"
+          :showSeeAllButton="false"
+          @onClick="handleOnClick"
+        />
+
+        <v-container class="text-xs-center">
+          <v-pagination v-model="page" :length="pageLength" :total-visible="6" circle></v-pagination>
+        </v-container>
       </v-flex>
     </v-layout>
     <v-layout row wrap>
@@ -25,18 +49,21 @@
 <script>
 import category from "../Shared/category";
 import selector from "../Shared/selector";
+import Loader from "../Shared/Loader";
 import config from "../../config";
 
 export default {
   name: "playlistSaved",
   components: {
     category,
-    selector
+    selector,
+    Loader
   },
   data() {
     return {
       selectedItemsIds: [],
       page: 1,
+      pageSize: 5,
       selectionLimit: config.LIMIT
     };
   },
@@ -53,31 +80,63 @@ export default {
     selectedArtists() {
       return this.$store.getters.getSelectedArtists;
     },
+    selectedArtistIds() {
+      return this.selectedArtists.map(artist => artist.id);
+    },
     isError() {
       let selectedItems = this.$store.getters.getSelectedArtists;
 
       if (selectedItems) {
         return selectedItems.length > config.LIMIT;
       }
+    },
+    pageLength() {
+      if (this.topArtists && this.pageSize) {
+        let pageLength = Math.ceil(this.topArtists.length / this.pageSize);
+
+        return pageLength;
+      }
+      return 0;
+    },
+    topArtistsInCurrentPage() {
+      if (!this.topArtists) return [];
+      return this.paginate(this.topArtists, this.pageSize, this.page);
+    },
+    loading() {
+      return this.$store.getters.isLoading;
     }
   },
   methods: {
-    handleOnClick({ index }) {
-      if (this.topArtists) {
-        let itemToAdd = this.topArtists[index];
-        this.$store.dispatch("addToSelectedArtists", itemToAdd);
-      }
+    paginate(array, page_size, page_number) {
+      --page_number; // because pages logically start with 1, but technically with 0
+      return array.slice(
+        page_number * page_size,
+        (page_number + 1) * page_size
+      );
     },
 
-    handleShowAllClick() {
-      // TODO: not needed here, since pagination will be used.. delete after seeing this
-      // delete the :onShowAllClick=handleShowAllClick" from "category" component
+    handleOnClick({ id }) {
+      if (this.topArtists && !this.isError) {
+        let index = this.topArtists.findIndex(artist => artist.id === id);
+        this.$store.dispatch("addToSelectedArtists", this.topArtists[index]);
+      }
     },
 
     handleRemoveSelected(index) {
       // TODO: look inside src/componets/Search/index
       // copy over handleRemoveSelected method, and extra out only
       // the "... dispatch("removeItemFromSelectedArtists", index)"
+
+      this.$store.dispatch("removeItemFromSelectedArtists", index);
+    },
+
+    onClearAll() {
+      this.$store.dispatch("removeAllSelectedItems");
+    },
+    onGeneratePlaylist() {
+      if (!this.isError) {
+        this.$store.dispatch("generatePlaylist");
+      }
     }
   }
 };

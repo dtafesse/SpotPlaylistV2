@@ -1,31 +1,32 @@
 <template>
-    <v-container v-if="albums || artists">
-        <v-layout row wrap>
-            <v-flex xs12 sm6>
-                <category  
-                    :type="'Albums'"    
-                    :items="albums"
-                    :selectedItems="selectedItemsIds"
-                    :size="5"
-                    :showSeeAllButton="true"
-                    @onClick="handleOnClick"
-                    @onShowAllClick="handleShowAllChick"
-                />
-            </v-flex>
-            <v-flex xs12 sm6>
-                <category  
-                    :type="'Artists'"    
-                    :items="artists"
-                    :selectedItems="selectedItemsIds"
-                    :size="5"
-                    :showSeeAllButton="true"
-                    @onClick="handleOnClick"
-                    @onShowAllClick="handleShowAllChick"
-                />
-            </v-flex>
-        </v-layout>
-    </v-container>
-    
+  <v-container v-if="albums || artists">
+    <v-layout row wrap>
+      <v-flex xs12 sm6>
+        <category
+          :type="'Albums'"
+          :headerMessage="'Albums'"
+          :items="albums"
+          :selectedItems="selectedItemsIds"
+          :size="5"
+          :showSeeAllButton="true"
+          @onClick="handleOnClick"
+          @onShowAllClick="handleShowAllChick"
+        />
+      </v-flex>
+      <v-flex xs12 sm6>
+        <category
+          :type="'Artists'"
+          :headerMessage="'Artists'"
+          :items="artists"
+          :selectedItems="selectedItemsIds"
+          :size="5"
+          :showSeeAllButton="true"
+          @onClick="handleOnClick"
+          @onShowAllClick="handleShowAllChick"
+        />
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 
