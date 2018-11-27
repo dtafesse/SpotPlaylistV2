@@ -1,5 +1,5 @@
-import axios from 'axios';
-import store from './store';
+import axios from "axios";
+import store from "./store";
 
 let subscribers = [];
 let isRefreshing = false;
@@ -18,11 +18,14 @@ export default {
       if (err.response.status === 401) {
         if (!isRefreshing) {
           isRefreshing = true;
-          store.dispatch('fetchSpotifyRefreshToken').then(() => {
-            isRefreshing = false;
-            onRrefreshed(store.getters.getAccessToken);
-            subscribers = [];
-          });
+          store
+            .dispatch("fetchSpotifyRefreshToken")
+            .then(() => {
+              isRefreshing = false;
+              onRrefreshed(store.getters.getAccessToken);
+              subscribers = [];
+            })
+            .catch(err => console.log(err));
         }
         const requestSubscribers = new Promise(resolve => {
           subscribeTokenRefresh(token => {
