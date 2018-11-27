@@ -1,56 +1,33 @@
 <template>
-    <v-list two-line>
-        <v-subheader>{{ type }}</v-subheader>
-        <template 
-            v-for="(item, index) in limitItemSize" >
-            <v-list-tile 
-                :key="item.id" 
-                avatar ripple 
-                @click="onClick(index)" 
-                class="listItem"
-            >
-                <v-list-tile>
-                    <v-avatar 
-                        v-bind="{ ['tile']: imageType }"
-                        size="55"
-                    >
-                        <v-img
-                            v-if="item.images.length > 0" 
-                             :src="item.images[0].url"  
-                        >
-                        </v-img>
-                        <v-img 
-                            v-else
-                            :src="defaultImage"
-                        >
-                        </v-img>
-                    </v-avatar>
-                </v-list-tile>
-                <v-list-tile-content>
-                    <v-list-tile-title v-html="item.name"></v-list-tile-title>
-                    <span v-if="selectedItems">
-                        <v-icon 
-                            v-if="selectedItems.indexOf(item.id) !== -1" 
-                            color="primary"
-                            right
-                        >
-                            check_circle_outline
-                        </v-icon>
-                    </span>
-                </v-list-tile-content>
-            </v-list-tile>
-        </template>
-        <v-btn 
-            v-if="showMoreButton" 
-            outline color="cyan lighten-1"
-            @click="onShowAllClick"
-        >
-            {{ moreText }}
-        </v-btn>
-    </v-list>
-    
-
-
+  <v-list two-line>
+    <v-subheader>{{ headerMessage }}</v-subheader>
+    <template v-for="(item, index) in limitItemSize">
+      <v-list-tile :key="item.id" avatar ripple @click="onClick(index)" class="listItem">
+        <v-list-tile>
+          <v-avatar v-bind="{ ['tile']: imageType }" size="55">
+            <v-img v-if="item.images.length > 0" :src="item.images[0].url"></v-img>
+            <v-img v-else :src="defaultImage"></v-img>
+          </v-avatar>
+        </v-list-tile>
+        <v-list-tile-content>
+          <v-list-tile-title v-html="item.name"></v-list-tile-title>
+          <span v-if="selectedItems">
+            <v-icon
+              v-if="selectedItems.indexOf(item.id) !== -1"
+              color="primary"
+              right
+            >check_circle_outline</v-icon>
+          </span>
+        </v-list-tile-content>
+      </v-list-tile>
+    </template>
+    <v-btn
+      v-if="showMoreButton"
+      outline
+      color="cyan lighten-1"
+      @click="onShowAllClick"
+    >{{ moreText }}</v-btn>
+  </v-list>
 </template>
 
 <script>
@@ -63,7 +40,8 @@ export default {
     items: Array,
     selectedItems: Array,
     size: Number,
-    showSeeAllButton: Boolean
+    showSeeAllButton: Boolean,
+    headerMessage: String
   },
   computed: {
     limitItemSize() {
