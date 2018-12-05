@@ -1,10 +1,6 @@
 <template>
   <v-container fluid mt-5>
     <v-layout row wrap v-if="isUserLoggedIn && isSpotifyAccountLinked">
-      <v-alert
-        :value="isError"
-        type="error"
-      >{{ `Please Select up to ${selectionLimit} times Only `}}</v-alert>
 
       <v-flex xs12>
         <!-- TODO: insert selected, follow the same steps as in src/componets/Search/index  -->
@@ -14,6 +10,36 @@
         <!-- TODO: for selector component, copy over, replace selectedItems with selectedArtists
             and implement handleRemoveSelected method below, tips there below
         -->
+           <v-flex sm8>
+                        <selector 
+                            :selectedItems="selectedArtists"  
+                            @onRemoveSelected="handleRemoveSelected"
+                        />
+                    </v-flex>
+                     <v-flex 
+                        sm4
+                        v-if="selectedArtists.length > 0"
+                    >
+                        <v-btn @click="onGeneratePlaylist" >
+                            Generate Playlist!
+                            <v-icon color="primary">library_music</v-icon>
+                        </v-btn>
+                        <v-btn @click="onClearAll">
+                            Clear All
+                            <v-icon color="red lighten-2">clear</v-icon>
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                         
+                <category  
+                    :type="'Top Artists For You'"    
+                    :items="topArtists"
+                    :selectedItems="selectedArtists"
+                    :size="5"
+                    :showSeeAllButton="false"
+                    @onClick="handleOnClick"
+                />
+            </v-flex>
       </v-flex>
     </v-layout>
     <v-layout row wrap>
@@ -63,23 +89,33 @@ export default {
   },
   methods: {
     handleOnClick({ index }) {
-      if (this.topArtists) {
+      let itemToAdd = null;
         itemToAdd = this.topArtists[index];
         this.$store.dispatch("addToSelectedArtists", itemToAdd);
+      
+    },
+  onClearAll() {
+      this.$store.dispatch("removeAllSelectedItems");
+    },
+    onGeneratePlaylist() {
+      if (!this.isError) {
+        this.$store.dispatch("generatePlaylist");
       }
     },
-
-    handleShowAllClick() {
-      // TODO: not needed here, since pagination will be used.. delete after seeing this
-      // delete the :onShowAllClick=handleShowAllClick" from "category" component
-    },
-
     handleRemoveSelected(index) {
       // TODO: look inside src/componets/Search/index
       // copy over handleRemoveSelected method, and extra out only
       // the "... dispatch("removeItemFromSelectedArtists", index)"
+      // TODO: figure out possibly using id, wheather to remove from selected artist or albums
+        let indexInArtistList = this.$store.getters.getSelectedArtists.findIndex(
+          artist => artist.id === this.selectedArtists[index].id
+        );
+        this.$store.dispatch(
+          "removeItemFromSelectedArtists",
+          indexInArtistList
+        );
+      }
     }
-  }
 };
 </script>
 
