@@ -14,9 +14,11 @@
           </template>
         </v-list>
 
+        <!-- Pagination Template -->
         <v-container class="text-xs-center">
           <v-pagination v-model="page" :length="pageLength" :total-visible="6" circle></v-pagination>
         </v-container>
+        <!-- End Pagination Template -->
       </v-flex>
     </v-layout>
   </v-container>
