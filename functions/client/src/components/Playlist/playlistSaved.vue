@@ -17,7 +17,9 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap>
-      <v-flex xs12 align-center justify-center fill-height>Previously listened to..</v-flex>
+      <v-flex xs12 align-center justify-center fill-height>
+        <recentPlaylists/>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -26,12 +28,14 @@
 import category from "../Shared/category";
 import selector from "../Shared/selector";
 import config from "../../config";
+import recentPlaylists from "./recentPlaylists";
 
 export default {
   name: "playlistSaved",
   components: {
     category,
-    selector
+    selector,
+    recentPlaylists
   },
   data() {
     return {

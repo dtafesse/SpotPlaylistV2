@@ -215,7 +215,7 @@ const actions = {
               shuffle: true,
               loadingNewPlaylist: true
             });
-            router.push({ path: "/Playlist" });
+            router.push({ path: "/playlist" });
             resolve();
           })
           .catch(err => {
@@ -247,6 +247,42 @@ const actions = {
           newItemToReplace: getters.getCurrentPlaylistMetaData.fbKey
         }).then(() => resolve());
       });
+    });
+  },
+  selectPlaylistFromRecentlyGeneratedPlaylists: (
+    { commit, dispatch },
+    selectedPlaylist
+  ) => {
+    commit("SET_LOADING", true);
+    commit("SET_CURRENT_PLAYLIST_META_DATA", selectedPlaylist);
+    let trackIds = selectedPlaylist.playlistIds.map(trackUri =>
+      trackUri.substring(14)
+    );
+    dispatch("fetchPlaylistTracks", trackIds).then(tracks => {
+      dispatch("setPlaylist", tracks)
+        .then(() => {
+          dispatch("setSuffle", {
+            shuffle: true,
+            loadingNewPlaylist: true
+          });
+
+          router.push({ path: "/playlist" });
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err.message);
+        })
+        .finally(() => commit("SET_LOADING", false));
+    });
+  },
+  fetchPlaylistTracks: (commit, trackIds) => {
+    return new Promise((resolve, reject) => {
+      api
+        .fetchPlaylistTracks(trackIds)
+        .then(({ items }) => {
+          resolve(items);
+        })
+        .catch(err => reject(err));
     });
   }
 };

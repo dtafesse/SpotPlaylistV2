@@ -103,6 +103,15 @@ export default {
       .then(response => response.data.data);
   },
 
+  fetchPlaylistTracks(trackIds) {
+    return axios
+      .post(`${ROOT_URL}/api/track/selectedids`, {
+        data: trackIds
+      })
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
   fetchRelatedTrack(id) {
     return axios
       .get(`${ROOT_URL}/api/track/related/${id}`)

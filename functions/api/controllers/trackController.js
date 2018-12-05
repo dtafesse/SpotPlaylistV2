@@ -1,5 +1,5 @@
-const SpotifyWebApi = require('spotify-web-api-node');
-const keys = require('../../config/keys.js');
+const SpotifyWebApi = require("spotify-web-api-node");
+const keys = require("../../config/keys.js");
 
 const spotifyWebApi = new SpotifyWebApi({
   clientId: keys.CLIENT_ID,
@@ -16,7 +16,7 @@ exports.getRelatedTracks = (req, res, next) => {
     .clientCredentialsGrant()
     .then(data => {
       // Save the access token so that it's used in future calls
-      spotifyWebApi.setAccessToken(data.body['access_token']);
+      spotifyWebApi.setAccessToken(data.body["access_token"]);
       return spotifyWebApi.getRecommendations({
         seed_tracks: [trackId],
         limit: 1
@@ -24,7 +24,7 @@ exports.getRelatedTracks = (req, res, next) => {
     })
     .then(data => {
       res.status(200).json({
-        confirmation: 'success',
+        confirmation: "success",
         data: {
           items: data.body.tracks
         }
@@ -34,7 +34,7 @@ exports.getRelatedTracks = (req, res, next) => {
     .catch(err => {
       console.log(err.message);
       res.status(404).json({
-        confirmation: 'fail',
+        confirmation: "fail",
         message: err.message
       });
     });
@@ -60,7 +60,7 @@ exports.reorderTrack = (req, res, next) => {
     )
     .then(data => {
       res.status(200).json({
-        confirmation: 'success',
+        confirmation: "success",
         data: {
           items: data.body.snapshot_id
         }
@@ -71,13 +71,13 @@ exports.reorderTrack = (req, res, next) => {
       console.log(err);
       if (err.statusCode === 401) {
         res.status(401).json({
-          confirmation: 'fail',
+          confirmation: "fail",
           message: err.message,
           statusCode: 401
         });
       } else {
         res.status(404).json({
-          confirmation: 'fail',
+          confirmation: "fail",
           message: err.message,
           statusCode: 404
         });
@@ -102,7 +102,7 @@ exports.removeTrackByPostion = (req, res, next) => {
     )
     .then(data => {
       res.status(200).json({
-        confirmation: 'success',
+        confirmation: "success",
         data: {
           items: data.body.snapshot_id
         }
@@ -113,16 +113,46 @@ exports.removeTrackByPostion = (req, res, next) => {
       console.log(err);
       if (err.statusCode === 401) {
         res.status(401).json({
-          confirmation: 'fail',
+          confirmation: "fail",
           message: err.message,
           statusCode: 401
         });
       } else {
         res.status(404).json({
-          confirmation: 'fail',
+          confirmation: "fail",
           message: err.message,
           statusCode: 404
         });
       }
+    });
+};
+
+exports.getTracks = (req, res, next) => {
+  let trackIds = req.body.data;
+
+  spotifyWebApi
+    .clientCredentialsGrant()
+    .then(data => {
+      // Save the access token so that it's used in future calls
+      spotifyWebApi.setAccessToken(data.body["access_token"]);
+      spotifyWebApi.setRefreshToken(data.body["refresh_token"]);
+      return spotifyWebApi.getTracks(trackIds);
+    })
+    .then(data => {
+      //let { tracks } = data.body;
+      res.status(200).json({
+        confirmation: "success",
+        data: {
+          items: data.body.tracks
+        }
+      });
+      return;
+    })
+    .catch(err => {
+      console.log(err.message);
+      res.status(404).json({
+        confirmation: "fail",
+        message: err.message
+      });
     });
 };

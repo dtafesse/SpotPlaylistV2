@@ -52,7 +52,7 @@ const actions = {
           });
 
           resolve();
-          router.push({ path: "/Playlist" });
+          router.push({ path: "/playlist" });
         })
         .catch(err => {
           // eslint-disable-next-line
