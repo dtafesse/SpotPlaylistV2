@@ -4,13 +4,13 @@
       <Loader :width="7" :size="70"/>
     </v-container>
 
-    <v-container v-else>
+    <v-container v-else mb-5>
       <v-layout row wrap v-if="isUserLoggedIn && isSpotifyAccountLinked">
         <top-artists-selection/>
-        <v-flex xs6>
+        <v-flex xs12 sm6>
           <top-artists-view/>
         </v-flex>
-        <v-flex xs6>
+        <v-flex xs12 sm6>
           <recent-playlists/>
         </v-flex>
       </v-layout>

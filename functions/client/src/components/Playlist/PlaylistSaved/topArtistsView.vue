@@ -14,8 +14,10 @@
       @onClick="handleOnClick"
     />
 
-    <!-- Pagination here -->
-    <!-- End Pagination template here -->
+    <v-container class="text-xs-center">
+      <!-- Pagination here -->
+      <!-- v-pagination .... -->
+    </v-container>
   </v-container>
 </template>
 
