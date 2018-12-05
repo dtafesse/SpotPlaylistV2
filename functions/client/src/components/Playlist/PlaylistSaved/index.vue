@@ -6,10 +6,13 @@
 
     <v-container v-else>
       <v-layout row wrap v-if="isUserLoggedIn && isSpotifyAccountLinked">
-        <topArtistsView/>
-      </v-layout>
-      <v-layout row wrap>
-        <v-flex xs12 align-center justify-center fill-height>Previously listened to..</v-flex>
+        <top-artists-selection/>
+        <v-flex xs6>
+          <top-artists-view/>
+        </v-flex>
+        <v-flex xs6>
+          <recent-playlists/>
+        </v-flex>
       </v-layout>
     </v-container>
   </v-container>
@@ -17,6 +20,8 @@
 
 <script>
 import topArtistsView from "./topArtistsView";
+import topArtistsSelection from "./topArtistsSelection";
+import recentPlaylists from "./recentPlaylists";
 import Loader from "../../Shared/Loader";
 import config from "../../../config";
 
@@ -24,6 +29,8 @@ export default {
   name: "playlistSaved",
   components: {
     topArtistsView,
+    recentPlaylists,
+    topArtistsSelection,
     Loader
   },
   data() {
@@ -38,7 +45,6 @@ export default {
     isSpotifyAccountLinked() {
       return this.$store.getters.isSpotifyLoggedIn;
     },
-
     isError() {
       let selectedItems = this.$store.getters.getSelectedArtists;
 
@@ -46,7 +52,6 @@ export default {
         return selectedItems.length > config.LIMIT;
       }
     },
-
     loading() {
       return this.$store.getters.isLoading;
     }

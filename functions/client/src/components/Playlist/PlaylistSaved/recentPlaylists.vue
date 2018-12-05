@@ -1,8 +1,8 @@
 <template>
-  <v-container grid-list-md text-xs-center my-5 pt-2>
+  <v-container grid-list-md>
     <v-layout row>
-      <v-flex xs12 sm6 align-center justify-center fill-height>
-        <v-list three-line v-if="recentlyGeneratedPlaylists.length > 0">
+      <v-flex xs12 align-center justify-center fill-height>
+        <v-list two-line v-if="recentlyGeneratedPlaylists.length > 0">
           <v-subheader>Recent Playlists...</v-subheader>
           <template v-for="(playlist, index) in recentlyGeneratedPlaylistsInCurrentPage">
             <v-list-tile :key="index" ripple class="listItem" @click="onClickPlaylist(playlist)">
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import config from "../../config";
+import config from "../../../config";
 
 export default {
   name: "recentPlaylists",
