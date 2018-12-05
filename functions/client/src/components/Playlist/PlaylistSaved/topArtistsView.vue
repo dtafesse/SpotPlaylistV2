@@ -25,7 +25,8 @@
     </v-layout>
 
     <!-- Change items:topArtists to "topArtistsInCurrentPage" 
-          define it in the computed aread 
+          define it in the computed aread -  // add topArtistsInCurrentPage () { } like how its defined in recentlyPlaylists component
+        
     -->
     <category
       :type="'Artists'"
