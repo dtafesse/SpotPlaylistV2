@@ -2,7 +2,7 @@
   <v-list two-line>
     <v-subheader>{{ headerMessage }}</v-subheader>
     <template v-for="(item, index) in limitItemSize">
-      <v-list-tile :key="item.id" avatar ripple @click="onClick(index)" class="listItem">
+      <v-list-tile :key="item.id" avatar ripple @click="onClick(index, item.id)" class="listItem">
         <v-list-tile>
           <v-avatar v-bind="{ ['tile']: imageType }" size="55">
             <v-img v-if="item.images.length > 0" :src="item.images[0].url"></v-img>
@@ -77,8 +77,12 @@ export default {
     }
   },
   methods: {
-    onClick(index) {
-      this.$emit("onClick", { type: this.type.toLowerCase(), index: index });
+    onClick(index, id) {
+      this.$emit("onClick", {
+        type: this.type.toLowerCase(),
+        index: index,
+        id
+      });
     },
     onShowAllClick() {
       this.$emit("onShowAllClick", this.type.toLowerCase());
