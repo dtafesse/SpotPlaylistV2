@@ -42,6 +42,7 @@ const actions = {
         }
       })
       .catch(err => {
+        // eslint-disable-next-line
         console.log(err);
       })
       .finally(() => commit("SET_LOADING", false));
@@ -96,6 +97,7 @@ const actions = {
         commit("SET_LOADING", false);
       })
       .catch(err => {
+        // eslint-disable-next-line
         console.log(err);
         commit("SET_LOADING", false);
       });
@@ -193,6 +195,7 @@ const actions = {
             resolve();
           })
           .catch(err => {
+            // eslint-disable-next-line
             console.log(err);
             reject(err);
           })

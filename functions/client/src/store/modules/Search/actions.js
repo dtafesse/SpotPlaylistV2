@@ -90,7 +90,10 @@ const actions = {
 
         return dispatch("finalSetUpForGeneratedPlaylist");
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err.message);
+      })
       .finally(() => commit("SET_LOADING", false));
   },
 
@@ -117,6 +120,7 @@ const actions = {
           resolve(combinedSuggestedTracks);
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
           commit("SET_LOADING", false);
           reject(err);
@@ -148,6 +152,7 @@ const actions = {
           resolve(generatedPlayistBasedOnAlbumsOnly);
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
           commit("SET_LOADING", false);
           reject(err);
