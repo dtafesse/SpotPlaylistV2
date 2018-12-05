@@ -3,7 +3,7 @@
     <v-layout row>
       <v-flex xs12 align-center justify-center fill-height>
         <v-list two-line v-if="recentlyGeneratedPlaylists.length > 0">
-          <v-subheader>Recent Playlists...</v-subheader>
+          <v-subheader>Most Recent Playlists...</v-subheader>
           <template v-for="(playlist, index) in recentlyGeneratedPlaylistsInCurrentPage">
             <v-list-tile :key="index" ripple class="listItem" @click="onClickPlaylist(playlist)">
               <v-list-tile-content>
@@ -40,7 +40,9 @@ export default {
       return this.$store.getters.isLoading;
     },
     recentlyGeneratedPlaylists() {
-      return this.$store.getters.getRecentlyGeneratedPlaylist;
+      // from latest to oldest, first copy it then reverse it.
+      let temp = [...this.$store.getters.getRecentlyGeneratedPlaylist];
+      return temp.reverse();
     },
     pageLength() {
       if (this.recentlyGeneratedPlaylists && this.pageSize) {
