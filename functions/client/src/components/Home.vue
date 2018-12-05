@@ -2,24 +2,23 @@
   <v-app>
     <navBar/>
     <v-content>
-        <v-container fluid>
-          <router-view></router-view>
-          <nowPlayingBar v-if="this.$store.getters.getCurrentPlaylist" />
-        </v-container>
-      </v-content>
+      <v-container fluid>
+        <router-view></router-view>
+        <nowPlayingBar v-if="this.$store.getters.getCurrentPlaylist"/>
+      </v-container>
+    </v-content>
   </v-app>
-  
 </template>
 
 <script>
-import landingPage from './Landing/landing';
-import nowPlayingBar from './NowPlayingBar/nowPlayingBar';
-import navBar from './NavBar/nav';
-import Loader from './Shared/Loader';
-import Alert from './Shared/Alert';
+import landingPage from "./Landing/landing";
+import nowPlayingBar from "./NowPlayingBar/nowPlayingBar";
+import navBar from "./NavBar/nav";
+import Loader from "./Shared/Loader";
+import Alert from "./Shared/Alert";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     nowPlayingBar,
     navBar,
@@ -28,11 +27,11 @@ export default {
     Alert
   },
   computed: {
-    loading(){
+    loading() {
       return this.$store.getters.isLoading;
     },
-    isCurrentPlaylist(){
-      if(this.$store.getters.getCurrentPlaylist){
+    isCurrentPlaylist() {
+      if (this.$store.getters.getCurrentPlaylist) {
         return true;
       }
       return false;
@@ -42,9 +41,9 @@ export default {
     }
   },
   created() {
-    this.$router.push({path: '/saved/playlists'});
-  },
-}
+    this.$router.push({ path: "/saved/playlists" });
+  }
+};
 </script>
 
 

@@ -48,7 +48,12 @@
               @mouseenter="selectedTrackToBeModified = index"
             >
               <v-list-tile @click="onClickTrack(index)">
-                <img :src="track.album.images[0].url" max-width="50" height="50">
+                <img
+                  v-if="track.album.images[0].url !== undefined"
+                  :src="track.album.images[0].url"
+                  max-width="50"
+                  height="50"
+                >
               </v-list-tile>
               <v-list-tile-content @click="onClickTrack(index)">
                 <v-list-tile-title v-html="track.name"></v-list-tile-title>
