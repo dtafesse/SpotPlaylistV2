@@ -24,19 +24,21 @@
       </v-flex>
     </v-layout>
 
+    <!-- Change items:topArtists to "topArtistsInCurrentPage" 
+          define it in the computed aread 
+    -->
     <category
       :type="'Artists'"
       :headerMessage="'Here are your top Artists, generate a playlist based on them?'"
-      :items="topArtistsInCurrentPage"
+      :items="topArtists"
       :selectedItems="selectedArtistIds"
       :size="pageSize"
       :showSeeAllButton="false"
       @onClick="handleOnClick"
     />
 
-    <v-container class="text-xs-center">
-      <v-pagination v-model="page" :length="pageLength" :total-visible="6" circle></v-pagination>
-    </v-container>
+    <!-- Pagination here -->
+    <!-- End Pagination template here -->
   </v-flex>
 </template>
 
@@ -83,31 +85,11 @@ export default {
         return selectedItems.length > config.LIMIT;
       }
     },
-    pageLength() {
-      if (this.topArtists && this.pageSize) {
-        let pageLength = Math.ceil(this.topArtists.length / this.pageSize);
-
-        return pageLength;
-      }
-      return 0;
-    },
-    topArtistsInCurrentPage() {
-      if (!this.topArtists) return [];
-      return this.paginate(this.topArtists, this.pageSize, this.page);
-    },
     loading() {
       return this.$store.getters.isLoading;
     }
   },
   methods: {
-    paginate(array, page_size, page_number) {
-      --page_number; // because pages logically start with 1, but technically with 0
-      return array.slice(
-        page_number * page_size,
-        (page_number + 1) * page_size
-      );
-    },
-
     handleOnClick({ id }) {
       if (this.topArtists && !this.isError) {
         let index = this.topArtists.findIndex(artist => artist.id === id);
