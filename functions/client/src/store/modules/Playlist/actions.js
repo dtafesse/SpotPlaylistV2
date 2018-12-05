@@ -90,7 +90,7 @@ const actions = {
           node: "/snapshot_id/",
           newItemToReplace: snapshot_id
         }).then(() => {
-          router.push({ path: "/Playlist" });
+          router.push({ path: "/playlist" });
         });
 
         commit("SET_LOADING", false);
@@ -102,16 +102,27 @@ const actions = {
   },
   savePlaylistToFirebaseDB({ commit, getters }) {
     commit("SET_LOADING", true);
-    firebase
+    let newPlaylistKey = firebase
       .database()
       .ref("/playlists/" + getters.user.id)
-      .push(getters.getCurrentPlaylistMetaData)
-      .then(data => {
-        let currentPlaylistMeta = {
-          ...getters.getCurrentPlaylistMetaData,
-          fbKey: data.key
-        };
+      .child("posts")
+      .push().key;
 
+    let currentPlaylistMeta = {
+      ...getters.getCurrentPlaylistMetaData,
+      fbKey: newPlaylistKey
+    };
+
+    let newPlaylist = {};
+    newPlaylist[
+      "/playlists/" + getters.user.id + "/" + newPlaylistKey
+    ] = currentPlaylistMeta;
+
+    firebase
+      .database()
+      .ref()
+      .update(newPlaylist)
+      .then(() => {
         commit("SET_CURRENT_PLAYLIST_META_DATA", currentPlaylistMeta);
         commit("ADD_TO_RECENTLY_GENERATED_PLAYLISTS", currentPlaylistMeta);
       })
