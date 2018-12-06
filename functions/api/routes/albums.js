@@ -9,5 +9,6 @@ router.post(
   AlbumController.getAlbumTracks,
   AlbumController.suggestTracksBasedOnAlbumTracks
 );
+router.get("/newreleases", AlbumController.getNewReleases);
 
 module.exports = router;
