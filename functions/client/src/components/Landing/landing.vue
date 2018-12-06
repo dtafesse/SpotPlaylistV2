@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid id="container">
     <v-layout align-center justify-center row wrap fill-height>
       <v-flex xs12 sm6>
         <v-layout wrap ml-5>
@@ -33,6 +33,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+#container {
+  background-color: #e9f2f7;
+}
 </style>
-
