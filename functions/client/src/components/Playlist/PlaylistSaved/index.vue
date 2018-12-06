@@ -6,7 +6,7 @@
 
     <v-container mb-5 v-else>
       <v-layout row wrap>
-        <selectorView v-if="isSpotifyAccountLinked"/>
+        <selectorView/>
         <v-flex xs12 sm6 v-if="isSpotifyAccountLinked">
           <top-artists-view/>
         </v-flex>
