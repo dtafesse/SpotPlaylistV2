@@ -349,15 +349,19 @@ const actions = {
       .finally(() => commit("SET_LOADING", false));
   },
   fetchTracksForSelectedFeaturedPlaylist: (
-    { dispatch },
+    { dispatch, commit },
     { id, playlistName }
   ) => {
-    api.fetchTracksForSelectedFeaturedPlaylist(id).then(({ items }) => {
-      dispatch("finalSetUpForGeneratedPlaylist", {
-        newlyGeneratedPlaylist: items,
-        playlistName: playlistName
-      });
-    });
+    commit("SET_LOADING", true);
+    api
+      .fetchTracksForSelectedFeaturedPlaylist(id)
+      .then(({ items }) => {
+        return dispatch("finalSetUpForGeneratedPlaylist", {
+          newlyGeneratedPlaylist: items,
+          playlistName: playlistName
+        });
+      })
+      .finally(() => commit("SET_LOADING", false));
   }
 };
 
