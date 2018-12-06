@@ -280,12 +280,59 @@ const actions = {
   },
   fetchPlaylistTracks: ({ commit }, trackIds) => {
     return new Promise((resolve, reject) => {
-      api
-        .fetchPlaylistTracks(trackIds)
-        .then(({ items }) => {
-          resolve(items);
+      let size = trackIds.length;
+      let quotient = Math.floor(size / 50);
+      let reminder = size % 50;
+
+      let startingPoint = 0;
+      let startingEndPoint = 50 > size ? size : 50;
+
+      let i = 0;
+      let promises = [];
+      if (quotient > 0) {
+        while (i < quotient) {
+          if (startingPoint < startingEndPoint) {
+            var trackIdsPortion = trackIds.slice(
+              startingPoint,
+              startingEndPoint
+            );
+
+            promises.push(api.fetchPlaylistTracks(trackIdsPortion));
+          }
+
+          if (i !== quotient - 1) {
+            startingPoint += startingEndPoint;
+            startingEndPoint += 50;
+          }
+          i += 1;
+        }
+        if (startingEndPoint !== size) {
+          promises.push(
+            api.fetchPlaylistTracks(trackIds.slice(startingEndPoint, size))
+          );
+        }
+      } else {
+        promises.push(
+          api.fetchPlaylistTracks(
+            trackIds.slice(startingPoint, startingPoint + reminder)
+          )
+        );
+      }
+
+      Promise.all(promises)
+        .then(responses => {
+          let playlistTracks = [];
+          responses.forEach(({ items }) => {
+            playlistTracks = [...playlistTracks, ...items];
+          });
+          resolve(playlistTracks);
         })
-        .catch(err => reject(err));
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+          commit("SET_LOADING", false);
+          reject(err);
+        });
     });
   },
   fetchFeaturedPlaylists: ({ commit }) => {
