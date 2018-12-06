@@ -4,8 +4,8 @@
       <Loader :width="7" :size="70"/>
     </v-container>
 
-    <v-container v-else-if="isUserLoggedIn && isSpotifyAccountLinked" mb-5>
-      <v-layout row wrap>
+    <v-container mb-5 v-else>
+      <v-layout row wrap v-if="isUserLoggedIn && isSpotifyAccountLinked">
         <top-artists-selection/>
         <v-flex xs12 sm6>
           <top-artists-view/>
@@ -14,9 +14,11 @@
           <recent-playlists/>
         </v-flex>
       </v-layout>
-    </v-container>
-    <v-container v-else>
-      <div>Start searching to get started, here are featured Artists and Albums</div>
+      <v-layout row wrap>
+        <v-flex xs12>
+          <featured-playlists/>
+        </v-flex>
+      </v-layout>
     </v-container>
   </v-container>
 </template>
@@ -24,6 +26,7 @@
 <script>
 import topArtistsView from "./topArtistsView";
 import topArtistsSelection from "./topArtistsSelection";
+import featuredPlaylists from "./featuredPlaylists";
 import recentPlaylists from "./recentPlaylists";
 import Loader from "../../Shared/Loader";
 import config from "../../../config";
@@ -34,6 +37,7 @@ export default {
     topArtistsView,
     recentPlaylists,
     topArtistsSelection,
+    featuredPlaylists,
     Loader
   },
   data() {

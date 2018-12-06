@@ -89,7 +89,6 @@ exports.featuredPlaylists = (req, res) => {
       return spotifyWebApi.getFeaturedPlaylists();
     })
     .then(data => {
-      console.log(data.body.items);
       return res.status(200).json({
         confirmation: "success",
         data: {

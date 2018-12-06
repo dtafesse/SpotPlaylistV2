@@ -110,6 +110,13 @@ export default {
       .then(response => response.data.data);
   },
 
+  fetchTracksForSelectedFeaturedPlaylist(id) {
+    return axios
+      .get(`${ROOT_URL}/api/playlist/select/${id}`)
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
   fetchPlaylistTracks(trackIds) {
     return axios
       .post(`${ROOT_URL}/api/track/selectedids`, {

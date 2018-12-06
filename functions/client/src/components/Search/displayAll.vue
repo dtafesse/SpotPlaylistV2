@@ -1,52 +1,25 @@
 <template>
-    <v-container grid-list-md my-5 pt-2 >
-        <v-layout 
-            row wrap  
-        >
-            <v-flex
-                v-for="(item, index) in items"
-                xs6 sm3
-                :key="item.id"
-            >
-                <v-card 
-                    flat
-                    class="card"
-                >
-                    <v-avatar 
-                        v-bind="{ ['tile']: imageType }"
-                        size="150"
-                    >
-                        <v-img
-                            v-if="item.images.length > 0" 
-                             :src="item.images[0].url"
-                            @click="selected(index)"
-                        >
-                        </v-img>
-                        <v-img 
-                            v-else
-                            :src="defaultImage"
-                            @click="selected(index)"
-                        >
-                        </v-img>
-                    </v-avatar>
-                    <v-card-title 
-                        class="caption"
-                        @click="selected(index)"
-                    >
-                        {{ item.name }}
-
-                        <span v-if="selectedItemsIds">
-                            <v-icon v-if="selectedItemsIds.indexOf(item.id) !== -1" color="primary">
-                                check_circle_outline
-                            </v-icon>
-                        </span>
-
-                    </v-card-title>
-                </v-card>
-            </v-flex>
-        </v-layout>
-    </v-container>
-
+  <v-container grid-list-md my-5 pt-2>
+    <v-layout row wrap>
+      <v-flex v-for="(item, index) in items" xs6 sm3 :key="item.id">
+        <v-card flat class="card">
+          <v-avatar v-bind="{ ['tile']: imageType }" size="150">
+            <v-img v-if="item.images.length > 0" :src="item.images[0].url" @click="selected(index)"></v-img>
+            <v-img v-else :src="defaultImage" @click="selected(index)"></v-img>
+          </v-avatar>
+          <v-card-title class="caption" @click="selected(index)">
+            {{ item.name }}
+            <span v-if="selectedItemsIds">
+              <v-icon
+                v-if="selectedItemsIds.indexOf(item.id) !== -1"
+                color="primary"
+              >check_circle_outline</v-icon>
+            </span>
+          </v-card-title>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
