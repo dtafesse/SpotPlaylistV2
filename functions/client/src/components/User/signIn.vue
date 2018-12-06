@@ -33,7 +33,6 @@
               <v-flex xs12>
                 <v-btn type="submit" color="primary" :disabled="loading" :loading="loading">Sign In</v-btn>
               </v-flex>
-              <v-dividor/>
               <v-flex xs12>
                 Don't Have an account? Create one for free!
                 <a
