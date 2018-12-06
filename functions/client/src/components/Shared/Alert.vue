@@ -1,17 +1,15 @@
 <template>
-    <v-alert error dismissible @input="closeAlert" :value=true> 
-        {{text}}
-    </v-alert>
+  <v-alert error dismissible @input="closeAlert" :value="true">{{text}}</v-alert>
 </template>
 
 <script>
-    export default {
-        name:"Alert",
-        props: ['text'],
-        methods: {
-            closeAlert() {
-                this.$emit('dismissed')
-            }
-        }
+export default {
+  name: "Alert",
+  props: ["text"],
+  methods: {
+    closeAlert() {
+      this.$emit("dismissed");
     }
+  }
+};
 </script>
