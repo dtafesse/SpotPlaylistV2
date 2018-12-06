@@ -26,11 +26,14 @@ const actions = {
       .finally(() => commit("SET_LOADING", false));
   },
 
-  finalSetUpForGeneratedPlaylist({ commit, dispatch, getters }) {
+  finalSetUpForGeneratedPlaylist(
+    { commit, dispatch, getters },
+    { newlyGeneratedPlaylist, playlistName }
+  ) {
     return new Promise((resolve, reject) => {
       let playlist = {
-        playlistName: "Untitled",
-        playlistIds: getters.getNewGeneratedPlaylist.map(track => track.uri),
+        playlistName,
+        playlistIds: newlyGeneratedPlaylist.map(track => track.uri),
         id: helpers.generateRandom(),
         spotifyGeneratedPlaylistId: null,
         snapshot_id: null
@@ -44,21 +47,9 @@ const actions = {
         commit("ADD_TO_RECENTLY_GENERATED_PLAYLISTS", playlist);
       }
 
-      dispatch("setPlaylist", getters.getNewGeneratedPlaylist)
-        .then(() => {
-          dispatch("setSuffle", {
-            shuffle: true,
-            loadingNewPlaylist: true
-          });
-
-          resolve();
-          router.push({ path: "/playlist" });
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(err.message);
-          reject(err);
-        });
+      dispatch("setPlaylist", newlyGeneratedPlaylist).then(() => {
+        resolve();
+      });
     });
   },
 
@@ -88,7 +79,10 @@ const actions = {
           }
         });
 
-        return dispatch("finalSetUpForGeneratedPlaylist");
+        return dispatch("finalSetUpForGeneratedPlaylist", {
+          newlyGeneratedPlaylist: getters.getNewGeneratedPlaylist,
+          playlistName: "Untitled"
+        });
       })
       .catch(err => {
         // eslint-disable-next-line

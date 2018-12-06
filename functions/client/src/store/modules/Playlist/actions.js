@@ -1,10 +1,20 @@
 import api from "../../../api/index";
 import router from "../../../router/index";
+import helpers from "../../../assets/js/helpers";
 import * as firebase from "firebase";
 
 const actions = {
-  setPlaylist: (context, newPlayist) => {
-    context.commit("SET_PLAYLIST", newPlayist);
+  setPlaylist: ({ commit, dispatch }, newPlayist) => {
+    return new Promise(resolve => {
+      commit("SET_PLAYLIST", newPlayist);
+
+      dispatch("setSuffle", {
+        shuffle: true,
+        loadingNewPlaylist: true
+      });
+      resolve();
+      router.push({ path: "/playlist" });
+    });
   },
   clearPlaylistState: ({ commit }) => {
     commit("SET_CURRENT_TRACK", undefined);
@@ -225,17 +235,7 @@ const actions = {
           getters.getRecentlyGeneratedPlaylist[postion].generatedPlaylist
         )
           .then(() => {
-            dispatch("setSuffle", {
-              shuffle: true,
-              loadingNewPlaylist: true
-            });
-            router.push({ path: "/playlist" });
             resolve();
-          })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.log(err.message);
-            reject(err);
           })
           .finally(() => {
             commit("SET_LOADING", false);
@@ -273,20 +273,9 @@ const actions = {
       trackUri.substring(14)
     );
     dispatch("fetchPlaylistTracks", trackIds).then(tracks => {
-      dispatch("setPlaylist", tracks)
-        .then(() => {
-          dispatch("setSuffle", {
-            shuffle: true,
-            loadingNewPlaylist: true
-          });
-
-          router.push({ path: "/playlist" });
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.log(err.message);
-        })
-        .finally(() => commit("SET_LOADING", false));
+      dispatch("setPlaylist", tracks).then(() => {
+        commit("SET_LOADING", false);
+      });
     });
   },
   fetchPlaylistTracks: ({ commit }, trackIds) => {
@@ -311,6 +300,17 @@ const actions = {
         console.log(err);
       })
       .finally(() => commit("SET_LOADING", false));
+  },
+  fetchTracksForSelectedFeaturedPlaylist: (
+    { dispatch },
+    { id, playlistName }
+  ) => {
+    api.fetchTracksForSelectedFeaturedPlaylist(id).then(({ items }) => {
+      dispatch("finalSetUpForGeneratedPlaylist", {
+        newlyGeneratedPlaylist: items,
+        playlistName: playlistName
+      });
+    });
   }
 };
 

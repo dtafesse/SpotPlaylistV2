@@ -83,7 +83,10 @@ export default {
     },
     onClickPlaylist(index) {
       let selectedPlaylist = this.featuredPlaylists[index];
-      console.log(selectedPlaylist.id);
+      this.$store.dispatch("fetchTracksForSelectedFeaturedPlaylist", {
+        id: selectedPlaylist.id,
+        playlistName: selectedPlaylist.name
+      });
     }
   },
   beforeDestroy() {
