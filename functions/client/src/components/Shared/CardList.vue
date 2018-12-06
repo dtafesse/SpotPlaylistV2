@@ -3,7 +3,7 @@
     <div class="subheading">{{heading}}</div>
     <v-layout row wrap>
       <v-flex v-for="item in itemsInCurrentPage" xs6 sm2 :key="item.id">
-        <v-card flat class="card text-as-center">
+        <v-card class="card text-as-center" height="200px">
           <v-avatar v-bind="{ ['tile']: true }" size="125">
             <v-img
               v-if="item.images.length > 0"
@@ -26,13 +26,15 @@
       </v-flex>
 
       <!-- Pagination Template -->
-      <v-layout row align-center justify-center fill-height mt-1>
-        <v-pagination
-          v-model="page"
-          :length="pageLength"
-          :total-visible="this.numOfPagesVisible"
-          circle
-        ></v-pagination>
+      <v-layout column align-center justify-center fill-height mt-1>
+        <v-flex xs12>
+          <v-pagination
+            v-model="page"
+            :length="pageLength"
+            :total-visible="this.numOfPagesVisible"
+            circle
+          ></v-pagination>
+        </v-flex>
       </v-layout>
       <!-- End Pagination Template -->
     </v-layout>

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="container">
     <navBar/>
     <v-content>
       <v-container fluid>
@@ -47,4 +47,8 @@ export default {
 </script>
 
 
-
+<style>
+#container {
+  background-color: #e9f2f7;
+}
+</style>
