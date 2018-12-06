@@ -5,20 +5,17 @@
     </v-container>
 
     <v-container mb-5 v-else>
-      <v-layout row wrap v-if="isUserLoggedIn && isSpotifyAccountLinked">
-        <top-artists-selection/>
-        <v-flex xs12 sm6>
+      <v-layout row wrap>
+        <top-artists-selection v-if="isSpotifyAccountLinked"/>
+        <v-flex xs12 sm6 v-if="isSpotifyAccountLinked">
           <top-artists-view/>
         </v-flex>
-        <v-flex xs12 sm6>
+        <v-flex xs12 sm6 v-bind="{ ['sm12']: !isSpotifyAccountLinked }">
           <recent-playlists/>
         </v-flex>
       </v-layout>
-      <v-layout row wrap>
-        <v-flex xs12>
-          <featured-playlists/>
-        </v-flex>
-      </v-layout>
+
+      <featured-playlists/>
     </v-container>
   </v-container>
 </template>

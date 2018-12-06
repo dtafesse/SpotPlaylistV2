@@ -1,14 +1,15 @@
 <template>
-  <v-container grid-list-md>
+  <v-container grid-list-md my-3>
+    <div class="subheading">Featured Playlists</div>
     <v-layout row wrap>
       <v-flex
         v-for="(playlist, index) in featuredPlaylistsInCurrentPage"
         xs6
-        sm3
+        sm2
         :key="playlist.id"
       >
-        <v-card flat class="card">
-          <v-avatar v-bind="{ ['tile']: true }" size="150">
+        <v-card flat class="card text-as-center">
+          <v-avatar v-bind="{ ['tile']: true }" size="125">
             <v-img
               v-if="playlist.images.length > 0"
               :src="playlist.images[0].url"
@@ -30,15 +31,24 @@
 </template>
 
 <script>
+import config from "../../../config";
+
 export default {
   name: "featuredPlaylists",
   data() {
     return {
       page: 1,
-      pageSize: 4
+      isMobile: false
     };
   },
   computed: {
+    pageSize() {
+      if (this.isMobile) {
+        return 4;
+      } else {
+        return 6;
+      }
+    },
     featuredPlaylists() {
       return this.$store.getters.getFeaturedPlaylists;
     },
@@ -55,6 +65,9 @@ export default {
         return pageLength;
       }
       return 0;
+    },
+    defaultImage() {
+      return config.defaultImage;
     }
   },
   methods: {
@@ -65,7 +78,28 @@ export default {
         (page_number + 1) * page_size
       );
     },
-    onClickPlaylist(index) {}
+    onResize() {
+      this.isMobile = window.innerWidth < 600;
+    },
+    onClickPlaylist(index) {
+      let selectedPlaylist = this.featuredPlaylists[index];
+      console.log(selectedPlaylist.id);
+    }
+  },
+  beforeDestroy() {
+    if (typeof window !== "undefined") {
+      window.removeEventListener("resize", this.onResize, { passive: true });
+    }
+  },
+  mounted() {
+    this.onResize();
+    window.addEventListener("resize", this.onResize, { passive: true });
   }
 };
 </script>
+
+<style scoped>
+.card:hover {
+  cursor: pointer;
+}
+</style>

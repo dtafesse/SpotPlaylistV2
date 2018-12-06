@@ -15,7 +15,7 @@
         </v-list>
 
         <!-- Pagination Template -->
-        <v-container class="text-xs-center">
+        <v-container class="text-xs-center" v-if="recentlyGeneratedPlaylists.length > 0">
           <v-pagination v-model="page" :length="pageLength" :total-visible="6" circle></v-pagination>
         </v-container>
         <!-- End Pagination Template -->
