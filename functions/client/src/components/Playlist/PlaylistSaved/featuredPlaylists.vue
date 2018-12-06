@@ -23,7 +23,10 @@ export default {
     }
   },
   methods: {
-    handleSelectedFeaturedPlaylist(index) {
+    handleSelectedFeaturedPlaylist(id) {
+      let index = this.featuredPlaylists.findIndex(
+        playlist => playlist.id === id
+      );
       let selectedPlaylist = this.featuredPlaylists[index];
       this.$store.dispatch("fetchTracksForSelectedFeaturedPlaylist", {
         id: selectedPlaylist.id,

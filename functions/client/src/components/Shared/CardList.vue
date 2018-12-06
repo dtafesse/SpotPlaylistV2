@@ -2,17 +2,17 @@
   <v-container grid-list-md my-3>
     <div class="subheading">{{heading}}</div>
     <v-layout row wrap>
-      <v-flex v-for="(item, index) in itemsInCurrentPage" xs6 sm2 :key="item.id">
+      <v-flex v-for="item in itemsInCurrentPage" xs6 sm2 :key="item.id">
         <v-card flat class="card text-as-center">
           <v-avatar v-bind="{ ['tile']: true }" size="125">
             <v-img
               v-if="item.images.length > 0"
               :src="item.images[0].url"
-              @click="onClickItem(index)"
+              @click="onClickItem(item.id)"
             ></v-img>
-            <v-img v-else :src="defaultImage" @click="onClickItem(index)"></v-img>
+            <v-img v-else :src="defaultImage" @click="onClickItem(item.id)"></v-img>
           </v-avatar>
-          <v-card-title class="caption" @click="onClickItem(index)">
+          <v-card-title class="caption" @click="onClickItem(item.id, index)">
             {{ item.name }}
             <span v-if="selectedItems">
               <v-icon
@@ -93,8 +93,8 @@ export default {
     onResize() {
       this.isMobile = window.innerWidth < 600;
     },
-    onClickItem(index) {
-      this.$emit("onClickItem", index);
+    onClickItem(id, index) {
+      this.$emit("onClickItem", id);
     }
   },
   beforeDestroy() {
