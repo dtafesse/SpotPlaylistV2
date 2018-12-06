@@ -27,8 +27,8 @@ export default {
     }
   },
   methods: {
-    handleSelectedAlbum(index) {
-      console.log(this.newlyReleasedAlbums[index]);
+    handleSelectedAlbum(id) {
+      let index = this.newlyReleasedAlbums.findIndex(album => album.id === id);
       this.$store.dispatch(
         "addToSelectedAlbums",
         this.newlyReleasedAlbums[index]
