@@ -62,6 +62,7 @@ export default {
   },
   created() {
     this.$store.dispatch("fetchFeaturedPlaylists");
+    this.$store.dispatch("fetchNewReleasedAlbums");
   }
 };
 </script>

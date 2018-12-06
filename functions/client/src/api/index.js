@@ -103,6 +103,13 @@ export default {
       .then(response => response.data.data);
   },
 
+  fetchNewReleasedAlbums() {
+    return axios
+      .get(`${ROOT_URL}/api/albums/newreleases`)
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
   fetchFeaturedPlaylists() {
     return axios
       .get(`${ROOT_URL}/api/playlist/featured`)
