@@ -13,9 +13,9 @@
         <v-flex xs12 sm6 v-bind="{ ['sm12']: !isSpotifyAccountLinked }">
           <recent-playlists/>
         </v-flex>
+        <new-album-releases/>
+        <featured-playlists/>
       </v-layout>
-
-      <featured-playlists/>
     </v-container>
   </v-container>
 </template>
@@ -23,8 +23,9 @@
 <script>
 import topArtistsView from "./topArtistsView";
 import topArtistsSelection from "./topArtistsSelection";
-import featuredPlaylists from "./featuredPlaylists";
 import recentPlaylists from "./recentPlaylists";
+import featuredPlaylists from "./featuredPlaylists";
+import newAlbumReleases from "./newAlbumReleases";
 import Loader from "../../Shared/Loader";
 import config from "../../../config";
 
@@ -33,8 +34,9 @@ export default {
   components: {
     topArtistsView,
     recentPlaylists,
-    topArtistsSelection,
     featuredPlaylists,
+    newAlbumReleases,
+    topArtistsSelection,
     Loader
   },
   data() {

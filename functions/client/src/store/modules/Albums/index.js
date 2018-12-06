@@ -4,6 +4,10 @@ const state = {
   newlyReleasedAlbums: undefined
 };
 
+const getters = {
+  getNewlyReleasedAlbums: state => state.newlyReleasedAlbums
+};
+
 const actions = {
   fetchNewReleasedAlbums: ({ commit, dispatch }) => {
     return new Promise((resolve, reject) => {
@@ -24,5 +28,6 @@ const mutations = {
 export default {
   state,
   actions,
+  getters,
   mutations
 };
