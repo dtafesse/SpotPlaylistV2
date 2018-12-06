@@ -24,7 +24,10 @@ export default {
   },
   methods: {
     handleSelectedAlbum(index) {
-      console.log(this.newlyReleasedAlbums[index].name);
+      this.$store.dispatch(
+        "addToSelectedAlbums",
+        this.newlyReleasedAlbums[index]
+      );
     }
   }
 };

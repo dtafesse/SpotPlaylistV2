@@ -6,7 +6,7 @@
 
     <v-container mb-5 v-else>
       <v-layout row wrap>
-        <top-artists-selection v-if="isSpotifyAccountLinked"/>
+        <selectorView v-if="isSpotifyAccountLinked"/>
         <v-flex xs12 sm6 v-if="isSpotifyAccountLinked">
           <top-artists-view/>
         </v-flex>
@@ -22,7 +22,7 @@
 
 <script>
 import topArtistsView from "./topArtistsView";
-import topArtistsSelection from "./topArtistsSelection";
+import selectorView from "../../Shared/SelectorView";
 import recentPlaylists from "./recentPlaylists";
 import featuredPlaylists from "./featuredPlaylists";
 import newAlbumReleases from "./newAlbumReleases";
@@ -36,7 +36,7 @@ export default {
     recentPlaylists,
     featuredPlaylists,
     newAlbumReleases,
-    topArtistsSelection,
+    selectorView,
     Loader
   },
   data() {
