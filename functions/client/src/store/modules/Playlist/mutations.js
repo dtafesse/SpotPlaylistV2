@@ -73,6 +73,9 @@ const mutations = {
     temp.splice(trackUriPosition, 1);
 
     state.recentlyGeneratedPlaylist[index].playlistIds = [...temp];
+  },
+  SET_FEATURED_PLAYLISTS: (state, playlist) => {
+    state.featuredPlaylists = playlist;
   }
 };
 

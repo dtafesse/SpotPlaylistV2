@@ -4,8 +4,8 @@
       <Loader :width="7" :size="70"/>
     </v-container>
 
-    <v-container v-else mb-5>
-      <v-layout row wrap v-if="isUserLoggedIn && isSpotifyAccountLinked">
+    <v-container v-else-if="isUserLoggedIn && isSpotifyAccountLinked" mb-5>
+      <v-layout row wrap>
         <top-artists-selection/>
         <v-flex xs12 sm6>
           <top-artists-view/>
@@ -14,6 +14,9 @@
           <recent-playlists/>
         </v-flex>
       </v-layout>
+    </v-container>
+    <v-container v-else>
+      <div>Start searching to get started, here are featured Artists and Albums</div>
     </v-container>
   </v-container>
 </template>
@@ -56,7 +59,9 @@ export default {
       return this.$store.getters.isLoading;
     }
   },
-  methods: {}
+  created() {
+    this.$store.dispatch("fetchFeaturedPlaylists");
+  }
 };
 </script>
 

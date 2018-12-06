@@ -1,5 +1,5 @@
-const SpotifyWebApi = require('spotify-web-api-node');
-const keys = require('../../config/keys.js');
+const SpotifyWebApi = require("spotify-web-api-node");
+const keys = require("../../config/keys.js");
 
 const spotifyWebApi = new SpotifyWebApi({
   clientId: keys.CLIENT_ID,
@@ -17,7 +17,7 @@ exports.createPlaylist = (req, res, next) => {
     })
     .then(data => {
       res.status(200).json({
-        confirmation: 'success',
+        confirmation: "success",
         data: {
           items: {
             id: data.body.id
@@ -30,13 +30,13 @@ exports.createPlaylist = (req, res, next) => {
       console.log(err);
       if (err.statusCode === 401) {
         res.status(401).json({
-          confirmation: 'fail',
+          confirmation: "fail",
           message: err.message,
           statusCode: 401
         });
       } else {
         res.status(404).json({
-          confirmation: 'fail',
+          confirmation: "fail",
           message: err.message,
           statusCode: 404
         });
@@ -52,7 +52,7 @@ exports.addToPlaylist = (req, res, next) => {
     .addTracksToPlaylist(playlistId, listOfPlaylistUris)
     .then(data => {
       res.status(200).json({
-        confirmation: 'success',
+        confirmation: "success",
         data: {
           items: {
             snapshot_id: data.body.snapshot_id
@@ -65,16 +65,76 @@ exports.addToPlaylist = (req, res, next) => {
       console.log(err);
       if (err.statusCode === 401) {
         res.status(401).json({
-          confirmation: 'fail',
+          confirmation: "fail",
           message: err.message,
           statusCode: 401
         });
       } else {
         res.status(404).json({
-          confirmation: 'fail',
+          confirmation: "fail",
           message: err.message,
           statusCode: 404
         });
       }
+    });
+};
+
+exports.featuredPlaylists = (req, res) => {
+  spotifyWebApi
+    .clientCredentialsGrant()
+    .then(data => {
+      // Save the access token so that it's used in future calls
+      spotifyWebApi.setAccessToken(data.body["access_token"]);
+
+      return spotifyWebApi.getFeaturedPlaylists();
+    })
+    .then(data => {
+      console.log(data.body.items);
+      return res.status(200).json({
+        confirmation: "success",
+        data: {
+          items: data.body.playlists.items
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(404).json({
+        confirmation: "fail",
+        message: err.message
+      });
+    });
+};
+
+exports.getPlaylistWithId = (req, res) => {
+  let id;
+  if (req.params.id) {
+    id = req.params.id;
+  }
+
+  spotifyWebApi
+    .clientCredentialsGrant()
+    .then(data => {
+      // Save the access token so that it's used in future calls
+      spotifyWebApi.setAccessToken(data.body["access_token"]);
+
+      return spotifyWebApi.getPlaylist(id);
+    })
+    .then(data => {
+      let tracks = data.body.tracks.items.map(item => item.track);
+
+      return res.status(200).json({
+        confirmation: "success",
+        data: {
+          items: tracks
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(404).json({
+        confirmation: "fail",
+        message: err.message
+      });
     });
 };

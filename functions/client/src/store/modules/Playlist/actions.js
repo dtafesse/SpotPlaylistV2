@@ -289,7 +289,7 @@ const actions = {
         .finally(() => commit("SET_LOADING", false));
     });
   },
-  fetchPlaylistTracks: (commit, trackIds) => {
+  fetchPlaylistTracks: ({ commit }, trackIds) => {
     return new Promise((resolve, reject) => {
       api
         .fetchPlaylistTracks(trackIds)
@@ -298,6 +298,19 @@ const actions = {
         })
         .catch(err => reject(err));
     });
+  },
+  fetchFeaturedPlaylists: ({ commit }) => {
+    commit("SET_LOADING", true);
+    api
+      .fetchFeaturedPlaylists()
+      .then(({ items }) => {
+        commit("SET_FEATURED_PLAYLISTS", items);
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err);
+      })
+      .finally(() => commit("SET_LOADING", false));
   }
 };
 
