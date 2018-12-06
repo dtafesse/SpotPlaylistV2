@@ -26,14 +26,14 @@
       </v-flex>
 
       <!-- Pagination Template -->
-      <v-container class="text-xs-center">
+      <v-layout row align-center justify-center fill-height mt-1>
         <v-pagination
           v-model="page"
           :length="pageLength"
           :total-visible="this.numOfPagesVisible"
           circle
         ></v-pagination>
-      </v-container>
+      </v-layout>
       <!-- End Pagination Template -->
     </v-layout>
   </v-container>

@@ -14,10 +14,17 @@
       @onClick="handleOnClick"
     />
 
-    <v-container class="text-xs-center">
+    <v-layout
+      row
+      align-center
+      justify-center
+      fill-height
+      mt-1
+      v-if="topArtists && topArtists.length > 0"
+    >
       <!-- Pagination here -->
       <!-- v-pagination .... -->
-    </v-container>
+    </v-layout>
   </v-container>
 </template>
 
