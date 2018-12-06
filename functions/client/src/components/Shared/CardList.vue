@@ -12,7 +12,16 @@
             ></v-img>
             <v-img v-else :src="defaultImage" @click="onClickItem(index)"></v-img>
           </v-avatar>
-          <v-card-title class="caption" @click="onClickItem(index)">{{ item.name }}</v-card-title>
+          <v-card-title class="caption" @click="onClickItem(index)">
+            {{ item.name }}
+            <span v-if="selectedItems">
+              <v-icon
+                v-if="selectedItems.indexOf(item.id) !== -1"
+                color="primary"
+                right
+              >check_circle_outline</v-icon>
+            </span>
+          </v-card-title>
         </v-card>
       </v-flex>
 
@@ -43,6 +52,7 @@ export default {
   },
   props: {
     items: Array,
+    selectedItems: Array,
     heading: String,
     numOfPagesVisible: Number, // set to 6 in parent comp
     pageSizeMobile: Number,
