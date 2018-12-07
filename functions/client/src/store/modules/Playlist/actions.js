@@ -362,6 +362,25 @@ const actions = {
         });
       })
       .finally(() => commit("SET_LOADING", false));
+  },
+  removePlaylistFromFirebasePlaylists: ({ getters }, index) => {
+    return new Promise((resolve, reject) => {
+      const fbKey = getters.getRecentlyGeneratedPlaylist[index].fbKey;
+      const location = "/playlists/" + getters.user.id + "/" + fbKey;
+
+      var updates = {};
+      updates[location] = null;
+
+      firebase
+        .database()
+        .ref()
+        .update(updates)
+        .then(() => resolve())
+        .catch(err => reject(err));
+    });
+  },
+  removePlaylistFromRecentlyGeneratedPlaylists: ({ commit }, index) => {
+    commit("REMOVE_SELECTED_PLAYLIST_FROM_RECENTLY_GENERATED_PLAYLISTS", index);
   }
 };
 

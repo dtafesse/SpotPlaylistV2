@@ -5,11 +5,21 @@
         <v-list two-line v-if="recentlyGeneratedPlaylists.length > 0">
           <v-subheader>Most Recent Playlists...</v-subheader>
           <template v-for="(playlist, index) in recentlyGeneratedPlaylistsInCurrentPage">
-            <v-list-tile :key="index" ripple class="listItem" @click="onClickPlaylist(playlist)">
-              <v-list-tile-content>
+            <v-list-tile :key="index" ripple class="listItem">
+              <v-list-tile-content @click="onClickPlaylist(playlist)">
                 <v-list-tile-title v-html="playlist.playlistName"></v-list-tile-title>
                 <v-list-tile-sub-title v-html="playlist.playlistIds.length + ' songs'"></v-list-tile-sub-title>
               </v-list-tile-content>
+              <v-list-tile-action>
+                <v-tooltip top>
+                  <v-icon
+                    color="error"
+                    @click="handleRemovePlaylist(playlist.id)"
+                    slot="activator"
+                  >delete</v-icon>
+                  <span>Delete</span>
+                </v-tooltip>
+              </v-list-tile-action>
             </v-list-tile>
           </template>
         </v-list>
@@ -87,6 +97,21 @@ export default {
         "selectPlaylistFromRecentlyGeneratedPlaylists",
         selectedPlaylist
       );
+    },
+    handleRemovePlaylist(id) {
+      let index = this.$store.getters.getRecentlyGeneratedPlaylist.findIndex(
+        playlist => playlist.id === id
+      );
+
+      this.$store
+        .dispatch("removePlaylistFromFirebasePlaylists", index)
+        .then(() =>
+          this.$store.dispatch(
+            "removePlaylistFromRecentlyGeneratedPlaylists",
+            index
+          )
+        )
+        .catch(err => console.log(err));
     }
   }
 };
