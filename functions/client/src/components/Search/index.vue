@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-md my-5 pt-2>
+  <v-container grid-list-md mb-5>
     <v-content v-if="loading">
       <Loader :width="7" :size="70"/>
     </v-content>
