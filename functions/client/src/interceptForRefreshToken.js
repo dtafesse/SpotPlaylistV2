@@ -25,7 +25,10 @@ export default {
               onRrefreshed(store.getters.getAccessToken);
               subscribers = [];
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+              // eslint-disable-next-line
+              console.log(err);
+            });
         }
         const requestSubscribers = new Promise(resolve => {
           subscribeTokenRefresh(token => {

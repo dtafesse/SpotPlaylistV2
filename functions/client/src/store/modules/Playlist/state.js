@@ -1,7 +1,8 @@
 const state = {
   playlist: undefined,
   currentPlaylistMetaData: undefined,
-  recentlyGeneratedPlaylist: []
+  recentlyGeneratedPlaylist: [],
+  featuredPlaylists: []
 };
 
 export default state;

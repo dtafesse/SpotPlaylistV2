@@ -1,10 +1,20 @@
 import api from "../../../api/index";
 import router from "../../../router/index";
+import helpers from "../../../assets/js/helpers";
 import * as firebase from "firebase";
 
 const actions = {
-  setPlaylist: (context, newPlayist) => {
-    context.commit("SET_PLAYLIST", newPlayist);
+  setPlaylist: ({ commit, dispatch }, newPlayist) => {
+    return new Promise(resolve => {
+      commit("SET_PLAYLIST", newPlayist);
+
+      dispatch("setSuffle", {
+        shuffle: true,
+        loadingNewPlaylist: true
+      });
+      resolve();
+      router.push({ path: "/playlist" });
+    });
   },
   clearPlaylistState: ({ commit }) => {
     commit("SET_CURRENT_TRACK", undefined);
@@ -42,6 +52,7 @@ const actions = {
         }
       })
       .catch(err => {
+        // eslint-disable-next-line
         console.log(err);
       })
       .finally(() => commit("SET_LOADING", false));
@@ -90,28 +101,40 @@ const actions = {
           node: "/snapshot_id/",
           newItemToReplace: snapshot_id
         }).then(() => {
-          router.push({ path: "/Playlist" });
+          router.push({ path: "/playlist" });
         });
 
         commit("SET_LOADING", false);
       })
       .catch(err => {
+        // eslint-disable-next-line
         console.log(err);
         commit("SET_LOADING", false);
       });
   },
   savePlaylistToFirebaseDB({ commit, getters }) {
     commit("SET_LOADING", true);
-    firebase
+    let newPlaylistKey = firebase
       .database()
       .ref("/playlists/" + getters.user.id)
-      .push(getters.getCurrentPlaylistMetaData)
-      .then(data => {
-        let currentPlaylistMeta = {
-          ...getters.getCurrentPlaylistMetaData,
-          fbKey: data.key
-        };
+      .child("posts")
+      .push().key;
 
+    let currentPlaylistMeta = {
+      ...getters.getCurrentPlaylistMetaData,
+      fbKey: newPlaylistKey
+    };
+
+    let newPlaylist = {};
+    newPlaylist[
+      "/playlists/" + getters.user.id + "/" + newPlaylistKey
+    ] = currentPlaylistMeta;
+
+    firebase
+      .database()
+      .ref()
+      .update(newPlaylist)
+      .then(() => {
         commit("SET_CURRENT_PLAYLIST_META_DATA", currentPlaylistMeta);
         commit("ADD_TO_RECENTLY_GENERATED_PLAYLISTS", currentPlaylistMeta);
       })
@@ -182,6 +205,7 @@ const actions = {
             resolve();
           })
           .catch(err => {
+            // eslint-disable-next-line
             console.log(err);
             reject(err);
           })
@@ -211,17 +235,7 @@ const actions = {
           getters.getRecentlyGeneratedPlaylist[postion].generatedPlaylist
         )
           .then(() => {
-            dispatch("setSuffle", {
-              shuffle: true,
-              loadingNewPlaylist: true
-            });
-            router.push({ path: "/Playlist" });
             resolve();
-          })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.log(err.message);
-            reject(err);
           })
           .finally(() => {
             commit("SET_LOADING", false);
@@ -248,6 +262,125 @@ const actions = {
         }).then(() => resolve());
       });
     });
+  },
+  selectPlaylistFromRecentlyGeneratedPlaylists: (
+    { commit, dispatch },
+    selectedPlaylist
+  ) => {
+    commit("SET_LOADING", true);
+    commit("SET_CURRENT_PLAYLIST_META_DATA", selectedPlaylist);
+    let trackIds = selectedPlaylist.playlistIds.map(trackUri =>
+      trackUri.substring(14)
+    );
+    dispatch("fetchPlaylistTracks", trackIds).then(tracks => {
+      dispatch("setPlaylist", tracks).then(() => {
+        commit("SET_LOADING", false);
+      });
+    });
+  },
+  fetchPlaylistTracks: ({ commit }, trackIds) => {
+    return new Promise((resolve, reject) => {
+      let size = trackIds.length;
+      let quotient = Math.floor(size / 50);
+      let reminder = size % 50;
+
+      let startingPoint = 0;
+      let startingEndPoint = 50 > size ? size : 50;
+
+      let i = 0;
+      let promises = [];
+      if (quotient > 0) {
+        while (i < quotient) {
+          if (startingPoint < startingEndPoint) {
+            var trackIdsPortion = trackIds.slice(
+              startingPoint,
+              startingEndPoint
+            );
+
+            promises.push(api.fetchPlaylistTracks(trackIdsPortion));
+          }
+
+          if (i !== quotient - 1) {
+            startingPoint += startingEndPoint;
+            startingEndPoint += 50;
+          }
+          i += 1;
+        }
+        if (startingEndPoint !== size) {
+          promises.push(
+            api.fetchPlaylistTracks(trackIds.slice(startingEndPoint, size))
+          );
+        }
+      } else {
+        promises.push(
+          api.fetchPlaylistTracks(
+            trackIds.slice(startingPoint, startingPoint + reminder)
+          )
+        );
+      }
+
+      Promise.all(promises)
+        .then(responses => {
+          let playlistTracks = [];
+          responses.forEach(({ items }) => {
+            playlistTracks = [...playlistTracks, ...items];
+          });
+          resolve(playlistTracks);
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err);
+          commit("SET_LOADING", false);
+          reject(err);
+        });
+    });
+  },
+  fetchFeaturedPlaylists: ({ commit }) => {
+    commit("SET_LOADING", true);
+    api
+      .fetchFeaturedPlaylists()
+      .then(({ items }) => {
+        commit("SET_FEATURED_PLAYLISTS", items);
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err);
+      })
+      .finally(() => commit("SET_LOADING", false));
+  },
+  fetchTracksForSelectedFeaturedPlaylist: (
+    { dispatch, commit },
+    { id, playlistName }
+  ) => {
+    commit("SET_LOADING", true);
+    api
+      .fetchTracksForSelectedFeaturedPlaylist(id)
+      .then(({ items }) => {
+        return dispatch("finalSetUpForGeneratedPlaylist", {
+          newlyGeneratedPlaylist: items,
+          playlistName: playlistName
+        });
+      })
+      .finally(() => commit("SET_LOADING", false));
+  },
+  removePlaylistFromFirebasePlaylists: ({ getters }, index) => {
+    return new Promise((resolve, reject) => {
+      const fbKey = getters.getRecentlyGeneratedPlaylist[index].fbKey;
+      const location = "/playlists/" + getters.user.id + "/" + fbKey;
+
+      var updates = {};
+      updates[location] = null;
+
+      firebase
+        .database()
+        .ref()
+        .update(updates)
+        .then(() => resolve())
+        .catch(err => reject(err));
+    });
+  },
+  removePlaylistFromRecentlyGeneratedPlaylists: ({ commit }, index) => {
+    commit("REMOVE_SELECTED_PLAYLIST_FROM_RECENTLY_GENERATED_PLAYLISTS", index);
   }
 };
 
