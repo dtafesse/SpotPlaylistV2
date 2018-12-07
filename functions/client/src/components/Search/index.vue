@@ -7,7 +7,7 @@
     <v-content v-else>
       <v-container>
         <v-layout row wrap v-if="albums || artists">
-          <selectorView/>
+          <selectorView v-if="selectedItems && selectedItems.length > 0"/>
         </v-layout>
       </v-container>
 
@@ -40,6 +40,12 @@ export default {
       return this.$store.getters.getQueryResult.artists
         ? this.$store.getters.getQueryResult.artists.items
         : null;
+    },
+    selectedItems() {
+      return [
+        ...this.$store.getters.getSelectedAlbums,
+        ...this.$store.getters.getSelectedArtists
+      ];
     }
   }
 };

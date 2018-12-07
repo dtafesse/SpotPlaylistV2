@@ -3,7 +3,7 @@
     <div class="subheading">{{heading}}</div>
     <v-layout row wrap>
       <v-flex v-for="item in itemsInCurrentPage" xs6 sm2 :key="item.id">
-        <v-card class="card text-as-center" height="220px">
+        <v-card class="card text-as-center" height="235px">
           <v-layout column align-center justify-center>
             <v-flex xs12 mt-4>
               <v-avatar v-bind="{ ['tile']: true }" size="125">

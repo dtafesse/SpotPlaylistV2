@@ -6,17 +6,19 @@
 
     <v-container mb-5 v-else>
       <v-layout row wrap>
-        <selectorView/>
+        <selectorView v-if="selectedItems && selectedItems.length > 0"/>
         <v-flex
           xs12
           sm6
           v-if="isSpotifyAccountLinked"
           v-bind="{ ['sm12']: recentlyGeneratedPlaylist.length === 0 }"
         >
-          <top-artists-view/>
+          <top-artists-view v-if="topArtists && topArtists.length > 0"/>
         </v-flex>
         <v-flex xs12 sm6 v-bind="{ ['sm12']: !isSpotifyAccountLinked }">
-          <recent-playlists/>
+          <recent-playlists
+            v-if="recentlyGeneratedPlaylists && recentlyGeneratedPlaylists.length >0"
+          />
         </v-flex>
         <new-album-releases/>
         <featured-playlists/>
@@ -67,6 +69,18 @@ export default {
       return this.$store.getters.isLoading;
     },
     recentlyGeneratedPlaylist() {
+      return this.$store.getters.getRecentlyGeneratedPlaylist;
+    },
+    selectedItems() {
+      return [
+        ...this.$store.getters.getSelectedAlbums,
+        ...this.$store.getters.getSelectedArtists
+      ];
+    },
+    topArtists() {
+      return this.$store.getters.getUserSpotifyTopArtists;
+    },
+    recentlyGeneratedPlaylists() {
       return this.$store.getters.getRecentlyGeneratedPlaylist;
     }
   },

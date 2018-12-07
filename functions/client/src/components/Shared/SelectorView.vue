@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <v-alert :value="isError" type="error">{{ `Please Select up to ${selectionLimit} times Only `}}</v-alert>
+    <v-alert
+      v-if="isError"
+      :value="isError"
+      type="error"
+    >{{ `Please Select up to ${selectionLimit} times Only `}}</v-alert>
 
     <v-layout row wrap>
       <v-flex sm8>
