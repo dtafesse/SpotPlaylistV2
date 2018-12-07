@@ -4,7 +4,7 @@
       <v-flex xs12 sm6>
         <v-layout wrap ml-5>
           <v-flex xs12>
-            <p>Hello welcome to spot playlist!</p>
+            <p>Not ready to create an account yet? No problem!</p>
           </v-flex>
 
           <v-flex xs12>
