@@ -2,20 +2,30 @@
   <v-container grid-list-md my-5 pt-2>
     <v-layout row wrap>
       <v-flex v-for="(item, index) in items" xs6 sm3 :key="item.id">
-        <v-card flat class="card">
-          <v-avatar v-bind="{ ['tile']: imageType }" size="150">
-            <v-img v-if="item.images.length > 0" :src="item.images[0].url" @click="selected(index)"></v-img>
-            <v-img v-else :src="defaultImage" @click="selected(index)"></v-img>
-          </v-avatar>
-          <v-card-title class="caption" @click="selected(index)">
-            {{ item.name }}
-            <span v-if="selectedItemsIds">
-              <v-icon
-                v-if="selectedItemsIds.indexOf(item.id) !== -1"
-                color="primary"
-              >check_circle_outline</v-icon>
-            </span>
-          </v-card-title>
+        <v-card class="card" height="255px">
+          <v-layout column align-center justify-center>
+            <v-flex xs12 mt-4>
+              <v-avatar v-bind="{ ['tile']: imageType }" size="150">
+                <v-img
+                  v-if="item.images.length > 0"
+                  :src="item.images[0].url"
+                  @click="selected(index)"
+                ></v-img>
+                <v-img v-else :src="defaultImage" @click="selected(index)"></v-img>
+              </v-avatar>
+            </v-flex>
+            <v-flex xs12>
+              <v-card-title class="caption" @click="selected(index)">
+                {{ item.name }}
+                <span v-if="selectedItemsIds">
+                  <v-icon
+                    v-if="selectedItemsIds.indexOf(item.id) !== -1"
+                    color="primary"
+                  >check_circle_outline</v-icon>
+                </span>
+              </v-card-title>
+            </v-flex>
+          </v-layout>
         </v-card>
       </v-flex>
     </v-layout>
