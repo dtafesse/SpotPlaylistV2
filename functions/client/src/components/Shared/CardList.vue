@@ -5,7 +5,7 @@
       <v-flex v-for="item in itemsInCurrentPage" xs6 sm2 :key="item.id">
         <v-card class="card text-as-center" height="220px">
           <v-layout column align-center justify-center>
-            <v-flex xs12>
+            <v-flex xs12 mt-4>
               <v-avatar v-bind="{ ['tile']: true }" size="125">
                 <v-img
                   v-if="item.images.length > 0"
