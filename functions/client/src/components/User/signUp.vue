@@ -53,7 +53,7 @@
                 Have an account?
                 <a @click="navSignIn" color="primary">Sign In</a>
               </v-flex>
-              <v-flex xs12 class="guestLink hidden-md-and-up">
+              <v-flex xs12>
                 Otherwise, Continue As
                 <a @click="navAsGuest" color="primary">Guest</a>
               </v-flex>
@@ -120,7 +120,5 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
 
 

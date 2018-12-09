@@ -37,7 +37,7 @@
                 Don't Have an account?
                 <a @click="navSignUp" color="primary">Sign Up</a>
               </v-flex>
-              <v-flex xs12 class="guestLink hidden-md-and-up">
+              <v-flex xs12>
                 Otherwise, Continue As
                 <a @click="navAsGuest" color="primary">Guest</a>
               </v-flex>
@@ -96,12 +96,5 @@ export default {
 };
 </script>
 
-<style scoped>
-.guestLink {
-  padding: 5px 0 0 0;
-  margin: 0;
-  text-align: center;
-}
-</style>
 
 
