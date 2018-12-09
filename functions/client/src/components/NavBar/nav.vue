@@ -37,7 +37,6 @@
 </template>
 
 <script>
-// import searchBar from './searchBar';
 import searchBar from "./searchTextField";
 
 export default {
@@ -74,7 +73,7 @@ export default {
     title() {
       return this.hideTitle && this.$vuetify.breakpoint.xs
         ? ""
-        : "SpotPlaylist";
+        : "Playlist Generator 3000";
     }
   },
   methods: {
