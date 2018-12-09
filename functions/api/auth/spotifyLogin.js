@@ -18,7 +18,7 @@ let spotifyWebApi = new SpotifyWebApi({
 
 router.get("/login", (req, res) => {
   var scope =
-    "user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-top-read";
+    "user-read-private user-read-email playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-top-read";
 
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
