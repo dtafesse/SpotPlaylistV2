@@ -54,6 +54,9 @@ export default {
     };
   },
   computed: {
+    isUserLoggedIn() {
+      return this.$store.getters.user ? true : false;
+    },
     loading() {
       return this.$store.getters.isLoading;
     },
@@ -103,15 +106,22 @@ export default {
         playlist => playlist.id === id
       );
 
-      this.$store
-        .dispatch("removePlaylistFromFirebasePlaylists", index)
-        .then(() =>
-          this.$store.dispatch(
-            "removePlaylistFromRecentlyGeneratedPlaylists",
-            index
+      if (this.isUserLoggedIn) {
+        this.$store
+          .dispatch("removePlaylistFromFirebasePlaylists", index)
+          .then(() =>
+            this.$store.dispatch(
+              "removePlaylistFromRecentlyGeneratedPlaylists",
+              index
+            )
           )
-        )
-        .catch(err => console.log(err));
+          .catch(err => console.log(err));
+      } else {
+        this.$store.dispatch(
+          "removePlaylistFromRecentlyGeneratedPlaylists",
+          index
+        );
+      }
     }
   }
 };
