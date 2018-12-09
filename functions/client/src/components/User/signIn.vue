@@ -17,6 +17,11 @@
                             Log In
                         </v-btn>
                     </v-layout>
+                    <v-card-text class="guestLink hidden-md-and-up">
+                        <a href="/saved/playlists">
+                                Continue As Guest
+                        </a>  
+                    </v-card-text>
                 </v-form>
             </v-card-text>
         </v-card>       
@@ -65,7 +70,11 @@ export default {
 </script>
 
 <style scoped>
-   
+   .guestLink {
+       padding: 5px 0 0 0;
+       margin: 0;
+       text-align: center;
+   }
 </style>
 
 
