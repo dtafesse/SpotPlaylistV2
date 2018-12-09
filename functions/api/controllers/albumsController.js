@@ -77,3 +77,29 @@ exports.suggestTracksBasedOnAlbumTracks = (req, res) => {
       });
     });
 };
+
+exports.getNewReleases = (req, res) => {
+  spotifyWebApi
+    .clientCredentialsGrant()
+    .then(data => {
+      // Save the access token so that it's used in future calls
+      spotifyWebApi.setAccessToken(data.body["access_token"]);
+
+      return spotifyWebApi.getNewReleases();
+    })
+    .then(data => {
+      return res.status(200).json({
+        confirmation: "success",
+        data: {
+          items: data.body.albums.items
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(404).json({
+        confirmation: "fail",
+        message: err.message
+      });
+    });
+};

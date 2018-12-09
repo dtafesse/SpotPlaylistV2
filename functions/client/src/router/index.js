@@ -12,7 +12,7 @@ import AlbumAndArtistResult from "../components/Search/AlbumAndArtistResult";
 import RenderAll from "../components/Search/displayAll";
 
 import PlaylistTable from "../components/Playlist/PlaylistTable/index";
-import SavedPlaylists from "../components/Playlist/playlistSaved";
+import SavedPlaylists from "../components/Playlist/PlaylistSaved/index";
 import Landing from "../components/Landing/landing";
 Vue.use(Router);
 

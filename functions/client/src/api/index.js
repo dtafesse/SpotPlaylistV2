@@ -103,6 +103,36 @@ export default {
       .then(response => response.data.data);
   },
 
+  fetchNewReleasedAlbums() {
+    return axios
+      .get(`${ROOT_URL}/api/albums/newreleases`)
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
+  fetchFeaturedPlaylists() {
+    return axios
+      .get(`${ROOT_URL}/api/playlist/featured`)
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
+  fetchTracksForSelectedFeaturedPlaylist(id) {
+    return axios
+      .get(`${ROOT_URL}/api/playlist/select/${id}`)
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
+  fetchPlaylistTracks(trackIds) {
+    return axios
+      .post(`${ROOT_URL}/api/track/selectedids`, {
+        data: trackIds
+      })
+      .then(checkStatus)
+      .then(response => response.data.data);
+  },
+
   fetchRelatedTrack(id) {
     return axios
       .get(`${ROOT_URL}/api/track/related/${id}`)

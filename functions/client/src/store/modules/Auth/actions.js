@@ -48,6 +48,7 @@ const actions = {
       .catch(error => {
         commit("SET_LOADING", false);
         commit("setError", error);
+        // eslint-disable-next-line
         console.log(error);
       });
   },
@@ -121,6 +122,7 @@ const actions = {
           });
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err.message);
           reject(err);
         })
@@ -151,6 +153,7 @@ const actions = {
           }
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
           reject(err);
         })
@@ -188,6 +191,7 @@ const actions = {
           });
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err.message);
           commit("SET_LOADING", false);
           reject(err);
@@ -204,6 +208,7 @@ const actions = {
           resolve();
         })
         .catch(err => {
+          // eslint-disable-next-line
           console.log(err);
           reject(err);
         });

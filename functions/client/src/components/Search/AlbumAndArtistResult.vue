@@ -80,10 +80,6 @@ export default {
           this.$store.dispatch("addToSelectedArtists", itemToAdd);
         }
       }
-
-      // if (itemToAdd) {
-      //   this.$store.dispatch("addToSelectedItems", itemToAdd);
-      // }
     },
     handleShowAllChick(type) {
       if (type === "album") {

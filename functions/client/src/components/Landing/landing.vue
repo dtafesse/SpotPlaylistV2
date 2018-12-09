@@ -21,11 +21,10 @@
                 <router-view></router-view>
             </v-flex>
         </v-layout>
-    </v-container>
+  </v-container>
 </template>
 
 <script>
-
 export default {
     name: 'landing',
     data() {
@@ -41,8 +40,7 @@ export default {
             this.$router.push('/signup');
          }
     }
-}
-
+};
 </script>
 
 <style scoped>
@@ -68,4 +66,3 @@ export default {
        color:#01579B;
    }
 </style>
-

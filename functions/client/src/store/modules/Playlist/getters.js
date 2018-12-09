@@ -7,7 +7,8 @@ const getters = {
       state.currentPlaylistMetaData &&
       state.currentPlaylistMetaData.spotifyGeneratedPlaylistId
     );
-  }
+  },
+  getFeaturedPlaylists: state => state.featuredPlaylists
 };
 
 export default getters;
