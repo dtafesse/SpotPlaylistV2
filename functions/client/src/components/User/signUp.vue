@@ -39,20 +39,26 @@
             :rules="[validatePassword]"
           ></v-text-field>
           <v-switch label="Link Spotify Account?" v-model="linkSpotify" color="primary"></v-switch>
-          <v-layout align-center justify-center column wrap fill-height>
-            <v-flex xs12>
-              <v-btn
-                type="submit"
-                color="primary"
-                :disabled="loading || validatePassword != ''"
-                :loading="loading"
-              >Create Account</v-btn>
-            </v-flex>
-            <v-flex xs12>
-              Have an account?
-              <a @click="navSignIn" color="primary">Sign In</a>
-            </v-flex>
-          </v-layout>
+          <v-container>
+            <v-layout align-center justify-center column wrap fill-height>
+              <v-flex xs12>
+                <v-btn
+                  type="submit"
+                  color="primary"
+                  :disabled="loading || validatePassword != ''"
+                  :loading="loading"
+                >Create Account</v-btn>
+              </v-flex>
+              <v-flex xs12>
+                Have an account?
+                <a @click="navSignIn" color="primary">Sign In</a>
+              </v-flex>
+              <v-flex xs12 class="guestLink hidden-md-and-up">
+                Otherwise, Continue As
+                <a @click="navAsGuest" color="primary">Guest</a>
+              </v-flex>
+            </v-layout>
+          </v-container>
         </v-form>
       </v-card-text>
     </v-card>
@@ -106,6 +112,9 @@ export default {
     },
     navSignIn() {
       this.$router.push({ path: "/signin" });
+    },
+    navAsGuest() {
+      this.$router.push({ path: "/saved/playlists" });
     }
   }
 };

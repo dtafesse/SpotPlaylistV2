@@ -31,13 +31,15 @@
           <v-container>
             <v-layout align-center justify-center column wrap fill-height>
               <v-flex xs12>
-                <v-btn @click="navSignUp" color="primary">Sign Up</v-btn>
                 <v-btn type="submit" color="primary" :disabled="loading" :loading="loading">Sign In</v-btn>
               </v-flex>
+              <v-flex xs12>
+                Don't have an account?
+                <a @click="navSignUp" color="primary">Sign Up</a>
+              </v-flex>
               <v-flex xs12 class="guestLink hidden-md-and-up">
-                <a @click="navSignUp" color="primary">
-                  Continue As Guest
-                </a>
+                Otherwise, Continue As
+                <a @click="navAsGuest" color="primary">Guest</a>
               </v-flex>
             </v-layout>
           </v-container>
@@ -86,17 +88,20 @@ export default {
     },
     navSignUp() {
       this.$router.push({ path: "/signup" });
+    },
+    navAsGuest() {
+      this.$router.push({ path: "/saved/playlists" });
     }
   }
 };
 </script>
 
 <style scoped>
-   .guestLink {
-       padding: 5px 0 0 0;
-       margin: 0;
-       text-align: center;
-   }
+.guestLink {
+  padding: 5px 0 0 0;
+  margin: 0;
+  text-align: center;
+}
 </style>
 
 
