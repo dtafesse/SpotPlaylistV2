@@ -1,11 +1,11 @@
 <template>
   <v-container grid-list-md my-5 pt-2>
     <v-layout row wrap>
-      <v-flex v-for="(item, index) in items" xs6 sm3 :key="item.id">
-        <v-card class="card" height="255px">
+      <v-flex v-for="(item, index) in items" xs6 sm3 md2 :key="item.id">
+        <v-card class="card" height="225px">
           <v-layout column align-center justify-center>
             <v-flex xs12 mt-4>
-              <v-avatar v-bind="{ ['tile']: imageType }" size="150">
+              <v-avatar v-bind="{ ['tile']: imageType }" size="147">
                 <v-img
                   v-if="item.images.length > 0"
                   :src="item.images[0].url"
@@ -15,7 +15,7 @@
               </v-avatar>
             </v-flex>
             <v-flex xs12>
-              <v-card-title class="caption" @click="selected(index)">
+              <v-card-title class="caption text-truncate" @click="selected(index)">
                 {{ item.name }}
                 <span v-if="selectedItemsIds">
                   <v-icon
