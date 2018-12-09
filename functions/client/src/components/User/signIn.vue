@@ -34,7 +34,7 @@
                 <v-btn type="submit" color="primary" :disabled="loading" :loading="loading">Sign In</v-btn>
               </v-flex>
               <v-flex xs12>
-                Don't have an account?
+                Don't Have an account?
                 <a @click="navSignUp" color="primary">Sign Up</a>
               </v-flex>
               <v-flex xs12 class="guestLink hidden-md-and-up">
