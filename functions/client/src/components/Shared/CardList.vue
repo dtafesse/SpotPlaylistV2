@@ -3,34 +3,19 @@
     <div class="subheading subheadingContainer">{{heading}}</div>
     <v-layout row wrap>
       <v-flex v-for="item in itemsInCurrentPage" xs6 sm2 :key="item.id">
-        <v-card class="card text-as-center" height="175px">
-          <v-layout column align-center justify-center>
-            <v-flex xs12 my-3>
-              <v-avatar v-bind="{ ['tile']: true }" size="125">
-                <v-img
-                  v-if="item.images.length > 0"
-                  :src="item.images[0].url"
-                  @click="onClickItem(item.id)"
-                  contain
-                ></v-img>
-                <v-img v-else :src="defaultImage" @click="onClickItem(item.id)"></v-img>
-              </v-avatar>
-            </v-flex>
-            <!-- <v-flex xs12 >
-              <div>
-                <v-card-title class="caption text-truncate" @click="onClickItem(item.id, index)">
-                  {{ item.name }}
-                  <span v-if="selectedItems">
-                    <v-icon
-                      v-if="selectedItems.indexOf(item.id) !== -1"
-                      color="primary"
-                      right
-                    >check_circle_outline</v-icon>
-                  </span>
-                </v-card-title>
-              </div>
-            </v-flex>-->
-          </v-layout>
+        <v-card class="card text-as-center" color="#e9f2f7">
+          <v-img
+            v-if="item.images.length > 0"
+            :src="item.images[0].url"
+            @click="onClickItem(item.id)"
+            contain
+          ></v-img>
+
+          <v-icon
+            v-if="selectedItems && selectedItems.indexOf(item.id) !== -1"
+            color="primary"
+            right
+          >check_circle_outline</v-icon>
         </v-card>
       </v-flex>
 

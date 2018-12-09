@@ -24,8 +24,7 @@
     >
       <!-- Pagination here -->
       <!-- v-pagination .... -->
-      
-          <v-pagination v-model="page" :length="pageLength" :total-visible="6" circle></v-pagination>
+      <v-pagination v-model="page" :length="pageLength" :total-visible="6" circle></v-pagination>
     </v-layout>
   </v-container>
 </template>
@@ -55,17 +54,11 @@ export default {
     },
     topArtistsInCurrentPage() {
       if (!this.topArtists) return [];
-      return this.paginate(
-        this.topArtists,
-        this.pageSize,
-        this.page
-      );
+      return this.paginate(this.topArtists, this.pageSize, this.page);
     },
     pageLength() {
       if (this.topArtists && this.pageSize) {
-        let pageLength = Math.ceil(
-          this.topArtists.length / this.pageSize
-        );
+        let pageLength = Math.ceil(this.topArtists.length / this.pageSize);
 
         return pageLength;
       }

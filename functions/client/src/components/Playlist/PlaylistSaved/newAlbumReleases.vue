@@ -1,15 +1,13 @@
 <template>
-  <v-content>
-    <card-list
-      :items="newlyReleasedAlbums"
-      :selectedItems="selectedAlbumIds"
-      heading="New Album Releases"
-      :numOfPagesVisible="6"
-      :pageSizeMobile="4"
-      :pageSizeNonMobile="6"
-      @onClickItem="handleSelectedAlbum"
-    />
-  </v-content>
+  <card-list
+    :items="newlyReleasedAlbums"
+    :selectedItems="selectedAlbumIds"
+    heading="New Album Releases"
+    :numOfPagesVisible="6"
+    :pageSizeMobile="4"
+    :pageSizeNonMobile="6"
+    @onClickItem="handleSelectedAlbum"
+  />
 </template>
 
 <script>
