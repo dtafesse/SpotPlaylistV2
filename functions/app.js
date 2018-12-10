@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan"); // logs all incoming requests to console, acts as a middleware
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const authRoutes = require("./api/auth/spotifyLogin");
 const artistRoutes = require("./api/routes/artists");
@@ -14,18 +15,20 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorizaion"
-  );
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-    return res.status(200).json({});
-  }
-  next();
-});
+app.use(cors({ origin: true }));
+
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorizaion"
+//   );
+//   if (req.method === "OPTIONS") {
+//     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+//     return res.status(200).json({});
+//   }
+//   next();
+// });
 
 // middleware which forwards to appropiate route
 app.use("/api/auth", authRoutes);
