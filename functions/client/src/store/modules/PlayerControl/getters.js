@@ -14,7 +14,8 @@ const getters = {
   isAutoPlay: state => state.autoPlay,
   isRepeat: state => state.repeat,
   isMute: state => state.mute,
-  isShuffle: state => state.shuffle
+  isShuffle: state => state.shuffle,
+  isPreviewUrlForCurrentTrack: state => state.previewUrlForCurrentTrack
 };
 
 export default getters;

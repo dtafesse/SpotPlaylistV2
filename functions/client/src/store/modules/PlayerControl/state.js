@@ -1,12 +1,12 @@
 const state = {
   currentTrack: undefined,
-  currentArtwork: '',
+  currentArtwork: "",
   audioElement: undefined,
   shuffledPlaylist: [],
   playing: true,
-  currentTime: '0:00',
+  currentTime: "0:00",
   progress: 0,
-  remainingTime: '',
+  remainingTime: "",
   volume: 0,
   mouseDown: false,
   duration: 0,
@@ -14,7 +14,8 @@ const state = {
   autoPlay: false,
   repeat: false,
   mute: false,
-  shuffle: false
+  shuffle: false,
+  previewUrlForCurrentTrack: false
 };
 
 export default state;

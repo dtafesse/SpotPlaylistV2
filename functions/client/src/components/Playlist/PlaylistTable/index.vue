@@ -1,5 +1,10 @@
 <template>
   <v-container grid-list-md text-xs-center my-5 pt-2>
+    <v-alert
+      :value="!isPreviewUrlAvailableForCurrentTrack"
+      dismissible
+      type="warning"
+    >{{ 'Selected track does not have a preview link, click on the Launch icon to preview the track on Spotify' }}</v-alert>
     <v-alert v-model="alert" dismissible :type="alertType">{{ alertMessage }}</v-alert>
 
     <Loader v-if="loading" :width="7" :size="70"/>
@@ -117,7 +122,8 @@ export default {
       selectedTrackToBeModified: 0,
       alert: false,
       alertType: undefined,
-      alertMessage: undefined
+      alertMessage: undefined,
+      alertForPreviewUrl: false
     };
   },
   computed: {
@@ -130,6 +136,9 @@ export default {
     isPlaylistSavedOnSpotify() {
       // Save to Spotify!
       return this.$store.getters.isCurrentPlaylistSavedOnSpotify;
+    },
+    isPreviewUrlAvailableForCurrentTrack() {
+      return this.$store.getters.isPreviewUrlForCurrentTrack;
     },
     currentPlaylistName() {
       return this.$store.getters.getCurrentPlaylistMetaData.playlistName

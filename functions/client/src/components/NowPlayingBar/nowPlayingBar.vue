@@ -59,7 +59,14 @@ export default {
   computed: {
     setAudioSource() {
       const currentTrack = this.$store.getters.getCurrentTrack;
-      return currentTrack ? currentTrack.preview_url : null;
+      if (currentTrack && currentTrack.preview_url) {
+        this.$store.commit("SET_PREVIEW_URL_FOR_CURRENT_TRACK", true);
+        return currentTrack.preview_url;
+      } else {
+        this.$store.commit("SET_PREVIEW_URL_FOR_CURRENT_TRACK", false);
+        return null;
+      }
+      // return currentTrack ? currentTrack.preview_url : null;
     }
   },
   methods: {
