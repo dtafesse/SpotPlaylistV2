@@ -1,4 +1,4 @@
-import helpers from '../../../assets/js/helpers';
+import helpers from "../../../assets/js/helpers";
 
 const mutations = {
   SET_CURRENT_TRACK: (state, payload) => {
@@ -56,6 +56,9 @@ const mutations = {
   },
   SET_AUDIO_ELEMENT_VOLUME_PERCENTAGE: (state, payload) => {
     state.audioElement.volume = payload;
+  },
+  SET_PREVIEW_URL_FOR_CURRENT_TRACK: (state, payload) => {
+    state.previewUrlForCurrentTrack = payload;
   }
 };
 
