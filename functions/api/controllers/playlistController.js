@@ -86,7 +86,7 @@ exports.featuredPlaylists = (req, res) => {
       // Save the access token so that it's used in future calls
       spotifyWebApi.setAccessToken(data.body["access_token"]);
 
-      return spotifyWebApi.getFeaturedPlaylists();
+      return spotifyWebApi.getFeaturedPlaylists({ limit: 18 });
     })
     .then(data => {
       return res.status(200).json({

@@ -85,7 +85,7 @@ exports.getNewReleases = (req, res) => {
       // Save the access token so that it's used in future calls
       spotifyWebApi.setAccessToken(data.body["access_token"]);
 
-      return spotifyWebApi.getNewReleases();
+      return spotifyWebApi.getNewReleases({ limit: 18 });
     })
     .then(data => {
       return res.status(200).json({
