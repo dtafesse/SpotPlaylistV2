@@ -2,14 +2,19 @@
   <v-container grid-list-md>
     <div class="subheading subheadingContainer">{{heading}}</div>
     <v-layout row wrap>
-      <v-flex v-for="item in itemsInCurrentPage" xs6 sm2 :key="item.id">
+      <v-flex v-for="(item, index) in itemsInCurrentPage" xs6 sm2 :key="item.id">
         <v-card class="card text-as-center" color="#e9f2f7">
           <v-img
             v-if="item.images.length > 0"
             :src="item.images[0].url"
+            :lazy-src="`https://picsum.photos/10/6?image=${index * 2 + 10}`"
             @click="onClickItem(item.id)"
             contain
-          ></v-img>
+          >
+            <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+              <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+            </v-layout>
+          </v-img>
 
           <v-icon
             v-if="selectedItems && selectedItems.indexOf(item.id) !== -1"
