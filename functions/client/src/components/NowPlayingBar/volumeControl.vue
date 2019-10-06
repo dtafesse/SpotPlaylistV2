@@ -2,21 +2,13 @@
   <v-container>
     <v-layout row>
       <v-flex sm4>
-        <v-btn fab dark small color="white">
+        <v-btn fab dark small color="white" style="margin: 12px">
           <v-icon @click="onMute" v-if="!this.$store.getters.isMute" color="primary">volume_up</v-icon>
           <v-icon @click="onMute" v-else color="orange darken-1">volume_off</v-icon>
         </v-btn>
       </v-flex>
       <v-flex sm8>
-        <div
-          ref="volumeProgressBar"
-          @mousedown="onMouseDown"
-          @mousemove="onMouseMove"
-          @mouseup="onMouseUp"
-          style="cursor: pointer"
-        >
-          <v-progress-linear v-model="widthPercentage" color="primary"></v-progress-linear>
-        </div>
+        <v-slider :value="widthPercentage" @change="onVolumeChange"></v-slider>
       </v-flex>
     </v-layout>
   </v-container>
@@ -48,31 +40,11 @@ export default {
     }
   },
   methods: {
+    onVolumeChange(newVolume) {
+      this.$store.dispatch("setAudioElementVolumePercentage", newVolume / 100);
+    },
     onMute() {
       this.$store.dispatch("muteSong", !this.$store.getters.isMute);
-    },
-    onMouseDown() {
-      this.$store.dispatch("setMouseDown", true);
-    },
-    onMouseMove(e) {
-      if (this.$store.getters.isMouseDown) {
-        const percentage = helpers.volumePercentageOffset(
-          e,
-          this.volumeProgressBar
-        );
-        if (percentage >= 0 && percentage <= 1) {
-          this.$store.dispatch("setAudioElementVolumePercentage", percentage);
-        }
-      }
-    },
-    onMouseUp(e) {
-      const percentage = helpers.volumePercentageOffset(
-        e,
-        this.volumeProgressBar
-      );
-      if (percentage >= 0 && percentage <= 1) {
-        this.$store.dispatch("setAudioElementVolumePercentage", percentage);
-      }
     }
   },
   mounted() {
