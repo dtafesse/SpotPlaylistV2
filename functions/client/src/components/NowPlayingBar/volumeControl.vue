@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-layout row>
-      <v-flex sm4>
+      <v-flex sm4 style="marginRight: 8px">
         <v-btn fab dark small color="white" style="margin: 12px">
           <v-icon @click="onMute" v-if="!this.$store.getters.isMute" color="primary">volume_up</v-icon>
           <v-icon @click="onMute" v-else color="orange darken-1">volume_off</v-icon>

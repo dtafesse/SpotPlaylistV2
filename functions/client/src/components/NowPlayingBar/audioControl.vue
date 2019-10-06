@@ -1,6 +1,12 @@
 <template>
   <v-container>
-    <v-layout row :class="{mobile: $vuetify.breakpoint.xsOnly}" align-center justify-center>
+    <v-layout
+      row
+      :class="{mobile: $vuetify.breakpoint.xsOnly}"
+      align-center
+      justify-center
+      style="padding: 0 70px"
+    >
       <v-flex sm2>
         <v-btn fab dark small color="white">
           <v-icon @click="onShuffle" v-if="!this.$store.getters.isShuffle" color="primary">shuffle</v-icon>
@@ -37,7 +43,7 @@
     <v-layout row>
       <span class="time">{{ this.$store.getters.getCurrentTime }}</span>
       <v-flex sm10>
-        <div
+        <!-- <div
           ref="progressBar"
           @mousedown="onMouseDown"
           @mouseup="onMouseUp"
@@ -45,7 +51,8 @@
           style="cursor: pointer"
         >
           <v-progress-linear v-model="widthPercentage" color="primary"></v-progress-linear>
-        </div>
+        </div>-->
+        <v-slider :value="widthPercentage" @change="onProgressBarChange"></v-slider>
       </v-flex>
       <span class="time">{{ this.$store.getters.getRemainingTime }}</span>
     </v-layout>
@@ -81,6 +88,11 @@ export default {
     }
   },
   methods: {
+    onProgressBarChange(newPos) {
+      const percent = newPos / 100;
+      const seconds = this.$store.getters.getDuration * percent;
+      this.$store.dispatch("setAudioElementCurrentTime", seconds);
+    },
     onPlay() {
       this.$store.dispatch("playPauseSong", {
         playing: false,
@@ -133,7 +145,6 @@ export default {
         this.progressBar,
         this.$store.getters.getDuration
       );
-      this.$store.dispatch("setAudioElementCurrentTime", seconds);
     }
   },
   mounted() {
@@ -148,13 +159,15 @@ export default {
 }
 
 .container {
-  padding-top: 0;
-  padding-bottom: 0;
+  /* padding-top: 0;
+  padding-bottom: 0; */
+  padding: 2px;
 }
 
 .time {
-  margin-top: 7px;
+  /* margin-top: 7px; */
   margin-right: 5px;
   margin-left: 5px;
+  margin: 20px 18px;
 }
 </style>
