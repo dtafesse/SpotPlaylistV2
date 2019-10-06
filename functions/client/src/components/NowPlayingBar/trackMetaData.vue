@@ -43,7 +43,6 @@ export default {
 }
 
 .container {
-  padding-bottom: 0;
-  padding-top: 15px;
+  margin: 4px 8px;
 }
 </style>
