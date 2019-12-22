@@ -23,20 +23,19 @@
           >check_circle_outline</v-icon>
         </v-card>
       </v-flex>
-
-      <!-- Pagination Template -->
-      <v-layout column align-center justify-center fill-height mt-1>
-        <v-flex xs12>
-          <v-pagination
-            v-model="page"
-            :length="pageLength"
-            :total-visible="this.numOfPagesVisible"
-            circle
-          ></v-pagination>
-        </v-flex>
-      </v-layout>
-      <!-- End Pagination Template -->
     </v-layout>
+    <!-- Pagination Template -->
+    <v-layout column align-center justify-center fill-height mt-1>
+      <v-flex xs12>
+        <v-pagination
+          v-model="page"
+          :length="pageLength"
+          :total-visible="this.numOfPagesVisible"
+          circle
+        ></v-pagination>
+      </v-flex>
+    </v-layout>
+    <!-- End Pagination Template -->
   </v-container>
 </template>
 
