@@ -93,7 +93,7 @@ export default {
     onResize() {
       this.isMobile = window.innerWidth < 600;
     },
-    onClickItem(id, index) {
+    onClickItem(id) {
       this.$emit("onClickItem", id);
     }
   },
