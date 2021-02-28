@@ -11,20 +11,14 @@
 </template>
 
 <script>
-import landingPage from "./Landing/landing";
 import nowPlayingBar from "./NowPlayingBar/nowPlayingBar";
 import navBar from "./NavBar/nav";
-import Loader from "./Shared/Loader";
-import Alert from "./Shared/Alert";
 
 export default {
   name: "Home",
   components: {
     nowPlayingBar,
     navBar,
-    Loader,
-    landingPage,
-    Alert
   },
   computed: {
     loading() {
