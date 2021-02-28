@@ -25,7 +25,6 @@
           flat
           v-for="item in menuItem"
           :key="item.title"
-          :to="item.link"
           @click="routeItem(item)"
         >
           <v-icon left dark>{{ item.icon }}</v-icon>
@@ -53,13 +52,13 @@ export default {
   computed: {
     menuItem() {
       let menuItemIcons = [
-        { icon: "lock_open", title: "Sign In", link: "/signin" },
-        { icon: "face", title: "Sign Up", link: "/signup" }
+        { icon: "lock_open", title: "Sign In" },
+        { icon: "face", title: "Sign Up" }
       ];
 
       if (this.userIsAuth) {
         menuItemIcons = [
-          { icon: "exit_to_app", title: "Logout", link: "/signin" }
+          { icon: "exit_to_app", title: "Logout" }
         ];
       }
       return menuItemIcons;

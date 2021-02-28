@@ -70,12 +70,13 @@ const actions = {
     if (getters.isSpotifyLoggedIn) {
       dispatch("logoutSpotify");
     }
-    firebase.auth().signOut();
-    commit("setUser", null);
-    dispatch("clearPlaylistState");
-    dispatch("clearSearchState");
+    firebase.auth().signOut().finally(() => {
+      commit("setUser", null);
+      dispatch("clearPlaylistState");
+      dispatch("clearSearchState");
 
-    router.push("/signin");
+      router.push("/signin");
+    });
   },
   clearError({ commit }) {
     commit("clearError");
