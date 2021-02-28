@@ -69,7 +69,7 @@ const actions = {
         // make sure each track is unique
         combinedSuggestedTracks.forEach(track => {
           const trackPos = getters.getNewGeneratedPlaylist
-            .map(function(e) {
+            .map((e) => {
               return e.id;
             })
             .indexOf(track.id);
@@ -199,7 +199,7 @@ const actions = {
   },
   addToSelectedAlbums: ({ dispatch, commit, getters }, item) => {
     const itemPos = getters.getSelectedAlbums
-      .map(function(e) {
+      .map((e) => {
         return e.id;
       })
       .indexOf(item.id);
@@ -212,7 +212,7 @@ const actions = {
   },
   addToSelectedArtists: ({ dispatch, commit, getters }, item) => {
     const itemPos = getters.getSelectedArtists
-      .map(function(e) {
+      .map((e) => {
         return e.id;
       })
       .indexOf(item.id);

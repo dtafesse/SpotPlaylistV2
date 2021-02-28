@@ -105,7 +105,7 @@ const actions = {
         playSong: true
       });
       return;
-    } else if (context.getters.getCurrentTrackIndex == playlistSize) {
+    } else if (context.getters.getCurrentTrackIndex === playlistSize) {
       // go back to start
       context.dispatch('setCurrentTrackIndex', 0);
     } else {
@@ -137,7 +137,7 @@ const actions = {
   },
   setPrevTrack(context) {
     if (
-      context.getters.getCurrentTrackIndex == 0 ||
+      context.getters.getCurrentTrackIndex === 0 ||
       context.getters.getAudioElement.currentTime >= 2
     ) {
       context.dispatch('setAudioElementCurrentTime', 0);

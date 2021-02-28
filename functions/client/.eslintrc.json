@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "plugin:vue/base"
+  ],
+  "plugins": [
+    "vuetify"
+  ],
+  "rules": {
+    "vuetify/no-deprecated-classes": "error",
+    "promise/always-return": "off",
+    "consistent-return": "off",
+    "promise/catch-or-return": "off",
+    "promise/no-nesting": "off"
+  }
+}

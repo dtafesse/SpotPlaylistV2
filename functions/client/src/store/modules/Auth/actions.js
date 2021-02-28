@@ -115,13 +115,13 @@ const actions = {
         .child("/tokens/")
         .set(tokens)
         .then(() => {
-          dispatch("finalizeSpotifyLogin", {
+          return dispatch("finalizeSpotifyLogin", {
             ...tokens,
             isRefresh: query.refresh
-          }).then(() => {
-            resolve(true);
           });
-        })
+        }).then(() => {
+            resolve(true);
+          })
         .catch(err => {
           // eslint-disable-next-line
           console.log(err.message);
@@ -145,14 +145,15 @@ const actions = {
         .then(data => {
           const tokens = data.val();
           if (tokens) {
-            dispatch("finalizeSpotifyLogin", tokens).then(() => resolve());
+            return dispatch("finalizeSpotifyLogin", tokens);
           } else {
-            dispatch("finalizeSpotifyLogin", {
+            return dispatch("finalizeSpotifyLogin", {
               access_token: null,
               refresh_token: null
-            }).then(() => resolve());
+            });
           }
         })
+        .then(() => resolve())
         .catch(err => {
           // eslint-disable-next-line
           console.log(err);
@@ -183,14 +184,15 @@ const actions = {
       api
         .fetchSpotifyRefreshToken(getters.getRefreshToken)
         .then(({ data }) => {
-          dispatch("saveUserSpotAuthTokensToFB", {
+          return dispatch("saveUserSpotAuthTokensToFB", {
             ...data.items,
             isRefresh: true
-          }).then(() => {
-            commit("SET_LOADING", false);
-            resolve(true);
           });
         })
+        .then(() => {
+            commit("SET_LOADING", false);
+            resolve(true);
+          })
         .catch(err => {
           // eslint-disable-next-line
           console.log(err.message);

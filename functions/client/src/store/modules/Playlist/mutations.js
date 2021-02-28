@@ -12,7 +12,7 @@ const mutations = {
     state.recentlyGeneratedPlaylist.push({ ...playlist });
   },
   UPDATE_RECENTLY_GENERATED_PLAYLIST_MEMBER: (state, { key, newValue, id }) => {
-    let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id == id);
+    let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id === id);
     state.recentlyGeneratedPlaylist[index][key] = newValue;
   },
   UPDATE_PLAYLIST_NAME: (state, newName) => {
@@ -56,7 +56,7 @@ const mutations = {
     state,
     { trackUri, id, trackUriPosition }
   ) => {
-    let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id == id);
+    let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id === id);
 
     let temp = [...state.recentlyGeneratedPlaylist[index].playlistIds];
     temp[trackUriPosition] = trackUri;
@@ -67,7 +67,7 @@ const mutations = {
     state,
     { id, trackUriPosition }
   ) => {
-    let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id == id);
+    let index = state.recentlyGeneratedPlaylist.findIndex(x => x.id === id);
 
     let temp = [...state.recentlyGeneratedPlaylist[index].playlistIds];
     temp.splice(trackUriPosition, 1);

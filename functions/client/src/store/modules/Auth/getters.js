@@ -1,5 +1,5 @@
 const getters = {
-  isSpotifyLoggedIn: state => !!state.spotifyAuthAccessCode && !!state.user,
+  isSpotifyLoggedIn: state => Boolean(state.spotifyAuthAccessCode) && Boolean(state.user),
   user: state => state.user,
   error: state => state.error,
   getAccessToken: state => state.spotifyAuthAccessCode,

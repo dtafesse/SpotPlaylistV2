@@ -271,11 +271,10 @@ const actions = {
     let trackIds = selectedPlaylist.playlistIds.map(trackUri =>
       trackUri.substring(14)
     );
-    dispatch("fetchPlaylistTracks", trackIds).then(tracks => {
-      dispatch("setPlaylist", tracks).then(() => {
-        commit("SET_LOADING", false);
-      });
-    });
+    
+    dispatch("fetchPlaylistTracks", trackIds)
+      .then(tracks => dispatch("setPlaylist", tracks))
+      .then(() => commit("SET_LOADING", false))
   },
   fetchPlaylistTracks: ({ commit }, trackIds) => {
     return new Promise((resolve, reject) => {

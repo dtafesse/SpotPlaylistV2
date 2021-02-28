@@ -141,7 +141,7 @@ const actions = {
       let list = [];
 
       let playlistIdsRef = firebase.database().ref(location);
-      playlistIdsRef.on('value', function(snap) {
+      playlistIdsRef.on('value', (snap) => {
         list = snap.val();
       });
 
