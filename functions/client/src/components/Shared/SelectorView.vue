@@ -44,6 +44,7 @@ export default {
       if (this.selectedItems) {
         return this.selectedItems.length > config.LIMIT;
       }
+      return false;
     },
     selectedItems() {
       return [

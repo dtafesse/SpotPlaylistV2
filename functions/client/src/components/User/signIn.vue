@@ -50,13 +50,11 @@
 </template>
 
 <script>
-import Loader from "../Shared/Loader";
 import Alert from "../Shared/Alert";
 
 export default {
   name: "signIn",
   components: {
-    Loader,
     Alert
   },
   data() {

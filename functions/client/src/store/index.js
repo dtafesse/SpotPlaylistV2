@@ -6,6 +6,7 @@ import Search from "./modules/Search";
 import PlayerControl from "./modules/PlayerControl";
 import Auth from "./modules/Auth";
 import Album from "./modules/Albums";
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({

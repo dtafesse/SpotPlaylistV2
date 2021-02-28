@@ -52,6 +52,7 @@ export default {
           return this.items;
         }
       }
+      return [];
     },
     showMoreButton() {
       if (this.items && this.showSeeAllButton) {
@@ -61,6 +62,7 @@ export default {
           return false;
         }
       }
+      return false;
     },
     moreText() {
       return this.type === "Albums" ? "See all albums" : "See all artists";

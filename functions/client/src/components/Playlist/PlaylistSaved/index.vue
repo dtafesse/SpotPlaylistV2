@@ -63,7 +63,8 @@ export default {
 
       if (selectedItems) {
         return selectedItems.length > config.LIMIT;
-      }
+      } 
+      return false;
     },
     loading() {
       return this.$store.getters.isLoading;

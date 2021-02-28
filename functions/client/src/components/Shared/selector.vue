@@ -1,7 +1,6 @@
 <template>
-    <v-container>
+    <v-container v-if="selectedItems">
         <v-chip
-            v-if="selectedItems"
             v-for="(item, index) in selectedItems"
             :key="index"
             close

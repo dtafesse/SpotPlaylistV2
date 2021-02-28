@@ -66,13 +66,11 @@
 </template>
 
 <script>
-import Loader from "../Shared/Loader";
 import Alert from "../Shared/Alert";
 
 export default {
   name: "signUp",
   components: {
-    Loader,
     Alert
   },
   data() {

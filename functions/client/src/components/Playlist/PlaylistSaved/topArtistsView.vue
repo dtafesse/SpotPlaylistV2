@@ -31,13 +31,11 @@
 
 <script>
 import category from "../../Shared/category";
-import Loader from "../../Shared/Loader";
 
 export default {
   name: "topArtistsView",
   components: {
-    category,
-    Loader
+    category
   },
   data() {
     return {
