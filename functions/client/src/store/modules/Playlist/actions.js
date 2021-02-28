@@ -1,7 +1,6 @@
 import api from "../../../api/index";
 import router from "../../../router/index";
-import helpers from "../../../assets/js/helpers";
-import * as firebase from "firebase";
+import firebase from "firebase";
 
 const actions = {
   setPlaylist: ({ commit, dispatch }, newPlayist) => {

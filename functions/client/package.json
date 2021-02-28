@@ -22,7 +22,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
     "axios": "^0.21.1",
-    "firebase": "^5.5.9",
+    "firebase": "^8.2.9",
     "lodash": "^4.17.19",
     "material-design-icons-iconfont": "^3.0.3",
     "qs": "^6.5.2",

@@ -1,5 +1,5 @@
 import api from '../../../api/index';
-import * as firebase from 'firebase';
+import firebase from 'firebase';
 
 const actions = {
   findRelatedTrack: (context, id) => {
@@ -13,7 +13,7 @@ const actions = {
           resolve(items[0]);
         })
         .catch(err => {
-          console.log(err);
+          console.error(err);
           reject(err);
         });
     });

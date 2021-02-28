@@ -1,6 +1,6 @@
 import api from "../../../api/index";
 import router from "../../../router/index";
-import * as firebase from "firebase";
+import firebase from "firebase";
 
 const actions = {
   firebaseSignUpUser({ commit, dispatch }, signUpRequest) {
