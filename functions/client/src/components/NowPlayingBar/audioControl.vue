@@ -43,15 +43,6 @@
     <v-layout row>
       <span class="time">{{ this.$store.getters.getCurrentTime }}</span>
       <v-flex sm10>
-        <!-- <div
-          ref="progressBar"
-          @mousedown="onMouseDown"
-          @mouseup="onMouseUp"
-          @mousemove="onMouseMove"
-          style="cursor: pointer"
-        >
-          <v-progress-linear v-model="widthPercentage" color="primary"></v-progress-linear>
-        </div>-->
         <v-slider :value="widthPercentage" @change="onProgressBarChange"></v-slider>
       </v-flex>
       <span class="time">{{ this.$store.getters.getRemainingTime }}</span>
