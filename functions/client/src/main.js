@@ -8,6 +8,7 @@ import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "material-design-icons-iconfont/dist/material-design-icons.css";
 import firebase from "firebase/app";
 import requestInterceptor from "./interceptForRefreshToken";
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false;
 
@@ -15,6 +16,8 @@ new Vue({
   store,
   router,
   render: h => h(App),
+  vuetify,
+
   created() {
     firebase.initializeApp({
       apiKey: "AIzaSyAJkYNu0OoZ-6tgwh4tEUg-R-FEr7OIhso",

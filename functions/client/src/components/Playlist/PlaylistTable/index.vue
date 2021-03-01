@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-md text-xs-center my-5 pt-2>
+  <v-container grid-list-md text-center mt-6>
     <v-alert
       :value="!isPreviewUrlAvailableForCurrentTrack"
       dismissible
@@ -8,7 +8,7 @@
     <v-alert v-model="alert" dismissible :type="alertType">{{ alertMessage }}</v-alert>
 
     <Loader v-if="loading" :width="7" :size="70"/>
-    <v-layout v-else row>
+    <v-layout v-else>
       <card
         :currentlySelectedTrack="currentlySelectedTrack"
         :isUserLoggedIn="isUserLoggedIn"
@@ -19,7 +19,7 @@
       />
 
       <v-flex xs12 sm6 offset-sm1 align-center justify-center fill-height>
-        <v-list three-line>
+        <v-list two-line>
           <v-subheader>
             <v-text-field
               :value="currentPlaylistName"
@@ -35,7 +35,7 @@
             <v-tooltip top>
               <v-btn
                 v-if="$vuetify.breakpoint.xs && isUserLoggedIn && isTextFieldReadOnly"
-                flat
+                text
                 small
                 @click="onSpotifyButton"
                 color="#1DB954"
@@ -44,56 +44,59 @@
               <span>{{ spotifyButtonToolTipValue }}</span>
             </v-tooltip>
           </v-subheader>
-          <template v-for="(track, index) in currentlySelectedPlaylist">
-            <v-list-tile
-              :key="index"
-              avatar
-              ripple
-              class="listItem"
-              @mouseenter="selectedTrackToBeModified = index"
+          <v-list-item
+            v-for="(track, index) in currentlySelectedPlaylist"
+            :key="index"
+            class="listItem"
+            @mouseenter="selectedTrackToBeModified = index"
+            
             >
-              <v-list-tile @click="onClickTrack(index)">
+              <v-list-item-avatar @click="onClickTrack(index)">
                 <img
                   v-if="track.album.images[0].url !== undefined"
                   :src="track.album.images[0].url"
                   max-width="50"
                   height="50"
                 >
-              </v-list-tile>
-              <v-list-tile-content @click="onClickTrack(index)">
-                <v-list-tile-title v-html="track.name"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="track.album.name"></v-list-tile-sub-title>
-              </v-list-tile-content>
+              </v-list-item-avatar>
+              <v-list-item-content @click="onClickTrack(index)">
+                <v-list-item-title class="titleContainer" v-text="track.name"></v-list-item-title>
+                <v-list-item-subtitle class="titleContainer" v-text="track.album.name"></v-list-item-subtitle>
+              </v-list-item-content>
 
-              <v-list-tile-action>
-                <div class="text-xs-center">
-                  <v-menu open-on-hover left :disabled="menuDisabled">
-                    <v-icon slot="activator" color="primary" dark>more_horiz</v-icon>
-
+              <v-list-item-action>
+                <div class="text-center">
+                  <v-menu left :disabled="menuDisabled" offset-y>
+                     <template v-slot:activator="{ on, attrs }">
+                       <v-icon slot="activator" color="primary" dark v-bind="attrs" v-on="on">more_horiz</v-icon>
+                     </template>
+                    
                     <v-list>
-                      <v-list-tile
+                      <v-list-item
                         v-for="(option, index) in menuOptions"
                         :key="index"
                         @click="onSelectOption(option, track, index)"
                       >
-                        <v-list-tile-title>{{ option.title }}</v-list-tile-title>
-                      </v-list-tile>
+                        <v-list-item-title>{{ option.title }}</v-list-item-title>
+                      </v-list-item>
                     </v-list>
                   </v-menu>
                 </div>
 
-                <v-tooltip top>
-                  <v-icon
-                    v-if="track.name === currentlySelectedTrackName"
-                    color="spotifyColor"
-                    @click="onListenToTrackOnSpotify"
-                    slot="activator"
-                  >launch</v-icon>
+                <v-tooltip bottom  v-if="track.name === currentlySelectedTrackName">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-icon
+                      color="spotifyColor"
+                      @click="onListenToTrackOnSpotify"
+                      v-bind="attrs"
+                      v-on="on"
+                    >launch</v-icon>
+                  </template>
                   <span>Listen On Spotify!</span>
                 </v-tooltip>
-              </v-list-tile-action>
-            </v-list-tile>
-          </template>
+  
+              </v-list-item-action>
+          </v-list-item>
         </v-list>
       </v-flex>
     </v-layout>
@@ -176,6 +179,7 @@ export default {
       if (this.currentlySelectedTrack) {
         trackName = this.currentlySelectedTrack.name;
       }
+      console.log(trackName)
       return trackName;
     },
     numberOfSongs() {
@@ -385,5 +389,8 @@ export default {
 }
 .listItem:hover {
   background-color: rgb(228, 231, 234);
+}
+.titleContainer {
+  text-align: start;
 }
 </style>

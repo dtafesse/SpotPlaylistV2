@@ -1,12 +1,12 @@
 <template>
   <v-app id="container">
     <navBar/>
-    <v-content>
+    <v-main> 
       <v-container fluid>
         <router-view></router-view>
-        <nowPlayingBar v-if="this.$store.getters.getCurrentPlaylist"/>
       </v-container>
-    </v-content>
+    </v-main>
+    <nowPlayingBar v-if="this.$store.getters.getCurrentPlaylist"/>
   </v-app>
 </template>
 
@@ -42,7 +42,13 @@ export default {
 
 
 <style>
-#container {
-  background-color: #e9f2f7;
-}
+  #container {
+    background-color: #e9f2f7;
+  }
+</style>
+
+<style scoped>
+  .container {
+    padding: 0px 12px;
+  }
 </style>

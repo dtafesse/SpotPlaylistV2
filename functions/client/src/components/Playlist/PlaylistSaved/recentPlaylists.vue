@@ -1,32 +1,32 @@
 <template>
   <v-container grid-list-md>
-    <v-layout row>
+    <v-layout>
       <v-flex xs12 align-center justify-center fill-height>
         <v-list two-line v-if="recentlyGeneratedPlaylists.length > 0">
           <v-subheader>Most Recent Playlists...</v-subheader>
-          <template v-for="(playlist, index) in recentlyGeneratedPlaylistsInCurrentPage">
-            <v-list-tile :key="index" ripple class="listItem">
-              <v-list-tile-content @click="onClickPlaylist(playlist)">
-                <v-list-tile-title v-html="playlist.playlistName"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="playlist.playlistIds.length + ' songs'"></v-list-tile-sub-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-tooltip top>
+          <v-list-item v-for="(playlist, index) in recentlyGeneratedPlaylistsInCurrentPage" :key="index" ripple class="listItem">
+            <v-list-item-content @click="onClickPlaylist(playlist)">
+              <v-list-item-title v-html="playlist.playlistName"></v-list-item-title>
+              <v-list-item-subtitle v-html="playlist.playlistIds.length + ' songs'"></v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     color="error"
                     @click="handleRemovePlaylist(playlist.id)"
-                    slot="activator"
+                    v-bind="attrs"
+                    v-on="on"
                   >delete</v-icon>
-                  <span>Delete</span>
-                </v-tooltip>
-              </v-list-tile-action>
-            </v-list-tile>
-          </template>
+                </template>
+                <span>Delete</span>
+              </v-tooltip>
+            </v-list-item-action>
+          </v-list-item>
         </v-list>
 
         <!-- Pagination Template -->
         <v-layout
-          row
           align-center
           justify-center
           fill-height

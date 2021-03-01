@@ -1,5 +1,5 @@
 <template>
-  <v-footer height="110" color="light-grey" fixed>
+  <v-footer color="light-grey" app fixed>
     <v-container
       fluid
       grid-list
@@ -8,7 +8,7 @@
       @touchmove="(e) => e.preventDefault()"
       @touchstart="(e) => e.preventDefault()"
     >
-      <v-layout v-if="$vuetify.breakpoint.smAndUp">
+      <v-layout v-if="$vuetify.breakpoint.smAndUp" align-center justify-center fill-height>
         <v-flex sm3>
           <TrackMetaData/>
         </v-flex>
@@ -19,7 +19,7 @@
           <volumeControl/>
         </v-flex>
       </v-layout>
-      <v-layout v-else align-center justify-center row fill-height>
+      <v-layout v-else align-center justify-center fill-height>
         <v-flex xs12>
           <audioControl/>
         </v-flex>
@@ -139,7 +139,10 @@ export default {
 </script>
 
 <style scoped>
-.container.fluid.grid-list {
+.container {
   padding: 0;
+}
+.v-footer {
+  padding: 0px 16px;
 }
 </style>

@@ -5,7 +5,7 @@
     </v-container>
 
     <v-container mb-5 v-else>
-      <v-layout row wrap>
+      <v-layout wrap>
         <selectorView v-if="selectedItems && selectedItems.length > 0"/>
         <v-flex
           xs12

@@ -4,6 +4,8 @@
       <v-form @submit.prevent="onSumbit">
         <v-text-field
           v-model="query"
+          hide-details
+          single-line
           color="white"
           append-outer-icon="search"
           @click:append-outer="onSumbit"

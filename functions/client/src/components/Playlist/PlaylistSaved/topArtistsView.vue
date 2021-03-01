@@ -15,7 +15,6 @@
     />
 
     <v-layout
-      row
       align-center
       justify-center
       fill-height

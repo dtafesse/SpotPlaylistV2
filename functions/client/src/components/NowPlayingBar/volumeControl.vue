@@ -1,14 +1,17 @@
 <template>
   <v-container>
-    <v-layout row>
-      <v-flex sm4 style="marginRight: 8px">
+    <v-layout     
+      align-center
+      justify-center
+    >
+      <v-flex sm4 class="flexBtnContainer">
         <v-btn fab dark small color="white" style="margin: 12px">
           <v-icon @click="onMute" v-if="!this.$store.getters.isMute" color="primary">volume_up</v-icon>
           <v-icon @click="onMute" v-else color="orange darken-1">volume_off</v-icon>
         </v-btn>
       </v-flex>
       <v-flex sm8>
-        <v-slider :value="widthPercentage" @change="onVolumeChange"></v-slider>
+        <v-slider class="slider" :value="widthPercentage" @change="onVolumeChange" single-line></v-slider>
       </v-flex>
     </v-layout>
   </v-container>
@@ -54,6 +57,14 @@ export default {
 </script>
 
 <style scoped>
+.flexBtnContainer { 
+  flex: 0 1 auto;
+  margin: 6px;
+}
+.slider {
+  margin-top: 16px;
+}
+
 .flex.sm8 {
   margin-top: auto;
   margin-bottom: auto;

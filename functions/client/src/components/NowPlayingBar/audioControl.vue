@@ -1,46 +1,44 @@
 <template>
   <v-container>
     <v-layout
-      row
       :class="{mobile: $vuetify.breakpoint.xsOnly}"
       align-center
       justify-center
-      style="padding: 0 70px"
     >
-      <v-flex sm2>
+      <v-flex class="flexButton">
         <v-btn fab dark small color="white">
           <v-icon @click="onShuffle" v-if="!this.$store.getters.isShuffle" color="primary">shuffle</v-icon>
           <v-icon @click="onShuffle" v-else color="orange darken-1">shuffle</v-icon>
         </v-btn>
       </v-flex>
-      <v-flex sm2>
+      <v-flex class="flexButton">
         <v-btn fab dark small color="white">
           <v-icon dark @click="onPrev" color="primary">skip_previous</v-icon>
         </v-btn>
       </v-flex>
-      <v-flex sm2 v-if="this.$store.getters.isPlaying">
+      <v-flex v-if="this.$store.getters.isPlaying" class="flexButton">
         <v-btn fab dark small color="white">
           <v-icon dark @click="onPlay" color="primary">play_circle_outline</v-icon>
         </v-btn>
       </v-flex>
-      <v-flex sm2 v-else>
+      <v-flex v-else class="flexButton">
         <v-btn fab dark small color="white">
           <v-icon dark @click="onPause" color="primary">pause_circle_outline</v-icon>
         </v-btn>
       </v-flex>
-      <v-flex sm2>
+      <v-flex class="flexButton">
         <v-btn fab dark small color="white">
           <v-icon dark @click="onNext" color="primary">skip_next</v-icon>
         </v-btn>
       </v-flex>
-      <v-flex sm2>
+      <v-flex class="flexButton">
         <v-btn fab dark small color="white">
           <v-icon dark @click="onRepeat" v-if="!this.$store.getters.isRepeat" color="primary">repeat</v-icon>
           <v-icon dark @click="onRepeat" v-else color="orange darken-1">repeat_one</v-icon>
         </v-btn>
       </v-flex>
     </v-layout>
-    <v-layout row>
+    <v-layout>
       <span class="time">{{ this.$store.getters.getCurrentTime }}</span>
       <v-flex sm10>
         <v-slider :value="widthPercentage" @change="onProgressBarChange"></v-slider>
@@ -145,6 +143,11 @@ export default {
 </script>
 
 <style scoped>
+.flexButton {
+  flex: 0 1 auto;
+  margin: 6px;
+}
+
 .mobile {
   padding-left: 15px;
 }
@@ -156,9 +159,8 @@ export default {
 }
 
 .time {
-  /* margin-top: 7px; */
+  margin-top: 3px;
   margin-right: 5px;
   margin-left: 5px;
-  margin: 20px 18px;
 }
 </style>

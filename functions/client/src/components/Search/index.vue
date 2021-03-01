@@ -1,18 +1,16 @@
 <template>
-  <v-container grid-list-md mb-5>
-    <v-content v-if="loading">
-      <Loader :width="7" :size="70"/>
-    </v-content>
+  <v-container grid-list-md>
+    <Loader v-if="loading" :width="7" :size="70"/>
 
-    <v-content v-else>
+    <div v-else>
       <v-container>
-        <v-layout row wrap v-if="albums || artists">
+        <v-layout wrap v-if="albums || artists">
           <selectorView v-if="selectedItems && selectedItems.length > 0"/>
         </v-layout>
       </v-container>
 
       <router-view></router-view>
-    </v-content>
+    </div>
   </v-container>
 </template>
 
@@ -52,3 +50,8 @@ export default {
 </script>
 
 
+<style scoped>
+  .container {
+    padding: 0px;
+  }
+</style>

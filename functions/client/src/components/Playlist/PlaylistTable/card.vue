@@ -13,13 +13,13 @@
       </v-layout>
       <v-divider light></v-divider>
       <v-card-actions>
-        <v-btn flat @click="$emit('onPlay')" color="primary">Play</v-btn>
+        <v-btn text @click="$emit('onPlay')" color="primary">Play</v-btn>
         <v-spacer></v-spacer>
-        <v-btn flat @click="$emit('onShuffle')" color="primary">Shuffle</v-btn>
+        <v-btn text @click="$emit('onShuffle')" color="primary">Shuffle</v-btn>
         <v-spacer></v-spacer>
         <v-btn
           v-if="isUserLoggedIn"
-          flat
+          text
           @click="$emit('onSpotifyButton')"
           color="spotifyColor"
         >{{ spotifyButtonValue }}</v-btn>

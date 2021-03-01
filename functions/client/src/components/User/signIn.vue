@@ -1,10 +1,10 @@
 <template>
   <v-container fluid>
-    <v-card class="elevation-12">
+    <v-card elevation="12">
       <div v-if="error">
         <Alert @dismissed="onDismissed" :text="error.message"></Alert>
       </div>
-      <v-toolbar dark color="primary">
+      <v-toolbar color="primary">
         <v-toolbar-title>Sign In</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
@@ -28,20 +28,20 @@
             color="primary"
             required
           ></v-text-field>
-          <v-container>
-            <v-layout align-center justify-center column wrap fill-height>
-              <v-flex xs12>
-                <v-btn type="submit" color="primary" :disabled="loading" :loading="loading">Sign In</v-btn>
-              </v-flex>
-              <v-flex xs12>
-                Don't Have an account?
-                <a @click="navSignUp" color="primary">Sign Up</a>
-              </v-flex>
-              <v-flex xs12>
-                Otherwise, Continue As
-                <a @click="navAsGuest" color="primary">Guest</a>
-              </v-flex>
-            </v-layout>
+            <v-container>
+              <v-layout align-center justify-center column wrap fill-height>
+                <v-flex xs12>
+                  <v-btn type="submit" color="primary" :disabled="loading" :loading="loading">Sign In</v-btn>
+                </v-flex>
+                <v-flex xs12>
+                  Don't Have an account?
+                  <a @click="navSignUp" color="primary">Sign Up</a>
+                </v-flex>
+                <v-flex xs12>
+                  Otherwise, Continue As
+                  <a @click="navAsGuest" color="primary">Guest</a>
+                </v-flex>
+              </v-layout>
           </v-container>
         </v-form>
       </v-card-text>
@@ -93,6 +93,3 @@ export default {
   }
 };
 </script>
-
-
-

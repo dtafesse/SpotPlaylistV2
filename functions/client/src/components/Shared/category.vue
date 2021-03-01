@@ -1,31 +1,31 @@
 <template>
   <v-list two-line>
     <v-subheader>{{ headerMessage }}</v-subheader>
-    <template v-for="(item, index) in limitItemSize">
-      <v-list-tile :key="item.id" avatar ripple @click="onClick(index, item.id)" class="listItem">
-        <v-list-tile>
+      <v-list-item v-for="(item, index) in limitItemSize" :key="item.id" @click="onClick(index, item.id)" class="listItem">
+        <v-list-item-avatar>
           <v-avatar v-bind="{ ['tile']: imageType }" size="55">
             <v-img v-if="item.images.length > 0" :src="item.images[0].url"></v-img>
             <v-img v-else :src="defaultImage"></v-img>
           </v-avatar>
-        </v-list-tile>
-        <v-list-tile-content>
-          <v-list-tile-title v-html="item.name"></v-list-tile-title>
-          <span v-if="selectedItems">
-            <v-icon
-              v-if="selectedItems.indexOf(item.id) !== -1"
-              color="primary"
-              right
-            >check_circle_outline</v-icon>
-          </span>
-        </v-list-tile-content>
-      </v-list-tile>
-    </template>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title v-text="item.name"></v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-icon
+            v-if="selectedItems && selectedItems.indexOf(item.id) !== -1"
+            color="primary"
+          > 
+            check_circle_outline
+          </v-icon>
+        </v-list-item-action>
+      </v-list-item>
     <v-btn
       v-if="showMoreButton"
-      outline
+      outlined
       color="cyan lighten-1"
       @click="onShowAllClick"
+      class="ml-4 mt-3"
     >{{ moreText }}</v-btn>
   </v-list>
 </template>
@@ -89,7 +89,7 @@ export default {
     onShowAllClick() {
       this.$emit("onShowAllClick", this.type.toLowerCase());
     }
-  }
+  },
 };
 </script>
 

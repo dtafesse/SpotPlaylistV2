@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-md my-5 pt-2>
-    <v-layout row wrap>
+    <v-layout wrap>
       <v-flex v-for="(item, index) in items" xs6 sm3 md2 :key="item.id">
         <v-card class="card" height="245px">
           <v-layout column align-center justify-center>
@@ -15,7 +15,7 @@
               </v-avatar>
             </v-flex>
             <v-flex xs12>
-              <v-card-title class="caption text-truncate" @click="selected(index)">
+              <v-card-title class="text-caption text-truncate" @click="selected(index)">
                 {{ item.name }}
                 <span v-if="selectedItemsIds">
                   <v-icon

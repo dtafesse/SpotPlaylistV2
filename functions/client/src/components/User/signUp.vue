@@ -3,8 +3,8 @@
     <div v-if="error">
       <Alert @dismissed="onDismissed" :text="error.message"></Alert>
     </div>
-    <v-card class="elevation-12">
-      <v-toolbar dark color="primary">
+    <v-card elevation="12">
+      <v-toolbar color="primary">
         <v-toolbar-title>Sign Up</v-toolbar-title>
       </v-toolbar>
       <v-card-text>

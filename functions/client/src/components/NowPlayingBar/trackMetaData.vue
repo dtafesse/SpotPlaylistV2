@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-layout align-center justify-center row fill-height>
+    <v-layout align-center justify-center fill-height>
       <v-flex sm12>
-        <v-img :src="setArtworkPath" contain width="55" height="55" class="float: left" pa-1></v-img>
+        <v-img :src="setArtworkPath" contain width="55" height="55" class="float: float-left" pa-1></v-img>
         <v-spacer></v-spacer>
         <div class="text-truncate">
           <div class="text-truncate">
@@ -44,5 +44,6 @@ export default {
 
 .container {
   margin: 4px 8px;
+  padding: 0px;
 }
 </style>

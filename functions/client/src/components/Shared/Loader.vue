@@ -1,5 +1,5 @@
 <template>
-    <v-layout align-center justify-center row fill-height >
+    <v-layout align-center justify-center fill-height class="mt-5" >
         <v-progress-circular
             :size="size"
             :width="width"

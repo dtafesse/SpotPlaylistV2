@@ -6,14 +6,14 @@
       type="error"
     >{{ `Please Select up to ${selectionLimit} times Only `}}</v-alert>
 
-    <v-layout row wrap>
+    <v-layout wrap>
       <v-flex sm8>
         <selector :selectedItems="selectedItems" @onRemoveSelected="handleRemoveSelected"/>
       </v-flex>
 
       <v-flex sm4 v-if="selectedItems.length > 0" mt-4>
-        <v-layout row align-center justify-end>
-          <v-btn @click="onGeneratePlaylist">Generate
+        <v-layout align-center justify-end>
+          <v-btn @click="onGeneratePlaylist" class="mr-3">Generate
             <v-icon color="primary">library_music</v-icon>
           </v-btn>
           <v-btn @click="onClearAll">Clear All

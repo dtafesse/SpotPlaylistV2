@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-md>
     <div class="subheading subheadingContainer">{{heading}}</div>
-    <v-layout row wrap>
+    <v-layout wrap>
       <v-flex v-for="(item, index) in itemsInCurrentPage" xs6 sm2 :key="item.id">
         <v-card class="card text-as-center" color="#e9f2f7">
           <v-img
