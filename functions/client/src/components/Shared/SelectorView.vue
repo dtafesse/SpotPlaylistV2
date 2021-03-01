@@ -1,12 +1,12 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-alert
       v-if="isError"
       :value="isError"
       type="error"
     >{{ `Please Select up to ${selectionLimit} times Only `}}</v-alert>
 
-    <v-layout wrap>
+    <v-layout wrap align-center justify-center>
       <v-flex sm8>
         <selector :selectedItems="selectedItems" @onRemoveSelected="handleRemoveSelected"/>
       </v-flex>

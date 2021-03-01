@@ -39,11 +39,15 @@
       </v-flex>
     </v-layout>
     <v-layout>
-      <span class="time">{{ this.$store.getters.getCurrentTime }}</span>
+      <span class="time">{{ currentTime }}</span>
       <v-flex sm10>
-        <v-slider :value="widthPercentage" @change="onProgressBarChange"></v-slider>
+        <v-slider 
+          :value="widthPercentage" 
+          @change="onProgressBarChange"
+        >
+        </v-slider>
       </v-flex>
-      <span class="time">{{ this.$store.getters.getRemainingTime }}</span>
+      <span class="time">{{ remainingTime }}</span>
     </v-layout>
   </v-container>
 </template>
@@ -74,6 +78,12 @@ export default {
   computed: {
     widthPercentage() {
       return this.$store.getters.getProgress;
+    },
+    currentTime() {
+      return this.$store.getters.getCurrentTime;
+    },
+    remainingTime() {
+      return this.$store.getters.getRemainingTime;
     }
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container>
       <v-chip
         v-for="(item, index) in selectedItems"
         :key="index"
@@ -19,7 +19,7 @@
         </v-avatar>    
         {{ item.name }}
       </v-chip>
-    </div>
+    </v-container>
 </template>
 
 <script>

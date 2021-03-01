@@ -32,15 +32,20 @@
               label="Playlist Name"
             ></v-text-field>
             <span v-if="$vuetify.breakpoint.smAndUp">{{ numberOfSongs }}</span>
-            <v-tooltip top>
-              <v-btn
-                v-if="$vuetify.breakpoint.xs && isUserLoggedIn && isTextFieldReadOnly"
-                text
-                small
-                @click="onSpotifyButton"
-                color="#1DB954"
-                slot="activator"
-              >{{ spotifyButtonValue }}</v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-if="$vuetify.breakpoint.xs && isUserLoggedIn && isTextFieldReadOnly"
+                  text
+                  small
+                  @click="onSpotifyButton"
+                  color="#1DB954"
+                  slot="activator"
+                  v-bind="attrs"
+                  v-on="on"
+                >{{ spotifyButtonValue }}</v-btn>
+              </template>
+
               <span>{{ spotifyButtonToolTipValue }}</span>
             </v-tooltip>
           </v-subheader>

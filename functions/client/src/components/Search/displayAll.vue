@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-md my-5 pt-2>
     <v-layout wrap>
-      <v-flex v-for="(item, index) in items" xs6 sm3 md2 :key="item.id">
+      <v-flex v-for="(item, index) in items" xs6 sm4 md3 lg2 :key="item.id">
         <v-card class="card" height="245px">
           <v-layout column align-center justify-center>
             <v-flex xs12 mt-4>
